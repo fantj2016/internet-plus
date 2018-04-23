@@ -1,12 +1,12 @@
-package com.tyut.web;
+package com.tyut.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Web {
+public class UserServer {
 
     public static void main(String[] args) {
-        SpringApplication.run(Web.class, args);
+        SpringApplication.run(UserServer.class, args);
     }
 }
