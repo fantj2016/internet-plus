@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/internet-plus.iml" filepath="$PROJECT_DIR$/.idea/internet-plus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-common/ip-common.iml" filepath="$PROJECT_DIR$/ip-common/ip-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-parent/ip-parent.iml" filepath="$PROJECT_DIR$/ip-parent/ip-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-user-client/ip-user-client.iml" filepath="$PROJECT_DIR$/ip-user-client/ip-user-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-user-server/ip-user-server.iml" filepath="$PROJECT_DIR$/ip-user-server/ip-user-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-web/ip-web.iml" filepath="$PROJECT_DIR$/ip-web/ip-web.iml" />
+    </modules>
+  </component>
+</project>
