@@ -6,12 +6,19 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/ip-core/pom.xml" />
         <option value="$PROJECT_DIR$/ip-parent/pom.xml" />
         <option value="$PROJECT_DIR$/ip-common/pom.xml" />
         <option value="$PROJECT_DIR$/ip-user-server/pom.xml" />
         <option value="$PROJECT_DIR$/ip-user-client/pom.xml" />
         <option value="$PROJECT_DIR$/ip-web/pom.xml" />
+        <option value="$PROJECT_DIR$/ip-activity-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ip-activity-client/pom.xml" />
+        <option value="$PROJECT_DIR$/ip-school-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ip-school-client/pom.xml" />
+        <option value="$PROJECT_DIR$/ip-notice-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ip-notice-client/pom.xml" />
+        <option value="$PROJECT_DIR$/ip-group-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ip-group-client/pom.xml" />
       </list>
     </option>
   </component>

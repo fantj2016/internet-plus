@@ -22,9 +22,9 @@ public class User  implements Serializable {
     @Column(nullable = false)
     private String userEmail;
     @Column(nullable = false)
-    private String userSex;
+    private Integer userSex;
     @Column(nullable = false)
-    private String userEducation;
+    private Integer userEducation;
     @Column(nullable = false)
     private String userSchool;
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public class User  implements Serializable {
     @Column(nullable = false)
     private String userProfession;
     @Column(nullable = false)
-    private Integer userStuNum;
+    private String userStuNum;
     @Column(nullable = false)
     private String userGrade;
     @Column(nullable = false)

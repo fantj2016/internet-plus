@@ -1,8 +1,8 @@
 package com.tyut.user.service;
 
 
-import com.tyut.user.domain.User;
-import com.tyut.user.response.ServerResponse;
+import com.tyut.core.pojo.User;
+import com.tyut.core.response.ServerResponse;
 
 /**
  * Created by Fant.J.
@@ -15,4 +15,12 @@ public interface UserService {
     ServerResponse update(User user);
     /** 查询单个*/
     ServerResponse selectById(int id);
+    /** 根据email查询密码 */
+    String selectPasswdByEmail(String email);
+    /** 根据 phone 查询密码 */
+    String selectPasswdByPhone(String phone);
+    /** 判断 email 是否存在*/
+    ServerResponse isExistEmail(String email);
+    /** 判断 phone 是否存在*/
+    ServerResponse isExistPhone(String phone);
 }

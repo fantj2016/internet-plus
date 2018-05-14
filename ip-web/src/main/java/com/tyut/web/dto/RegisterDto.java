@@ -1,0 +1,30 @@
+package com.tyut.web.dto;
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+/**
+ * Created by Fant.J.
+ * 2018/5/3 15:46
+ */
+@Data
+public class RegisterDto {
+
+    private String email;
+    private String phone;
+    private String passwd;
+    private String rePasswd;
+    private Integer schoolId;
+    @ApiModelProperty("学院")
+    private String academy;
+    @ApiModelProperty("专业")
+    private String profession;
+    @ApiModelProperty("年级")
+    private String grade;
+    @ApiModelProperty("学号")
+    private String num;
+    private String name;
+    private Integer sex;
+    @ApiModelProperty("学历：本科、硕士..")
+    private Integer edu;
+}

@@ -3,8 +3,16 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/internet-plus.iml" filepath="$PROJECT_DIR$/.idea/internet-plus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-activity-client/ip-activity-client.iml" filepath="$PROJECT_DIR$/ip-activity-client/ip-activity-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-activity-server/ip-activity-server.iml" filepath="$PROJECT_DIR$/ip-activity-server/ip-activity-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/ip-common/ip-common.iml" filepath="$PROJECT_DIR$/ip-common/ip-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-group-client/ip-group-client.iml" filepath="$PROJECT_DIR$/ip-group-client/ip-group-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-group-server/ip-group-server.iml" filepath="$PROJECT_DIR$/ip-group-server/ip-group-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-notice-client/ip-notice-client.iml" filepath="$PROJECT_DIR$/ip-notice-client/ip-notice-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-notice-server/ip-notice-server.iml" filepath="$PROJECT_DIR$/ip-notice-server/ip-notice-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/ip-parent/ip-parent.iml" filepath="$PROJECT_DIR$/ip-parent/ip-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-school-client/ip-school-client.iml" filepath="$PROJECT_DIR$/ip-school-client/ip-school-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ip-school-server/ip-school-server.iml" filepath="$PROJECT_DIR$/ip-school-server/ip-school-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/ip-user-client/ip-user-client.iml" filepath="$PROJECT_DIR$/ip-user-client/ip-user-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/ip-user-server/ip-user-server.iml" filepath="$PROJECT_DIR$/ip-user-server/ip-user-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/ip-web/ip-web.iml" filepath="$PROJECT_DIR$/ip-web/ip-web.iml" />

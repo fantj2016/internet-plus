@@ -5,7 +5,7 @@
 
     <groupId>com.tyut</groupId>
     <artifactId>ip-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${ip.version}</version>
     <packaging>pom</packaging>
 
     <name>ip-parent</name>
@@ -64,6 +64,11 @@
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
             </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>3.3</version>
+            </dependency>
 
 
         </dependencies>
@@ -76,6 +81,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                    <skip>true</skip>
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
@@ -89,6 +95,12 @@
         <module>../ip-user-server</module>
         <module>../ip-user-client</module>
         <module>../ip-web</module>
+        <module>../ip-school-server</module>
+        <module>../ip-school-client</module>
+        <module>../ip-notice-server</module>
+        <module>../ip-notice-client</module>
+        <module>../ip-group-server</module>
+        <module>../ip-group-client</module>
     </modules>
 
     <!--自定义属性版本-->

@@ -21,15 +21,13 @@ public class Group  implements Serializable {
 
     private String groupName;
 
-    private String groupHeader;
+    private Integer groupHeaderId;
 
     private Integer groupSchoolId;
 
-    private Integer groupAcademyId;
-
-    private String groupEmail;
-
     private String groupPhone;
+
+    private Integer groupType;
 
     private Integer groupStatus;
 

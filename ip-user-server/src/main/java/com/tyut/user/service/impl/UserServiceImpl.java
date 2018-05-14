@@ -1,8 +1,9 @@
 package com.tyut.user.service.impl;
 
-import com.tyut.user.domain.User;
+import com.tyut.core.pojo.User;
+import com.tyut.core.response.ServerResponse;
+import com.tyut.core.vo.UserVo;
 import com.tyut.user.repostory.UserRepository;
-import com.tyut.user.response.ServerResponse;
 import com.tyut.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,9 +26,9 @@ public class UserServiceImpl implements UserService {
     public ServerResponse insert(User user) {
         User save = userRepository.save(user);
         if (save != null){
-            return ServerResponse.createBySuccessMessage("用户添加成功");
+            return ServerResponse.createBySuccessMessage("注册成功");
         }
-        return ServerResponse.createByErrorMessage("用户添加失败");
+        return ServerResponse.createByErrorMessage("注册失败");
     }
 
     /**
@@ -42,12 +43,69 @@ public class UserServiceImpl implements UserService {
      * 查询单个
      */
     @Override
-    public ServerResponse selectById(int id) {
+    public ServerResponse<UserVo> selectById(int id) {
         User user = userRepository.findOne(id);
         if (user == null){
             return ServerResponse.createByErrorMessage("找不到该用户");
         }
-        user.setUserPasswd(" ");
-        return ServerResponse.createBySuccess(user);
+        UserVo userVo = new UserVo();
+        userVo.setUserId(user.getUserId());
+        userVo.setUserName(user.getUserName());
+        userVo.setUserPhone(user.getUserPhone());
+        userVo.setUserSchoolId(user.getUserSchoolId());
+        return ServerResponse.createBySuccess(userVo);
     }
+
+    /**
+     * 根据email查询密码
+     *
+     * @param email
+     */
+    @Override
+    public String selectPasswdByEmail(String email) {
+        return userRepository.selectPasswdByEmail(email);
+    }
+
+    /**
+     * 根据 phone 查询密码
+     *
+     * @param phone
+     */
+    @Override
+    public String selectPasswdByPhone(String phone) {
+        return userRepository.selectPasswdByPhone(phone);
+    }
+
+    /**
+     * 判断 email 是否存在
+     *
+     * @param email
+     */
+    @Override
+    public ServerResponse isExistEmail(String email) {
+        int i = userRepository.selectIsExistEmail(email);
+        if (i==0){
+            //证明 phone 可以使用
+            return ServerResponse.createBySuccess("OK");
+        }else {
+            return ServerResponse.createByErrorMessage("该邮箱已被注册");
+        }
+    }
+
+    /**
+     * 判断 phone 是否存在
+     *
+     * @param phone
+     */
+    @Override
+    public ServerResponse isExistPhone(String phone) {
+        int i = userRepository.selectIsExistPhone(phone);
+        if (i==0){
+            //证明 phone 可以使用
+            return ServerResponse.createBySuccess("OK");
+        }else {
+            return ServerResponse.createByErrorMessage("该手机号已被注册");
+        }
+    }
+
 }
