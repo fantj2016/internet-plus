@@ -16,9 +16,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @Configuration
 @EnableResourceServer
 public class MyResourceServerConfig extends ResourceServerConfigurerAdapter {
-//
-//    @Autowired
-//    private SpringSocialConfigurer springSocialConfigurer;
+
     @Autowired
     private MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
     @Autowired
@@ -34,40 +32,11 @@ public class MyResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .failureHandler(myAuthenticationFailHandler);
 
         http
-//                .apply(springSocialConfigurer)
-//                .and()
                 .authorizeRequests()
-                .antMatchers(
-                        "/user/*"
-//                        "/authentication/require",
-//                        "/oauth/token",
-//                        "/authentication/form",
-//                        "/notice/*",
-//                        "/notice/list/*/*",
-//                        "/sch/*",
-//                        "/sch/like/*",
-//                        "/guest/*",
-//                        "/guest/get0/*",
-//                        "/guest/get1/*",
-//                        "/register/checkEmail",
-//                        "/register/checkPhone",
-//                        "/register/user",
-//                        "/swagger*.*/",
-//                        "/swagger-ui.html#/**",
-//                        "/swagger-ui.html/**",
-//                        "/swagger-resources/configuration/security/",
-//                        "/swagger-resources/configuration/ui",
-//                        "/swagger-resources/**",
-//                        "/swagger-ui.html#!/**",
-//                        "/v2/api-docs"
-                ).authenticated()
+                .antMatchers("/user/*").authenticated()
+                .antMatchers("/oauth/token").permitAll()
                 .anyRequest()
                 .permitAll()
-
-
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated()
                 .and()
                 //关闭跨站请求防护
                 .csrf().disable();

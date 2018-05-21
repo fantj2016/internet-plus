@@ -20,11 +20,7 @@ import java.io.IOException;
 @Component
 public class MyAuthenticationFailHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    /**
-     * 日志
-     */
     private Logger logger = LoggerFactory.getLogger(getClass());
-
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
@@ -35,6 +31,5 @@ public class MyAuthenticationFailHandler extends SimpleUrlAuthenticationFailureH
             response.setContentType("application/json;charset=UTF-8");
             //将 登录失败 信息打包成json格式返回
             response.getWriter().write(JSON.toJSONString(ServerResponse.createByErrorMessage(exception.getMessage())));
-        ;
     }
 }

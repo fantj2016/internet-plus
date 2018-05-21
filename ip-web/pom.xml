@@ -5,7 +5,7 @@
 
     <groupId>com.tyut</groupId>
     <artifactId>ip-web</artifactId>
-    <version>${ip.version}</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>ip-web</name>
@@ -48,17 +48,17 @@
         <dependency>
             <groupId>com.tyut</groupId>
             <artifactId>ip-user-client</artifactId>
-            <version>${ip.version}</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.tyut.school</groupId>
             <artifactId>ip-school-client</artifactId>
-            <version>${ip.version}</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.tyut.notice</groupId>
             <artifactId>ip-notice-client</artifactId>
-            <version>${ip.version}</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -86,7 +86,17 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-jwt</artifactId>
         </dependency>
-
+        <!--logback-->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 <!--    <build>
