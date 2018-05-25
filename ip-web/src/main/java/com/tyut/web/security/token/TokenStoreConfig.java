@@ -20,21 +20,10 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
  */
 @Configuration
 public class TokenStoreConfig {
-
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
-
-    @Bean
-    @ConditionalOnProperty(prefix = "ip.security.oauth2",name = "storeType",havingValue = "redis")
-    public TokenStore redisTokenStore(){
-        return new RedisTokenStore(redisConnectionFactory);
-    }
-
     /**
      * JWT 配置
      */
     @Configuration
-    @ConditionalOnProperty(prefix = "ip.security.oauth2",name = "storeType",havingValue = "jwt",matchIfMissing = true)
     public static class JwtTokenConfig{
 
         @Bean
@@ -43,7 +32,7 @@ public class TokenStoreConfig {
         }
 
         /**
-         * token生成处理：指定签名(签名一定保密)
+         * token生成处理：指定签名
          */
         @Bean
         public JwtAccessTokenConverter jwtAccessTokenConverter(){
@@ -53,7 +42,6 @@ public class TokenStoreConfig {
         }
 
         @Bean
-        @ConditionalOnMissingBean(name = "jwtTokenEnhancer")
         public TokenEnhancer jwtTokenEnhancer(){
                 return new JwtTokenEnhancer();
         }

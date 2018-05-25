@@ -36,9 +36,9 @@ public class MyAuthorizationServerConfig extends AuthorizationServerConfigurerAd
     @Autowired
     private TokenStore tokenStore;
 
-    @Autowired(required = false)
+    @Autowired
     private JwtAccessTokenConverter jwtAccessTokenConverter;
-    @Autowired(required = false)
+    @Autowired
     private TokenEnhancer jwtTokenEnhancer;
 
 
@@ -75,7 +75,6 @@ public class MyAuthorizationServerConfig extends AuthorizationServerConfigurerAd
             enhancerList.add(jwtTokenEnhancer);
             enhancerList.add(jwtAccessTokenConverter);
             enhancerChain.setTokenEnhancers(enhancerList);
-
 
             endpoints
                     .tokenEnhancer(enhancerChain)

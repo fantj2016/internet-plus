@@ -2,6 +2,8 @@ package com.tyut.web.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Created by Fant.J.
@@ -12,8 +14,10 @@ public class RegisterDto {
 
     private String email;
     private String phone;
-    private String passwd;
-    private String rePasswd;
+    @NotBlank
+    private String password;
+    private String checkPassword;
+    @NotBlank
     private Integer schoolId;
     @ApiModelProperty("学院")
     private String academy;
@@ -22,6 +26,7 @@ public class RegisterDto {
     @ApiModelProperty("年级")
     private String grade;
     @ApiModelProperty("学号")
+    @NotBlank
     private String num;
     private String name;
     private Integer sex;

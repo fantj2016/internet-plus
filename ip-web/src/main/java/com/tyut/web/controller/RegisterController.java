@@ -72,10 +72,10 @@ public class RegisterController {
                     ConsParams.Phone.GET_EXIST_ERROR_MSG);
         }
         //如果两次密码相同
-        if (StringUtils.equals(registerDto.getPasswd(),registerDto.getRePasswd())){
+        if (StringUtils.equals(registerDto.getPassword(),registerDto.getCheckPassword())){
             User user = new User();
             user.setUserName(registerDto.getName());
-            user.setUserPasswd(registerDto.getPasswd());
+            user.setUserPasswd(registerDto.getPassword());
             user.setUserStuNum(registerDto.getNum());
             user.setUserEmail(registerDto.getEmail());
             user.setUserPhone(registerDto.getPhone());

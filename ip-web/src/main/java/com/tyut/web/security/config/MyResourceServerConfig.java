@@ -32,9 +32,10 @@ public class MyResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .failureHandler(myAuthenticationFailHandler);
 
         http
+                .authorizeRequests().antMatchers("/oauth/token").permitAll()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/user/*").authenticated()
-                .antMatchers("/oauth/token").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and()
