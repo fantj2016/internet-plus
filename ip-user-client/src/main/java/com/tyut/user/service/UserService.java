@@ -23,4 +23,6 @@ public interface UserService {
     ServerResponse isExistEmail(String email);
     /** 判断 phone 是否存在*/
     ServerResponse isExistPhone(String phone);
+    /** 通过 手机或者 邮箱 查询 个人信息 */
+    ServerResponse selectMe(String str);
 }

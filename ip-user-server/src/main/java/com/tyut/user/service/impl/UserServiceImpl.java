@@ -3,8 +3,11 @@ package com.tyut.user.service.impl;
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.core.vo.UserVo;
+import com.tyut.user.dto.UserDto;
 import com.tyut.user.repostory.UserRepository;
 import com.tyut.user.service.UserService;
+import com.tyut.user.util.CheckFormat;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.dubbo.config.annotation.Service;
@@ -14,6 +17,7 @@ import com.alibaba.dubbo.config.annotation.Service;
  * 2018/4/21 13:41
  */
 @Service(version = "2.0.0")
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -106,6 +110,26 @@ public class UserServiceImpl implements UserService {
         }else {
             return ServerResponse.createByErrorMessage("该手机号已被注册");
         }
+    }
+
+    /**
+     * 通过 手机或者 邮箱 查询 个人信息
+     *
+     * @param str
+     */
+    @Override
+    public ServerResponse selectMe(String str) {
+        if (CheckFormat.isEmail(str)){
+            UserDto user = userRepository.selectByEmail(str);
+            return ServerResponse.createBySuccess(user);
+        }
+        if (CheckFormat.isPhone(str)){
+            UserDto user = userRepository.selectByPhone(str);
+            log.info(user.toString());
+            return ServerResponse.createBySuccess(user);
+        }
+        log.info(str);
+        return ServerResponse.createByErrorMessage("用户名格式不正确");
     }
 
 }

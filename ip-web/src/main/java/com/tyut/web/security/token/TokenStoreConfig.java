@@ -18,7 +18,7 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
  * Created by Fant.J.
  * 2018/5/3 12:11
  */
-@Configuration
+//@Configuration
 public class TokenStoreConfig {
     /**
      * JWT 配置
@@ -31,7 +31,7 @@ public class TokenStoreConfig {
             return new JwtTokenStore(jwtAccessTokenConverter());
         }
 
-        /**
+        /*
          * token生成处理：指定签名
          */
         @Bean
@@ -41,10 +41,10 @@ public class TokenStoreConfig {
             return accessTokenConverter;
         }
 
-        @Bean
-        public TokenEnhancer jwtTokenEnhancer(){
-                return new JwtTokenEnhancer();
-        }
+//        @Bean
+//        public TokenEnhancer jwtTokenEnhancer(){
+//                return new JwtTokenEnhancer();
+//        }
 
     }
 }

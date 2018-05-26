@@ -30,13 +30,8 @@ import java.io.IOException;
 @Component
 public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    /**
-     * 日志
-     */
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private SecurityProperties securityProperties;
     @Autowired
     private ClientDetailsService clientDetailsService;
 
