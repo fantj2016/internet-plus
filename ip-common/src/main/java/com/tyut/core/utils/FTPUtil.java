@@ -4,6 +4,7 @@ package com.tyut.core.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -134,6 +135,22 @@ public class FTPUtil {
 
     public void setFtpClient(FTPClient ftpClient) {
         this.ftpClient = ftpClient;
+    }
+
+    public static String getFtpIp() {
+        return ftpIp;
+    }
+
+    public static String getFtpUser() {
+        return ftpUser;
+    }
+
+    public static String getFtpPass() {
+        return ftpPass;
+    }
+
+    public static Logger getLog() {
+        return log;
     }
 }
 

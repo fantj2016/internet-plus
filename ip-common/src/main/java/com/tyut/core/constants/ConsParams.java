@@ -5,6 +5,11 @@ package com.tyut.core.constants;
  * 2018/5/3 11:57
  */
 public class ConsParams {
+
+    public interface Portrait{
+        String BOY_PORTRAIT = "/portrait/boy.png";
+        String GIRL_PROTRAIT = "/portrait/girl.png";
+    }
     public interface Auth{
         String GET_CLIENT_ID = "internet_plus";
         String GET_SECRET = "internet_plus";

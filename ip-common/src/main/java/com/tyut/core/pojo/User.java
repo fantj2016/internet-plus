@@ -40,10 +40,14 @@ public class User  implements Serializable {
     @Column(nullable = false)
     private String userGrade;
     @Column(nullable = false)
-    private Integer userStatus;
+    private String userPortrait;
     @Column(nullable = false)
     private Date userCreateTime;
     @Column(nullable = false)
     private Date userUpdateTime;
+//
+//    @OneToMany
+//    @JoinColumn(name = "user_id")
+//    private GroupMembers groupMembers;
 
 }

@@ -29,6 +29,8 @@ public class Group  implements Serializable {
 
     private Integer groupType;
 
+    private String groupKey;
+
     private Integer groupStatus;
 
     private Date groupCreateTime;

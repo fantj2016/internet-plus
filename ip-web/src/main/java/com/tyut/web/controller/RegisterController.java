@@ -2,9 +2,11 @@ package com.tyut.web.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.tyut.core.constants.ConsParams;
+import com.tyut.core.constants.SexEnum;
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ResponseCode;
 import com.tyut.core.response.ServerResponse;
+import com.tyut.core.utils.FTPUtil;
 import com.tyut.user.service.UserService;
 import com.tyut.web.dto.RegisterDto;
 import com.tyut.web.util.CheckFormat;
@@ -86,8 +88,12 @@ public class RegisterController {
             user.setUserSex(registerDto.getSex());
             user.setUserEducation(registerDto.getEdu());
             user.setUserStuNum(registerDto.getNum());
-            //默认属性设置
-            user.setUserStatus(0);
+            //默认头像
+            if (registerDto.getSex().equals(SexEnum.GIRL.getCode())){
+                user.setUserPortrait(FTPUtil.getFtpIp()+ConsParams.Portrait.BOY_PORTRAIT);
+            }else {
+                user.setUserPortrait(FTPUtil.getFtpIp()+ConsParams.Portrait.GIRL_PROTRAIT);
+            }
             user.setUserCreateTime(new Date());
             return userService.insert(user);
         }else {

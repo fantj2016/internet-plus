@@ -22,8 +22,9 @@ public class UserDto implements Serializable {
     private String userProfession;
     private Integer userSex;
     private String userStuNum;
+    private String userPortrait;
 
-    public UserDto(Integer userId, String userPhone, String userSchool, String userEmail, String userName, String userAcademy, Integer userEducation, String userGrade, String userProfession, Integer userSex, String userStuNum) {
+    public UserDto(Integer userId, String userPhone, String userSchool, String userEmail, String userName, String userAcademy, Integer userEducation, String userGrade, String userProfession, Integer userSex, String userStuNum, String userPortrait) {
         this.userId = userId;
         this.userPhone = userPhone;
         this.userSchool = userSchool;
@@ -35,5 +36,6 @@ public class UserDto implements Serializable {
         this.userProfession = userProfession;
         this.userSex = userSex;
         this.userStuNum = userStuNum;
+        this.userPortrait = userPortrait;
     }
 }

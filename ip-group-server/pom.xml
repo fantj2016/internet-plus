@@ -23,7 +23,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
-
     <dependencies>
         <!-- Spring Boot Web 依赖 -->
         <dependency>
@@ -46,8 +45,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.8-dmr</version>
-            <scope>compile</scope>
         </dependency>
         <!--dubbo 依赖-->
         <dependency>
@@ -71,24 +68,7 @@
             <artifactId>ip-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
-
     </dependencies>
-
-
-
-    <!--<build>-->
-    <!--<finalName>notice-server</finalName>-->
-    <!--<plugins>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-surefire-plugin</artifactId>-->
-    <!--<configuration>-->
-    <!--<testFailureIgnore>true</testFailureIgnore>-->
-    <!--</configuration>-->
-    <!--</plugin>-->
-    <!--</plugins>-->
-    <!--</build>-->
 
     <build>
         <finalName>group-server</finalName>
