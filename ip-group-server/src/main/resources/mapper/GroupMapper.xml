@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyut.group.dao.GroupMapper" >
+  <resultMap id="BaseResultMap" type="com.tyut.core.pojo.Group" >
+    <id column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="group_header_id" property="groupHeaderId" jdbcType="INTEGER" />
+    <result column="group_school_id" property="groupSchoolId" jdbcType="INTEGER" />
+    <result column="group_phone" property="groupPhone" jdbcType="VARCHAR" />
+    <result column="group_type" property="groupType" jdbcType="INTEGER" />
+    <result column="group_key" property="groupKey" jdbcType="VARCHAR" />
+    <result column="group_status" property="groupStatus" jdbcType="INTEGER" />
+    <result column="group_create_time" property="groupCreateTime" jdbcType="TIMESTAMP" />
+    <result column="group_update_time" property="groupUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    group_id, group_name, group_header_id, group_school_id, group_phone, group_type, 
+    group_key, group_status, group_create_time, group_update_time
+  </sql>
+
+
+
+  <select id="selectByKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ip_group
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from ip_group
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ip_group
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyut.core.pojo.Group" >
+    insert into ip_group (group_id, group_name, group_header_id, 
+      group_school_id, group_phone, group_type, 
+      group_key, group_status, group_create_time, 
+      group_update_time, group_academy_id, group_email, 
+      group_header)
+    values (#{groupId,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{groupHeaderId,jdbcType=INTEGER}, 
+      #{groupSchoolId,jdbcType=INTEGER}, #{groupPhone,jdbcType=VARCHAR}, #{groupType,jdbcType=INTEGER}, 
+      #{groupKey,jdbcType=VARCHAR}, #{groupStatus,jdbcType=INTEGER}, #{groupCreateTime,jdbcType=TIMESTAMP}, 
+      #{groupUpdateTime,jdbcType=TIMESTAMP}, #{groupAcademyId,jdbcType=INTEGER}, #{groupEmail,jdbcType=VARCHAR}, 
+      #{groupHeader,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyut.core.pojo.Group" >
+    insert into ip_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="groupHeaderId != null" >
+        group_header_id,
+      </if>
+      <if test="groupSchoolId != null" >
+        group_school_id,
+      </if>
+      <if test="groupPhone != null" >
+        group_phone,
+      </if>
+      <if test="groupType != null" >
+        group_type,
+      </if>
+      <if test="groupKey != null" >
+        group_key,
+      </if>
+      <if test="groupStatus != null" >
+        group_status,
+      </if>
+      <if test="groupCreateTime != null" >
+        group_create_time,
+      </if>
+      <if test="groupUpdateTime != null" >
+        group_update_time,
+      </if>
+      <if test="groupAcademyId != null" >
+        group_academy_id,
+      </if>
+      <if test="groupEmail != null" >
+        group_email,
+      </if>
+      <if test="groupHeader != null" >
+        group_header,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupHeaderId != null" >
+        #{groupHeaderId,jdbcType=INTEGER},
+      </if>
+      <if test="groupSchoolId != null" >
+        #{groupSchoolId,jdbcType=INTEGER},
+      </if>
+      <if test="groupPhone != null" >
+        #{groupPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="groupType != null" >
+        #{groupType,jdbcType=INTEGER},
+      </if>
+      <if test="groupKey != null" >
+        #{groupKey,jdbcType=VARCHAR},
+      </if>
+      <if test="groupStatus != null" >
+        #{groupStatus,jdbcType=INTEGER},
+      </if>
+      <if test="groupCreateTime != null" >
+        #{groupCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupUpdateTime != null" >
+        #{groupUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupAcademyId != null" >
+        #{groupAcademyId,jdbcType=INTEGER},
+      </if>
+      <if test="groupEmail != null" >
+        #{groupEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="groupHeader != null" >
+        #{groupHeader,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyut.core.pojo.Group" >
+    update ip_group
+    <set >
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupHeaderId != null" >
+        group_header_id = #{groupHeaderId,jdbcType=INTEGER},
+      </if>
+      <if test="groupSchoolId != null" >
+        group_school_id = #{groupSchoolId,jdbcType=INTEGER},
+      </if>
+      <if test="groupPhone != null" >
+        group_phone = #{groupPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="groupType != null" >
+        group_type = #{groupType,jdbcType=INTEGER},
+      </if>
+      <if test="groupKey != null" >
+        group_key = #{groupKey,jdbcType=VARCHAR},
+      </if>
+      <if test="groupStatus != null" >
+        group_status = #{groupStatus,jdbcType=INTEGER},
+      </if>
+      <if test="groupCreateTime != null" >
+        group_create_time = #{groupCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupUpdateTime != null" >
+        group_update_time = #{groupUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupAcademyId != null" >
+        group_academy_id = #{groupAcademyId,jdbcType=INTEGER},
+      </if>
+      <if test="groupEmail != null" >
+        group_email = #{groupEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="groupHeader != null" >
+        group_header = #{groupHeader,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.Group" >
+    update ip_group
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      group_header_id = #{groupHeaderId,jdbcType=INTEGER},
+      group_school_id = #{groupSchoolId,jdbcType=INTEGER},
+      group_phone = #{groupPhone,jdbcType=VARCHAR},
+      group_type = #{groupType,jdbcType=INTEGER},
+      group_key = #{groupKey,jdbcType=VARCHAR},
+      group_status = #{groupStatus,jdbcType=INTEGER},
+      group_create_time = #{groupCreateTime,jdbcType=TIMESTAMP},
+      group_update_time = #{groupUpdateTime,jdbcType=TIMESTAMP},
+      group_academy_id = #{groupAcademyId,jdbcType=INTEGER},
+      group_email = #{groupEmail,jdbcType=VARCHAR},
+      group_header = #{groupHeader,jdbcType=VARCHAR}
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+</mapper>

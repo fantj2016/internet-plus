@@ -3,6 +3,7 @@ package com.tyut.group.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.response.ServerResponse;
+import com.tyut.group.repostroy.GroupMemJpa;
 import com.tyut.group.vo.GroupMemVo;
 import com.tyut.group.repostroy.GroupMemRepostory;
 import com.tyut.group.service.GroupMemberService;
@@ -24,6 +25,8 @@ public class GroupMemServiceImpl implements GroupMemberService {
 
     @Autowired
     private GroupMemRepostory memRepostory;
+    @Autowired
+    private GroupMemJpa groupMemJpa;
 
     /**
      * 加入队伍
@@ -39,7 +42,7 @@ public class GroupMemServiceImpl implements GroupMemberService {
         members.setUserIdentity(0);
         members.setUserStatus(0);
         members.setGroupName(groupName);
-        GroupMembers save = memRepostory.save(members);
+        GroupMembers save = groupMemJpa.save(members);
         if (save == null){
             return ServerResponse.createBySuccessMessage("申请失败");
         }
@@ -81,11 +84,9 @@ public class GroupMemServiceImpl implements GroupMemberService {
     @Override
     public ServerResponse agreeSomeone(Integer groupId,Integer headId,Integer userId) {
         //查询用户身份
-        GroupMembers byUserId = memRepostory.findByUserId(headId);
-        if (byUserId == null){
-            return ServerResponse.createByErrorMessage("用户不存在");
-        }
-        if (byUserId.getUserIdentity() == 0){
+        int identity = memRepostory.findByUserId(headId,groupId);
+
+        if (identity == 0){
             //无同意权限
             return ServerResponse.createByErrorMessage("该用户没有权限");
         }

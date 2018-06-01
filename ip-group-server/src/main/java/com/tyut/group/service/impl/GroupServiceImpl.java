@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.tyut.core.pojo.Group;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.response.ServerResponse;
+import com.tyut.group.repostroy.GroupMemJpa;
 import com.tyut.group.vo.GroupVo;
 import com.tyut.group.vo.GroupsVo;
 import com.tyut.group.repostroy.GroupMemRepostory;
@@ -31,6 +32,8 @@ public class GroupServiceImpl implements GroupService {
     private GroupRepostory groupRepostory;
     @Autowired
     private GroupMemRepostory memRepostory;
+    @Autowired
+    private GroupMemJpa groupMemJpa;
 
     /**
      * 创建队伍
@@ -41,7 +44,7 @@ public class GroupServiceImpl implements GroupService {
         group.setGroupStatus(0);
         group.setGroupCreateTime(new Date());
         group.setGroupKey(UUID.randomUUID().toString().replace("-",""));
-        Group save = groupRepostory.save(group);
+        Group save = (Group) groupRepostory.save(group);
         if (save == null){
             return ServerResponse.createByErrorMessage("创建队伍失败");
         }
@@ -54,7 +57,7 @@ public class GroupServiceImpl implements GroupService {
         members.setUserIdentity(1);
         members.setUserStatus(1);
         members.setGroupName(save.getGroupName());
-        memRepostory.save(members);
+        groupMemJpa.save(members);
         return ServerResponse.createBySuccess(save.getGroupKey(),"创建队伍成功");
     }
 

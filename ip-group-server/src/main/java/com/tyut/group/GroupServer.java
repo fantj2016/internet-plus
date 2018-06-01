@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@EntityScan("com.tyut.core")
+@EntityScan("com.tyut.core.pojo")
 public class GroupServer {
 
     public static void main(String[] args) {

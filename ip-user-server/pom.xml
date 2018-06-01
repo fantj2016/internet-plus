@@ -46,8 +46,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.8-dmr</version>
-            <scope>compile</scope>
         </dependency>
         <!--dubbo 依赖-->
         <dependency>
@@ -85,6 +83,11 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-jwt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.3.1</version>
         </dependency>
 
     </dependencies>

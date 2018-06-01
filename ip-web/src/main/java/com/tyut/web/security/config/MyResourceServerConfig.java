@@ -33,7 +33,7 @@ public class MyResourceServerConfig extends ResourceServerConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/user/**","/me").authenticated()
+                .antMatchers("/user/**","/me","/group/**").authenticated()
                 .anyRequest()
                 .permitAll()
                 .and()

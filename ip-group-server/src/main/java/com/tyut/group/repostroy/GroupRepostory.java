@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Fant.J.
  * 2018/5/21 20:43
  */
-//@Repository
+@Repository
 public interface GroupRepostory extends JpaRepository<Group,Integer> {
 
 
