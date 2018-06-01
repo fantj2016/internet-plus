@@ -31,4 +31,12 @@ public class CompetitionServiceImpl  implements CompetitionService {
         }
         return null;
     }
+
+    /**
+     * 查询题目列表
+     */
+    @Override
+    public ServerResponse selectTitleList() {
+        return null;
+    }
 }

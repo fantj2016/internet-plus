@@ -9,4 +9,6 @@ import com.tyut.core.response.ServerResponse;
 public interface CompetitionService {
     /** 查询单个*/
     ServerResponse selectById(Integer id);
+    /** 查询题目列表 */
+    ServerResponse selectTitleList();
 }

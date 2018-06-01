@@ -10779,3 +10779,13 @@ Caused by: java.net.ConnectException: connection timed out
 2018-06-01 19:44:20,704  Bean 'org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator' of type [org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
 2018-06-01 19:44:20,709  Bean 'org.springframework.web.servlet.support.SessionFlashMapManager' of type [org.springframework.web.servlet.support.SessionFlashMapManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
 2018-06-01 19:44:20,710  FrameworkServlet 'dispatcherServlet': initialization completed in 19 ms
+2018-06-01 20:58:25,551  No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'
+2018-06-01 20:58:25,986  Bean 'error' of type [org.springframework.web.servlet.view.InternalResourceView] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-06-01 20:58:38,919  No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'
+2018-06-01 20:58:40,126  No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'
+2018-06-01 20:58:40,970  No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'
+2018-06-01 20:58:42,023  No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'
+2018-06-01 20:58:42,784  No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'
+2018-06-01 20:58:43,522  No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'
+2018-06-01 20:58:44,211  No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'
+2018-06-01 20:58:44,887  No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'

@@ -2,6 +2,7 @@ package com.tyut.web.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.tyut.core.constants.ConsParams;
+import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.core.vo.UserVo;
 import com.tyut.user.service.UserEduService;
@@ -34,12 +35,6 @@ public class UserController {
     @Reference(version = "2.0.0")
     private UserService userService;
 
-    @GetMapping("/user/{id}")
-    @ResponseBody
-    public ServerResponse get(@PathVariable Integer id){
-        return userService.selectById(id);
-    }
-
     @GetMapping("/me")
     public ServerResponse getCurrentUser(Authentication user) throws UnsupportedEncodingException {
 
@@ -48,32 +43,12 @@ public class UserController {
         return userService.selectMe(username);
     }
 
-    @ApiOperation("获取token")
-    @PostMapping("/authentication/form")
-    public ServerResponse getToken(@ApiParam("账号") @RequestParam String username,
-                                   @ApiParam("密码") @RequestParam String password
-                                   ){
-
-        return null;
+    @ApiOperation("修改用户信息")
+    @PostMapping("/update")
+    public ServerResponse updateUser(User user){
+        return userService.update(user);
     }
 
-    @ApiOperation("刷新token")
-    @PostMapping("/oauth/token")
-    public ServerResponse refreshToken(@ApiParam("") @RequestParam String grant_type,
-                                        @ApiParam("") @RequestParam String refresh_token){
-        return null;
-    }
 
-    @ApiIgnore
-    @GetMapping("/authentication/require")
-    public ServerResponse getAuthenticationRequire(){
-        return ServerResponse.createByErrorCodeMessage(403,"请先登录!");
-    }
-
-//
-//    @PostMapping("/findPasswd")
-//    public ServerResponse findPasswd(){
-//
-//    }
 
 }

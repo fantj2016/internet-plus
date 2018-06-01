@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyut.user.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.tyut.core.pojo.User" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_passwd" property="userPasswd" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+    <result column="user_sex" property="userSex" jdbcType="INTEGER" />
+    <result column="user_education" property="userEducation" jdbcType="INTEGER" />
+    <result column="user_school" property="userSchool" jdbcType="VARCHAR" />
+    <result column="user_school_id" property="userSchoolId" jdbcType="INTEGER" />
+    <result column="user_academy" property="userAcademy" jdbcType="VARCHAR" />
+    <result column="user_academy_id" property="userAcademyId" jdbcType="INTEGER" />
+    <result column="user_profession" property="userProfession" jdbcType="VARCHAR" />
+    <result column="user_stu_num" property="userStuNum" jdbcType="VARCHAR" />
+    <result column="user_grade" property="userGrade" jdbcType="VARCHAR" />
+    <result column="user_portrait" property="userPortrait" jdbcType="VARCHAR" />
+    <result column="user_create_time" property="userCreateTime" jdbcType="TIMESTAMP" />
+    <result column="user_update_time" property="userUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="user_status" property="userStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, user_name, user_passwd, user_phone, user_email, user_sex, user_education, 
+    user_school, user_school_id, user_academy, user_academy_id, user_profession, user_stu_num, 
+    user_grade, user_portrait, user_create_time, user_update_time, user_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ip_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ip_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyut.core.pojo.User" >
+    insert into ip_user (user_id, user_name, user_passwd, 
+      user_phone, user_email, user_sex, 
+      user_education, user_school, user_school_id, 
+      user_academy, user_academy_id, user_profession, 
+      user_stu_num, user_grade, user_portrait, 
+      user_create_time, user_update_time, user_status
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPasswd,jdbcType=VARCHAR}, 
+      #{userPhone,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{userSex,jdbcType=INTEGER}, 
+      #{userEducation,jdbcType=INTEGER}, #{userSchool,jdbcType=VARCHAR}, #{userSchoolId,jdbcType=INTEGER}, 
+      #{userAcademy,jdbcType=VARCHAR}, #{userAcademyId,jdbcType=INTEGER}, #{userProfession,jdbcType=VARCHAR}, 
+      #{userStuNum,jdbcType=VARCHAR}, #{userGrade,jdbcType=VARCHAR}, #{userPortrait,jdbcType=VARCHAR}, 
+      #{userCreateTime,jdbcType=TIMESTAMP}, #{userUpdateTime,jdbcType=TIMESTAMP}, #{userStatus,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyut.core.pojo.User" >
+    insert into ip_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userPasswd != null" >
+        user_passwd,
+      </if>
+      <if test="userPhone != null" >
+        user_phone,
+      </if>
+      <if test="userEmail != null" >
+        user_email,
+      </if>
+      <if test="userSex != null" >
+        user_sex,
+      </if>
+      <if test="userEducation != null" >
+        user_education,
+      </if>
+      <if test="userSchool != null" >
+        user_school,
+      </if>
+      <if test="userSchoolId != null" >
+        user_school_id,
+      </if>
+      <if test="userAcademy != null" >
+        user_academy,
+      </if>
+      <if test="userAcademyId != null" >
+        user_academy_id,
+      </if>
+      <if test="userProfession != null" >
+        user_profession,
+      </if>
+      <if test="userStuNum != null" >
+        user_stu_num,
+      </if>
+      <if test="userGrade != null" >
+        user_grade,
+      </if>
+      <if test="userPortrait != null" >
+        user_portrait,
+      </if>
+      <if test="userCreateTime != null" >
+        user_create_time,
+      </if>
+      <if test="userUpdateTime != null" >
+        user_update_time,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPasswd != null" >
+        #{userPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null" >
+        #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null" >
+        #{userSex,jdbcType=INTEGER},
+      </if>
+      <if test="userEducation != null" >
+        #{userEducation,jdbcType=INTEGER},
+      </if>
+      <if test="userSchool != null" >
+        #{userSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="userSchoolId != null" >
+        #{userSchoolId,jdbcType=INTEGER},
+      </if>
+      <if test="userAcademy != null" >
+        #{userAcademy,jdbcType=VARCHAR},
+      </if>
+      <if test="userAcademyId != null" >
+        #{userAcademyId,jdbcType=INTEGER},
+      </if>
+      <if test="userProfession != null" >
+        #{userProfession,jdbcType=VARCHAR},
+      </if>
+      <if test="userStuNum != null" >
+        #{userStuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="userGrade != null" >
+        #{userGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="userPortrait != null" >
+        #{userPortrait,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreateTime != null" >
+        #{userCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userUpdateTime != null" >
+        #{userUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyut.core.pojo.User" >
+    update ip_user
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPasswd != null" >
+        user_passwd = #{userPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null" >
+        user_email = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null" >
+        user_sex = #{userSex,jdbcType=INTEGER},
+      </if>
+      <if test="userEducation != null" >
+        user_education = #{userEducation,jdbcType=INTEGER},
+      </if>
+      <if test="userSchool != null" >
+        user_school = #{userSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="userSchoolId != null" >
+        user_school_id = #{userSchoolId,jdbcType=INTEGER},
+      </if>
+      <if test="userAcademy != null" >
+        user_academy = #{userAcademy,jdbcType=VARCHAR},
+      </if>
+      <if test="userAcademyId != null" >
+        user_academy_id = #{userAcademyId,jdbcType=INTEGER},
+      </if>
+      <if test="userProfession != null" >
+        user_profession = #{userProfession,jdbcType=VARCHAR},
+      </if>
+      <if test="userStuNum != null" >
+        user_stu_num = #{userStuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="userGrade != null" >
+        user_grade = #{userGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="userPortrait != null" >
+        user_portrait = #{userPortrait,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreateTime != null" >
+        user_create_time = #{userCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userUpdateTime != null" >
+        user_update_time = #{userUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userStatus != null" >
+        user_status = #{userStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.User" >
+    update ip_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      user_passwd = #{userPasswd,jdbcType=VARCHAR},
+      user_phone = #{userPhone,jdbcType=VARCHAR},
+      user_email = #{userEmail,jdbcType=VARCHAR},
+      user_sex = #{userSex,jdbcType=INTEGER},
+      user_education = #{userEducation,jdbcType=INTEGER},
+      user_school = #{userSchool,jdbcType=VARCHAR},
+      user_school_id = #{userSchoolId,jdbcType=INTEGER},
+      user_academy = #{userAcademy,jdbcType=VARCHAR},
+      user_academy_id = #{userAcademyId,jdbcType=INTEGER},
+      user_profession = #{userProfession,jdbcType=VARCHAR},
+      user_stu_num = #{userStuNum,jdbcType=VARCHAR},
+      user_grade = #{userGrade,jdbcType=VARCHAR},
+      user_portrait = #{userPortrait,jdbcType=VARCHAR},
+      user_create_time = #{userCreateTime,jdbcType=TIMESTAMP},
+      user_update_time = #{userUpdateTime,jdbcType=TIMESTAMP},
+      user_status = #{userStatus,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

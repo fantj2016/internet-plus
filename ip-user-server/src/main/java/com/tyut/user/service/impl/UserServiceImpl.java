@@ -3,6 +3,7 @@ package com.tyut.user.service.impl;
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.core.vo.UserVo;
+import com.tyut.user.dao.UserMapper;
 import com.tyut.user.dto.UserDto;
 import com.tyut.user.repostory.UserRepository;
 import com.tyut.user.service.UserService;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.dubbo.config.annotation.Service;
+
+import java.util.Date;
 
 /**
  * Created by Fant.J.
@@ -22,6 +25,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 增加
@@ -40,7 +45,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ServerResponse update(User user) {
-        return null;
+        user.setUserUpdateTime(new Date());
+        int i = userMapper.updateByPrimaryKeySelective(user);
+        if (i ==0 ){
+            return ServerResponse.createByErrorMessage("修改失败");
+        }
+        return ServerResponse.createBySuccessMessage("修改成功");
     }
 
     /**

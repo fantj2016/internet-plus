@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tyut.user.dao.NewsMapper" >
+  <resultMap id="BaseResultMap" type="com.tyut.core.pojo.News" >
+    <id column="news_id" property="newsId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="news_status" property="newsStatus" jdbcType="INTEGER" />
+    <result column="news_create_time" property="newsCreateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tyut.core.pojo.News" extends="BaseResultMap" >
+    <result column="news_content" property="newsContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    news_id, user_id, news_status, news_create_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    news_content
+  </sql>
+
+
+
+  <select id="selectNewsList" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    news_id, news_status, news_create_time
+    ,
+    <include refid="Blob_Column_List" />
+    from ip_news
+    where user_id = #{userId,jdbcType=INTEGER}  order by news_id desc
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ip_news
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ip_news
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tyut.core.pojo.News" >
+    insert into ip_news (news_id, user_id, news_status, 
+      news_create_time, news_content)
+    values (#{newsId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{newsStatus,jdbcType=INTEGER}, 
+      #{newsCreateTime,jdbcType=TIMESTAMP}, #{newsContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tyut.core.pojo.News" >
+    insert into ip_news
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="newsId != null" >
+        news_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="newsStatus != null" >
+        news_status,
+      </if>
+      <if test="newsCreateTime != null" >
+        news_create_time,
+      </if>
+      <if test="newsContent != null" >
+        news_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="newsId != null" >
+        #{newsId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="newsStatus != null" >
+        #{newsStatus,jdbcType=INTEGER},
+      </if>
+      <if test="newsCreateTime != null" >
+        #{newsCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsContent != null" >
+        #{newsContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="hasRead" parameterType="java.lang.Integer" >
+    update ip_news
+    set news_status = 1
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tyut.core.pojo.News" >
+    update ip_news
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="newsStatus != null" >
+        news_status = #{newsStatus,jdbcType=INTEGER},
+      </if>
+      <if test="newsCreateTime != null" >
+        news_create_time = #{newsCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsContent != null" >
+        news_content = #{newsContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tyut.core.pojo.News" >
+    update ip_news
+    set user_id = #{userId,jdbcType=INTEGER},
+      news_status = #{newsStatus,jdbcType=INTEGER},
+      news_create_time = #{newsCreateTime,jdbcType=TIMESTAMP},
+      news_content = #{newsContent,jdbcType=LONGVARCHAR}
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.News" >
+    update ip_news
+    set user_id = #{userId,jdbcType=INTEGER},
+      news_status = #{newsStatus,jdbcType=INTEGER},
+      news_create_time = #{newsCreateTime,jdbcType=TIMESTAMP}
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+</mapper>
