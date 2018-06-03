@@ -18,4 +18,6 @@ public interface GroupService {
     /** 通过用户id查询  用户所在的 队伍列表 */
     ServerResponse selectGroupList(Integer userId);
 
+    /** 查看队伍名字是否存在 */
+    ServerResponse isGroupNameExist(String groupName);
 }

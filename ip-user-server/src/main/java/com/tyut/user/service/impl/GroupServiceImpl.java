@@ -109,4 +109,19 @@ public class GroupServiceImpl implements GroupService {
         list.forEach(p-> System.out.println(p.toString()));
         return ServerResponse.createBySuccess(list);
     }
+
+    /**
+     * 查看队伍名字是否存在
+     *
+     * @param groupName
+     */
+    @Override
+    public ServerResponse isGroupNameExist(String groupName) {
+        List<Group> exsitGroupName = groupRepostory.isExsitGroupName(groupName);
+        log.info("使用这个队名{}的有{}个",groupName,exsitGroupName.size());
+        if (exsitGroupName.size()==0) {
+            return ServerResponse.createBySuccessMessage("队名可以使用");
+        }
+        return ServerResponse.createByErrorMessage("队名已占用");
+    }
 }

@@ -24,5 +24,6 @@ public interface GroupRepostory extends JpaRepository<Group,Integer> {
 //    @Query(value = "select g.group_id,g.group_name from ip_group g WHERE g.group_key=?1",nativeQuery = true)
 //    List<Object> selectByKey(String key);
 
-
+    @Query("select g.groupId from Group g where g.groupName=?1")
+    List<Group> isExsitGroupName(String groupName);
 }

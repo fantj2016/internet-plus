@@ -38,4 +38,11 @@ public class NewsController {
         return newsService.hasRead(newsId);
     }
 
+    @ApiOperation("添加消息")
+    @PostMapping("/add")
+    public ServerResponse addNews(@RequestParam Integer userId,
+                                  @RequestParam String content){
+        return newsService.addNews(userId,content);
+    }
+
 }

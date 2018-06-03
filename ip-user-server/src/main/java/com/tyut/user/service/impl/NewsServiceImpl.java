@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,5 +55,25 @@ public class NewsServiceImpl implements NewsService {
             return ServerResponse.createBySuccessMessage("消息已读");
         }
         return ServerResponse.createByErrorMessage("修改消息状态出错");
+    }
+
+    /**
+     * 增加消息
+     *
+     * @param userId
+     * @param content
+     */
+    @Override
+    public ServerResponse addNews(Integer userId, String content) {
+        News news = new News();
+        news.setUserId(userId);
+        news.setNewsContent(content);
+        news.setNewsCreateTime(new Date());
+        news.setNewsStatus(0);
+        int insert = newsMapper.insert(news);
+        if (insert!=1){
+            return ServerResponse.createByErrorMessage("添加消息失败");
+        }
+        return ServerResponse.createBySuccessMessage("添加消息成功");
     }
 }

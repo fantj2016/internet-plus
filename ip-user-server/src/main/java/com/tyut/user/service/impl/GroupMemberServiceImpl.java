@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.user.dao.GroupMembersMapper;
+import com.tyut.user.dao.NewsMapper;
 import com.tyut.user.repostory.GroupMemRepostory;
 import com.tyut.user.service.GroupMemberService;
 import com.tyut.user.vo.GroupMemVo;
@@ -32,6 +33,8 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     private EntityManager em;
     @Autowired
     private GroupMembersMapper membersMapper;
+    @Autowired
+    private NewsServiceImpl newsService;
 
 
 
@@ -57,6 +60,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (save == null){
             return ServerResponse.createBySuccessMessage("申请失败");
         }
+        newsService.addNews(userId,"已通知队长，请等待队长同意");
         return ServerResponse.createBySuccessMessage("申请成功");
     }
 
@@ -107,6 +111,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (i1 == 0){
             return ServerResponse.createByErrorMessage("用户加入失败");
         }
+        newsService.addNews(userId,"队长已同意你加入队伍,请刷新查看我的队伍");
         return ServerResponse.createBySuccessMessage("用户加入成功");
     }
 }
