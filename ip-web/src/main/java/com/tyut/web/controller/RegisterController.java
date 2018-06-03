@@ -76,7 +76,7 @@ public class RegisterController {
         //如果两次密码相同
         if (StringUtils.equals(registerDto.getPassword(),registerDto.getCheckPassword())){
             User user = new User();
-            user.setUserName(registerDto.getName());
+            user.setUserName(registerDto.getUserName());
             user.setUserPasswd(registerDto.getPassword());
             user.setUserStuNum(registerDto.getNum());
             user.setUserEmail(registerDto.getEmail());

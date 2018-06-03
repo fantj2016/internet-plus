@@ -41,7 +41,6 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     public ServerResponse selectAll(Integer page,Integer size) {
-//        Page<Notice> all = noticeRepostory.findAll(PageableTools.basicPage(page, size, new SortDto("DESC", "noticeId")));
         Pageable pageable = new PageRequest(page,size,Sort.Direction.DESC,"noticeId");
         Iterator<Notice> all = noticeRepostory.findAll(pageable).iterator();
         List<Notice> list = new ArrayList<Notice>();

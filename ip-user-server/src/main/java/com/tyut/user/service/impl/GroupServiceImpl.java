@@ -1,6 +1,7 @@
 package com.tyut.user.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.tyut.core.aspect.ServiceLog;
 import com.tyut.core.pojo.Group;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.response.ServerResponse;
@@ -40,6 +41,7 @@ public class GroupServiceImpl implements GroupService {
      *
      * @param group
      */
+    @ServiceLog
     @Override
     public ServerResponse create(Group group) {
 

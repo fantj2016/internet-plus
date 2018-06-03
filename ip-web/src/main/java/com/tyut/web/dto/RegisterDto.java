@@ -28,7 +28,7 @@ public class RegisterDto {
     @ApiModelProperty("学号")
     @NotBlank
     private String num;
-    private String name;
+    private String userName;
     private Integer sex;
     @ApiModelProperty("学历：本科、硕士..")
     private Integer edu;
