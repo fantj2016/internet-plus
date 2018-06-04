@@ -18,4 +18,7 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+    /** 更改头像 */
+    int updatePortraitByEmail(User record);
+    int updatePortraitByPhone(User record);
 }

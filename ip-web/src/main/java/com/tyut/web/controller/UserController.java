@@ -1,9 +1,11 @@
 package com.tyut.web.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.google.common.collect.Maps;
 import com.tyut.core.constants.ConsParams;
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
+import com.tyut.core.utils.PropertiesUtil;
 import com.tyut.core.vo.UserVo;
 import com.tyut.user.service.UserEduService;
 import com.tyut.user.service.UserService;
@@ -15,11 +17,13 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.annotations.Cacheable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Created by Fant.J.
@@ -49,6 +53,13 @@ public class UserController {
         return userService.update(user);
     }
 
+    @ApiOperation("修改头像")
+    @RequestMapping("/updatePortrait")
+    public ServerResponse upload(@RequestParam(value = "file",required = false) MultipartFile file,
+                                 HttpServletRequest request,Authentication user){
+        String path = request.getSession().getServletContext().getRealPath("upload");
+        return userService.uploadFile(file,path,user.getName());
+    }
 
 
 }

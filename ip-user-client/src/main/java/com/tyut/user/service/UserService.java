@@ -3,6 +3,7 @@ package com.tyut.user.service;
 
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by Fant.J.
@@ -25,4 +26,6 @@ public interface UserService {
     ServerResponse isExistPhone(String phone);
     /** 通过 手机或者 邮箱 查询 个人信息 */
     ServerResponse selectMe(String str);
+    /** 上传头像和文件 */
+    ServerResponse uploadFile(MultipartFile file, String path,String username);
 }
