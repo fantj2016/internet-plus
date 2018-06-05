@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @ApiOperation("修改头像")
-    @RequestMapping("/updatePortrait")
+    @PostMapping("/updatePortrait")
     public ServerResponse upload(@RequestParam(value = "file",required = false) MultipartFile file,
                                  HttpServletRequest request,Authentication user){
         String path = request.getSession().getServletContext().getRealPath("upload");

@@ -43,8 +43,6 @@ public class UserEduServiceImplTest {
 
     @Test
     public void upload() throws IOException {
-        String path = "/upload";
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("QQ图片20180430184714.jpg", new FileInputStream(new File("C:\\Users\\84407\\Desktop\\QQ图片20180430184714.jpg")));
-        userService.uploadFile((MultipartFile)mockMultipartFile, path);
+
     }
 }

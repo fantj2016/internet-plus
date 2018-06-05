@@ -84,15 +84,18 @@ public class RegisterController {
             user.setUserAcademy(registerDto.getAcademy());
             user.setUserSchoolId(registerDto.getSchoolId());
             user.setUserProfession(registerDto.getProfession());
-            user.setUserGrade(registerDto.getGrade());
+            //Sun Jan 01 2012 00:00:00 GMT+0800 (中国标准时间)
+            //Mon Jan 01 2018 00:00:00 GMT+0800 (中国标准时间)
+            String[] split = registerDto.getGrade().split(" ");
+            user.setUserGrade(split[3]);
             user.setUserSex(registerDto.getSex());
             user.setUserEducation(registerDto.getEdu());
             user.setUserStuNum(registerDto.getNum());
             //默认头像
             if (registerDto.getSex().equals(SexEnum.GIRL.getCode())){
-                user.setUserPortrait(FTPUtil.getFtpIp()+ConsParams.Portrait.BOY_PORTRAIT);
+                user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+ConsParams.Portrait.GIRL_PROTRAIT);
             }else {
-                user.setUserPortrait(FTPUtil.getFtpIp()+ConsParams.Portrait.GIRL_PROTRAIT);
+                user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+ConsParams.Portrait.BOY_PORTRAIT);
             }
             user.setUserCreateTime(new Date());
             return userService.insert(user);

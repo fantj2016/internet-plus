@@ -38,4 +38,7 @@ public class UserDto implements Serializable {
         this.userStuNum = userStuNum;
         this.userPortrait = userPortrait;
     }
+
+    public UserDto() {
+    }
 }

@@ -19,6 +19,8 @@ public class Test {
 
     @org.junit.Test
     public void printTest(){
+        String[] name = "Sun Jan 01 2012 00:00:00 GMT+0800 (中国标准时间)".split(" ");
+        System.out.println(name[3]);
         PrintUtil.printObj("sdfsdf","prefix");
     }
 }
