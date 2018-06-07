@@ -1,12 +1,16 @@
 package com.tyut.user.service.impl;
 
 import com.tyut.core.constants.ConsParams;
+import com.tyut.core.pojo.ChangePasswd;
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.core.utils.FTPUtil;
 import com.tyut.core.vo.UserVo;
 import com.tyut.user.dao.UserMapper;
 import com.tyut.user.dto.UserDto;
+import com.tyut.user.myEmail.MailSender;
+import com.tyut.user.myEmail.emailEnum.MailContentTypeEnum;
+import com.tyut.user.repostory.ChangePasswdRepostory;
 import com.tyut.user.repostory.UserRepository;
 import com.tyut.user.service.UserService;
 import com.tyut.user.util.CheckFormat;
@@ -15,6 +19,8 @@ import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -22,9 +28,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.lang.annotation.Inherited;
+import java.util.*;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by Fant.J.
@@ -40,6 +46,8 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private ChangePasswdRepostory changePasswdRepostory;
 
     /**
      * 增加
@@ -85,8 +93,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据email查询密码
-     *
-     * @param email
      */
     @Override
     public String selectPasswdByEmail(String email) {
@@ -95,8 +101,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据 phone 查询密码
-     *
-     * @param phone
      */
     @Override
     public String selectPasswdByPhone(String phone) {
@@ -105,8 +109,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 判断 email 是否存在
-     *
-     * @param email
      */
     @Override
     public ServerResponse isExistEmail(String email) {
@@ -142,10 +144,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ServerResponse selectMe(String str) {
+        String common_sql = "select u.user_id,u.user_phone,s.school_name as user_school,u.user_email,u.user_name,u.user_academy,e.edu_name as user_education,u.user_grade,u.user_profession,u.user_sex,u.user_stu_num,u.user_portrait  from ip_user as u,ip_school as s,ip_user_edu as e  where u.user_school_id=s.id and u.user_education=e.edu_id";
         if (CheckFormat.isEmail(str)){
 //            UserDto user = userRepository.selectByEmail(str);
 
-            Query nativeQuery = entityManager.createNativeQuery("select u.user_id,u.user_phone,s.school_name as user_school,u.user_email,u.user_name,u.user_academy,u.user_education,u.user_grade,u.user_profession,u.user_sex,u.user_stu_num,u.user_portrait  from ip_user as u,ip_school as s where u.user_school_id=s.id and u.user_email=?1");
+            Query nativeQuery = entityManager.createNativeQuery(common_sql+" and u.user_email=?1");
             Object result = nativeQuery.setParameter(1, str).getSingleResult();
             Object[] o = (Object[]) result;
             UserDto userDto = new UserDto();
@@ -155,7 +158,7 @@ public class UserServiceImpl implements UserService {
             userDto.setUserEmail((String)o[3]);
             userDto.setUserName((String)o[4]);
             userDto.setUserAcademy((String)o[5]);
-            userDto.setUserEducation((Integer)o[6]);
+            userDto.setUserEducation((String)o[6]);
             userDto.setUserGrade((String)o[7]);
             userDto.setUserProfession((String)o[8]);
             userDto.setUserSex((Integer)o[9]);
@@ -168,7 +171,7 @@ public class UserServiceImpl implements UserService {
         }
         if (CheckFormat.isPhone(str)){
 //            UserDto user = userRepository.selectByPhone(str);
-            Query nativeQuery = entityManager.createNativeQuery("select u.user_id,u.user_phone,s.school_name as user_school,u.user_email,u.user_name,u.user_academy,u.user_education,u.user_grade,u.user_profession,u.user_sex,u.user_stu_num,u.user_portrait  from ip_user as u,ip_school as s where u.user_school_id=s.id and u.user_phone=?1");
+            Query nativeQuery = entityManager.createNativeQuery(common_sql+"  and u.user_phone=?1");
             Object result = nativeQuery.setParameter(1, str).getSingleResult();
             Object[] o = (Object[]) result;
             UserDto userDto = new UserDto();
@@ -178,7 +181,7 @@ public class UserServiceImpl implements UserService {
             userDto.setUserEmail((String)o[3]);
             userDto.setUserName((String)o[4]);
             userDto.setUserAcademy((String)o[5]);
-            userDto.setUserEducation((Integer)o[6]);
+            userDto.setUserEducation((String)o[6]);
             userDto.setUserGrade((String)o[7]);
             userDto.setUserProfession((String)o[8]);
             userDto.setUserSex((Integer)o[9]);
@@ -243,4 +246,91 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    /**
+     * 1.找回密码-发送邮件
+     *
+     * @param email
+     */
+    @Override
+    @Async
+    public ServerResponse findPasswd(String email){
+        String uuid = UUID.randomUUID().toString().replace("-","");
+        try {
+            new MailSender()
+                    .title("重设你的晋软杯账户密码")
+                    .content("<a href='"+ConsParams.Portrait.PRIFIX_PORTRAIT+"/findPasswd/"+uuid+"' target='_blank'> 点击此链接修改密码</a>")
+                    .contentType(MailContentTypeEnum.HTML)
+                    .targets(new ArrayList<String>(){{
+                        add(email); }}).send();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ServerResponse.createByErrorMessage("发送邮件失败");
+        }
+        log.info("修改密码 1：****** 邮件发送成功！");
+        //把这东西存到数据库
+        ChangePasswd changePasswd = new ChangePasswd();
+        changePasswd.setCreateTime(new Date());
+        changePasswd.setUsername(email);
+        changePasswd.setUserKey(uuid);
+        ChangePasswd save = changePasswdRepostory.save(changePasswd);
+        if (save == null){
+            return ServerResponse.createByErrorMessage("存储信息有误");
+        }
+        log.info("修改密码 1：****** username & valid存入数据库成功");
+        return ServerResponse.createBySuccessMessage("请查收你的邮箱");
+    }
+
+    /**
+     * 2.找回密码-有效校验
+     */
+    @Override
+    public ServerResponse isValid(String valid) {
+        // 查询最新一条 valid 是否有效
+        ChangePasswd latest = changePasswdRepostory.findLatest(valid);
+        if (latest == null){
+            log.info("修改密码 2：******  验证无效");
+            return ServerResponse.createByErrorMessage("验证无效");
+        }
+        // 获取前一天 时间，判断 是否过了24h
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(latest.getCreateTime());
+        calendar.add(Calendar.DAY_OF_MONTH, +1);
+        Date time = calendar.getTime();
+        //比较  time 应该在 数据库获取到的时间
+        if (latest.getUserKey().equals(valid) && time.after(new Date())){
+            // 验证没过期,更新密码
+            // 验证没过期,返回200
+            log.info("修改密码 2：****** {} 验证通过",latest.getUsername());
+            return ServerResponse.createBySuccess("验证通过",latest.getUsername());
+        }
+        log.info("修改密码 2：****** {} 验证已过期",latest.getUsername());
+        return ServerResponse.createByErrorMessage("验证已过期");
+    }
+
+    /**
+     * 3.找回密码-修改密码
+     */
+    @Override
+    public ServerResponse updatePasswd(String passwd,String valid) {
+        // 再次验证
+        ServerResponse response = isValid( valid);
+        if (response.getStatus() != 200){
+            log.info("修改密码 3：****** {} 验证无效",valid);
+            return ServerResponse.createByErrorMessage("验证无效");
+        }
+        String username = (String)response.getData();
+        //完成修改
+        User user = new User();
+        //通过 email 修改密码
+        user.setUserEmail(username);
+        user.setUserPasswd(passwd);
+        int i = userMapper.updatePasswdByEmail(user);
+        if (i!=0){
+            log.info("修改密码 3：****** {} 密码修改成功",username);
+            return ServerResponse.createBySuccessMessage("密码修改成功");
+        }else {
+            log.info("修改密码 3：****** {} 密码修改失败",username);
+            return ServerResponse.createByErrorMessage("密码修改失败");
+        }
+    }
 }

@@ -243,6 +243,12 @@
     set  user_portrait = #{userPortrait,jdbcType=VARCHAR},
     where user_phone = #{userPhone,jdbcType=VARCHAR}
   </update>
+  <!--updatePasswdByEmail-->
+  <update id="updatePasswdByEmail" parameterType="com.tyut.core.pojo.User" >
+    update ip_user
+    set user_passwd = #{userPasswd,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
+  </update>
 
   <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.User" >
     update ip_user

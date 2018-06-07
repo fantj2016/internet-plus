@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.annotations.Cacheable;
 
@@ -61,5 +62,61 @@ public class UserController {
         return userService.uploadFile(file,path,user.getName());
     }
 
+    /**
+     * 修改密码第一步
+     * 发送email，并保存valid 和username
+     */
+    @ApiOperation("修改密码（发送email）")
+    @PostMapping("/getEmail")
+    public ServerResponse sendEmail(@RequestParam String username){
+        return userService.findPasswd(username);
+    }
 
+    /**
+     * 修改密码第二步
+     * 用户点击邮件，通过valid校验有效 后跳转到修改密码页面
+     * 校验 valid 真实性
+     * @return
+     */
+    @GetMapping("/findPasswd/{valid}")
+    public ModelAndView findPasswd(
+                             @PathVariable String valid,
+                             ModelAndView mv){
+        // 检测 valid 是否有效  ，并返回username
+        ServerResponse serverResponse = userService.isValid(valid);
+        log.info("状态码{}",serverResponse.getStatus());
+        if (serverResponse.getStatus()!=200){
+            //设置msg 并返回view
+            mv.addObject("msg","验证无效，请重新获取邮件");
+            log.info("返回错误页面");
+            mv.setViewName("errorPage");
+            return mv;
+        }
+        //返回 修改页面的 view
+        mv.setViewName("changePasswd");
+        //把username 和 valid 返回给页面
+        mv.addObject("valid",valid);
+        return mv;
+    }
+    /**
+     * 修改密码第三步
+     * 接受post
+     */
+    @PostMapping("/changePasswd")
+    public ModelAndView changePasswd(
+                                       @RequestParam String passwd,
+                                       @RequestParam String rePasswd,
+                                     @RequestParam String valid,
+                                     ModelAndView mv){
+//        if (passwd != rePasswd){
+//            log.info("密码{},重复密码{}",passwd,rePasswd);
+//            mv.addObject("msg","两次密码输入不同");
+//            mv.setViewName("errorPage");
+//            return mv;
+//        }
+        userService.updatePasswd(passwd,valid);
+        mv.addObject("msg","密码修改成功!");
+        mv.setViewName("success");
+        return mv;
+    }
 }

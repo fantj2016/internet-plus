@@ -42,10 +42,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     /**
      * 根据 查询用户信息
      */
-    @Query(value = "select new com.tyut.user.dto.UserDto(userId,userPhone,userSchool,userEmail,userName,userAcademy,userEducation,userGrade,userProfession,userSex,userStuNum,userPortrait)  from User u where u.userPhone=:phone group by u.userName")
-    UserDto  selectByPhone(@Param("phone") String phone);
-    @Query(value = "select new com.tyut.user.dto.UserDto(userId,userPhone,userSchool,userEmail,userName,userAcademy,userEducation,userGrade,userProfession,userSex,userStuNum,userPortrait)  from User u where u.userEmail=:email")
-    UserDto selectByEmail(@Param("email") String email);
+//    @Query(value = "select new com.tyut.user.dto.UserDto(userId,userPhone,userSchool,userEmail,userName,userAcademy,userEducation,userGrade,userProfession,userSex,userStuNum,userPortrait)  from User u where u.userPhone=:phone group by u.userName")
+//    UserDto  selectByPhone(@Param("phone") String phone);
+//    @Query(value = "select new com.tyut.user.dto.UserDto(userId,userPhone,userSchool,userEmail,userName,userAcademy,userEducation,userGrade,userProfession,userSex,userStuNum,userPortrait)  from User u where u.userEmail=:email")
+//    UserDto selectByEmail(@Param("email") String email);
 
 //    @Query(nativeQuery = true,value = "select u.user_id,u.user_phone,s.school_name,u.user_email,u.user_name,u.user_academy,u.user_education,u.user_grade,u.user_profession,u.user_sex,u.user_stu_num,u.user_portrait  from ip_user as u,ip_school as s where u.user_school_id=s.id and u.user_phone=?1")
 //    Object  selectByPhone(@Param("phone") String phone);

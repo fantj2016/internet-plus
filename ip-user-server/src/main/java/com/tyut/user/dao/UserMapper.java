@@ -21,4 +21,6 @@ public interface UserMapper {
     /** 更改头像 */
     int updatePortraitByEmail(User record);
     int updatePortraitByPhone(User record);
+    /** 通过email 修改密码 */
+    int updatePasswdByEmail(User user);
 }
