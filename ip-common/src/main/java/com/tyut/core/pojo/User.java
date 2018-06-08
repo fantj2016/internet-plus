@@ -1,6 +1,8 @@
 package com.tyut.core.pojo;
 
+import com.sun.istack.internal.Nullable;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,10 +11,14 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "ip_user")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class User  implements Serializable {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer userId;
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(length = 32)
+    private String userId;
     @Column(nullable = false)
     private String userName;
     @Column(nullable = false)
@@ -26,12 +32,14 @@ public class User  implements Serializable {
     @Column(nullable = false)
     private Integer userEducation;
     @Column(nullable = false)
+    @Nullable
     private String userSchool;
     @Column(nullable = false)
     private Integer userSchoolId;
     @Column(nullable = false)
     private String userAcademy;
     @Column(nullable = false)
+    @Nullable
     private Integer userAcademyId;
     @Column(nullable = false)
     private String userProfession;

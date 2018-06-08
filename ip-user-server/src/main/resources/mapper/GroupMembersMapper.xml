@@ -5,7 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="group_name" property="groupName" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="user_identity" property="userIdentity" jdbcType="INTEGER" />
     <result column="user_status" property="userStatus" jdbcType="INTEGER" />
   </resultMap>
@@ -13,10 +13,10 @@
     id, group_id, group_name, user_id, user_identity, user_status
   </sql>
 
-  <select id="selectIndentity" resultType="int" parameterType="java.lang.Integer" >
+  <select id="selectIndentity" resultType="int">
     select user_identity
     from ip_group_members
-    where user_id = #{userId,jdbcType=INTEGER} and group_id = #{groupId,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=VARCHAR} and group_id = #{groupId,jdbcType=INTEGER}
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -33,7 +33,7 @@
       user_id, user_identity, user_status
       )
     values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, 
-      #{userId,jdbcType=INTEGER}, #{userIdentity,jdbcType=INTEGER}, #{userStatus,jdbcType=INTEGER}
+      #{userId,jdbcType=VARCHAR}, #{userIdentity,jdbcType=INTEGER}, #{userStatus,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tyut.core.pojo.GroupMembers" >
@@ -69,7 +69,7 @@
         #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
+        #{userId,jdbcType=VARCHAR},
       </if>
       <if test="userIdentity != null" >
         #{userIdentity,jdbcType=INTEGER},
@@ -89,7 +89,7 @@
         group_name = #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=VARCHAR},
       </if>
       <if test="userIdentity != null" >
         user_identity = #{userIdentity,jdbcType=INTEGER},
@@ -106,14 +106,14 @@
   <update id="updateStatus" parameterType="com.tyut.core.pojo.GroupMembers" >
     update ip_group_members
     set user_status = 1
-    where user_id = #{userId,jdbcType=INTEGER} and group_id = #{groupId,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=VARCHAR} and group_id = #{groupId,jdbcType=INTEGER}
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.GroupMembers" >
     update ip_group_members
     set group_id = #{groupId,jdbcType=INTEGER},
       group_name = #{groupName,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=VARCHAR},
       user_identity = #{userIdentity,jdbcType=INTEGER},
       user_status = #{userStatus,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}

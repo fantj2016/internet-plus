@@ -22,7 +22,7 @@ public class News implements Serializable {
     @GeneratedValue
     private Integer newsId;
 
-    private Integer userId;
+    private String userId;
 
     private Integer newsStatus;
 

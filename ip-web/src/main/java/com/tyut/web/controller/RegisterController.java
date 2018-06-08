@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Fant.J.
@@ -76,12 +77,14 @@ public class RegisterController {
         //如果两次密码相同
         if (StringUtils.equals(registerDto.getPassword(),registerDto.getCheckPassword())){
             User user = new User();
+//            user.setUserId(UUID.randomUUID().toString().replace("-",""));
             user.setUserName(registerDto.getUserName());
             user.setUserPasswd(registerDto.getPassword());
             user.setUserStuNum(registerDto.getNum());
             user.setUserEmail(registerDto.getEmail());
             user.setUserPhone(registerDto.getPhone());
             user.setUserAcademy(registerDto.getAcademy());
+            user.setUserAcademyId(1);
             user.setUserSchoolId(registerDto.getSchoolId());
             user.setUserProfession(registerDto.getProfession());
             //Sun Jan 01 2012 00:00:00 GMT+0800 (中国标准时间)
@@ -91,6 +94,8 @@ public class RegisterController {
             user.setUserSex(registerDto.getSex());
             user.setUserEducation(registerDto.getEdu());
             user.setUserStuNum(registerDto.getNum());
+            user.setUserSchool(" ");
+            user.setUserUpdateTime(new Date());
             //默认头像
             if (registerDto.getSex().equals(SexEnum.GIRL.getCode())){
                 user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+ConsParams.Portrait.GIRL_PROTRAIT);

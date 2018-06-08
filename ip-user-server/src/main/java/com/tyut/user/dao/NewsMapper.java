@@ -20,7 +20,7 @@ public interface NewsMapper {
     int updateByPrimaryKey(News record);
 
     /** 查询用户消息列表 */
-    List<News> selectNewsList(Integer userId);
+    List<News> selectNewsList(String userId);
 
     /** 修改为已读 */
     int hasRead(Integer newsId);

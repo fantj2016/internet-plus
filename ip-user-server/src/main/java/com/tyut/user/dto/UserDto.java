@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 public class UserDto implements Serializable {
 
-    private Integer userId;
+    private String userId;
     private String userPhone;
     private String userSchool;
     private String userEmail;

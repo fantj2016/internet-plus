@@ -30,7 +30,7 @@ public class NewsServiceImpl implements NewsService {
      * @param userId
      */
     @Override
-    public ServerResponse selectNewsList(Integer userId,Integer pageNum,Integer pageSize) {
+    public ServerResponse selectNewsList(String userId,Integer pageNum,Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<News> news = newsMapper.selectNewsList(userId);
         PageInfo<News> appsPageInfo = new PageInfo<>(news);
@@ -64,7 +64,7 @@ public class NewsServiceImpl implements NewsService {
      * @param content
      */
     @Override
-    public ServerResponse addNews(Integer userId, String content) {
+    public ServerResponse addNews(String userId, String content) {
         News news = new News();
         news.setUserId(userId);
         news.setNewsContent(content);

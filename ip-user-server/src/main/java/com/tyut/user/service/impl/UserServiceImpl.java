@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
      * 查询单个
      */
     @Override
-    public ServerResponse<UserVo> selectById(int id) {
+    public ServerResponse<UserVo> selectById(String id) {
         User user = userRepository.findOne(id);
         if (user == null){
             return ServerResponse.createByErrorMessage("找不到该用户");
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
             Object result = nativeQuery.setParameter(1, str).getSingleResult();
             Object[] o = (Object[]) result;
             UserDto userDto = new UserDto();
-            userDto.setUserId((Integer)o[0]);
+            userDto.setUserId((String)o[0]);
             userDto.setUserPhone((String)o[1]);
             userDto.setUserSchool((String)o[2]);
             userDto.setUserEmail((String)o[3]);
@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
             Object result = nativeQuery.setParameter(1, str).getSingleResult();
             Object[] o = (Object[]) result;
             UserDto userDto = new UserDto();
-            userDto.setUserId((Integer)o[0]);
+            userDto.setUserId((String)o[0]);
             userDto.setUserPhone((String)o[1]);
             userDto.setUserSchool((String)o[2]);
             userDto.setUserEmail((String)o[3]);

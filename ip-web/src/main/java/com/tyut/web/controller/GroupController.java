@@ -51,7 +51,7 @@ public class GroupController {
 
     @ApiOperation("通过两个id加入队伍")
     @PostMapping("/join")
-    public ServerResponse joinGroup(@RequestParam Integer groupId,@RequestParam String groupName,@RequestParam Integer userId){
+    public ServerResponse joinGroup(@RequestParam Integer groupId,@RequestParam String groupName,@RequestParam String userId){
         return memberService.join(groupId,userId,groupName);
     }
 
@@ -65,14 +65,14 @@ public class GroupController {
     @ApiOperation("队长同意用户加入")
     @PostMapping("/agree")
     public ServerResponse agreeSomeone(@ApiParam("队伍id")@RequestParam Integer groupId,
-                                       @ApiParam("登录用户id") @RequestParam Integer headId,
-                                       @ApiParam("需要同意的队员id")@RequestParam Integer userId){
+                                       @ApiParam("登录用户id") @RequestParam String headId,
+                                       @ApiParam("需要同意的队员id")@RequestParam String userId){
         return memberService.agreeSomeone(groupId,headId,userId);
     }
 
     @ApiOperation("获取用户参加的所有队伍")
     @GetMapping("/{userId}/myGroup")
-    public ServerResponse getMyGroup(@PathVariable Integer userId){
+    public ServerResponse getMyGroup(@PathVariable String userId){
         return groupService.selectGroupList(userId);
     }
 }

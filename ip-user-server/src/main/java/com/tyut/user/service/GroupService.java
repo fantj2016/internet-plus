@@ -16,7 +16,7 @@ public interface GroupService {
     ServerResponse selectByKey(String key);
 
     /** 通过用户id查询  用户所在的 队伍列表 */
-    ServerResponse selectGroupList(Integer userId);
+    ServerResponse selectGroupList(String userId);
 
     /** 查看队伍名字是否存在 */
     ServerResponse isGroupNameExist(String groupName);

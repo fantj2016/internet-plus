@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * 2018/4/21 13:39
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, String> {
 
     /**
      * 校验登录密码
@@ -35,9 +35,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      * (用户登录返回使用)
      * 根据id查询 用户 名字+id+电话+学校
      */
-    @Override
     @Query(value = "select u.userId,u.userPhone,u.userSchoolId,u.userName from User u where  u.userId =:id")
-    User findOne(@Param("id")Integer id);
+    User findOne(@Param("id")String id);
 
     /**
      * 根据 查询用户信息

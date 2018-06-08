@@ -21,7 +21,7 @@ public class Group  implements Serializable {
 
     private String groupName;
 
-    private Integer groupHeaderId;
+    private String groupHeaderId;
 
     private Integer groupSchoolId;
 

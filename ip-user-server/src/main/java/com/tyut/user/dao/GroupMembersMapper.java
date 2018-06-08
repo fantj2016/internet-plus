@@ -20,7 +20,7 @@ public interface GroupMembersMapper {
 
     int updateByPrimaryKey(GroupMembers record);
     /** 同意用户加入（用户状态修改成1）*/
-    int updateStatus(@Param("groupId") Integer groupId,@Param("userId") Integer userId);
+    int updateStatus(@Param("groupId") Integer groupId,@Param("userId") String userId);
     /** 查询用户是否是队长 */
-    int selectIndentity(@Param("userId") Integer userId,@Param("groupId") Integer groupId);
+    int selectIndentity(@Param("userId") String userId,@Param("groupId") Integer groupId);
 }

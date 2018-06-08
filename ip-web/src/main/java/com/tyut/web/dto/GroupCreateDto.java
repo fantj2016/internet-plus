@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class GroupCreateDto  implements Serializable {
     private String groupName;
 
-    private Integer groupHeaderId;
+    private String groupHeaderId;
 
     private String groupPhone;
 

@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface NewsService {
     /** 查询消息列表 */
-    ServerResponse selectNewsList(Integer userId,Integer pageNum,Integer pageSize);
+    ServerResponse selectNewsList(String userId,Integer pageNum,Integer pageSize);
     /** 消息状态修改（已读）*/
     ServerResponse hasRead(Integer newsId);
     /** 增加消息 */
-    ServerResponse addNews(Integer userId,String content);
+    ServerResponse addNews(String userId,String content);
 }

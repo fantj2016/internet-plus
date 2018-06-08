@@ -28,7 +28,7 @@ public class NewsController {
     public ServerResponse selectNewsList(
             @RequestParam(value = "offset",defaultValue = "0",required = false) Integer pageNum,
             @PathVariable Integer pageSize,
-            @PathVariable Integer userId){
+            @PathVariable String userId){
         return newsService.selectNewsList(userId,pageNum,pageSize);
     }
 
@@ -40,7 +40,7 @@ public class NewsController {
 
     @ApiOperation("添加消息")
     @PostMapping("/add")
-    public ServerResponse addNews(@RequestParam Integer userId,
+    public ServerResponse addNews(@RequestParam String userId,
                                   @RequestParam String content){
         return newsService.addNews(userId,content);
     }

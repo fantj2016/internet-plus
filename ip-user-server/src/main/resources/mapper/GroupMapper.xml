@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.tyut.core.pojo.Group" >
     <id column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="group_name" property="groupName" jdbcType="VARCHAR" />
-    <result column="group_header_id" property="groupHeaderId" jdbcType="INTEGER" />
+    <result column="group_header_id" property="groupHeaderId" jdbcType="VARCHAR" />
     <result column="group_school_id" property="groupSchoolId" jdbcType="INTEGER" />
     <result column="group_phone" property="groupPhone" jdbcType="VARCHAR" />
     <result column="group_type" property="groupType" jdbcType="INTEGER" />
@@ -41,7 +41,7 @@
       group_key, group_status, group_create_time, 
       group_update_time, group_academy_id, group_email, 
       group_header)
-    values (#{groupId,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{groupHeaderId,jdbcType=INTEGER}, 
+    values (#{groupId,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{groupHeaderId,jdbcType=VARCHAR},
       #{groupSchoolId,jdbcType=INTEGER}, #{groupPhone,jdbcType=VARCHAR}, #{groupType,jdbcType=INTEGER}, 
       #{groupKey,jdbcType=VARCHAR}, #{groupStatus,jdbcType=INTEGER}, #{groupCreateTime,jdbcType=TIMESTAMP}, 
       #{groupUpdateTime,jdbcType=TIMESTAMP}, #{groupAcademyId,jdbcType=INTEGER}, #{groupEmail,jdbcType=VARCHAR}, 
@@ -98,7 +98,7 @@
         #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="groupHeaderId != null" >
-        #{groupHeaderId,jdbcType=INTEGER},
+        #{groupHeaderId,jdbcType=VARCHAR},
       </if>
       <if test="groupSchoolId != null" >
         #{groupSchoolId,jdbcType=INTEGER},
@@ -139,7 +139,7 @@
         group_name = #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="groupHeaderId != null" >
-        group_header_id = #{groupHeaderId,jdbcType=INTEGER},
+        group_header_id = #{groupHeaderId,jdbcType=VARCHAR},
       </if>
       <if test="groupSchoolId != null" >
         group_school_id = #{groupSchoolId,jdbcType=INTEGER},
@@ -179,7 +179,7 @@
   <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.Group" >
     update ip_group
     set group_name = #{groupName,jdbcType=VARCHAR},
-      group_header_id = #{groupHeaderId,jdbcType=INTEGER},
+      group_header_id = #{groupHeaderId,jdbcType=VARCHAR},
       group_school_id = #{groupSchoolId,jdbcType=INTEGER},
       group_phone = #{groupPhone,jdbcType=VARCHAR},
       group_type = #{groupType,jdbcType=INTEGER},

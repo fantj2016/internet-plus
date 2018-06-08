@@ -47,7 +47,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      * @param groupName
      */
     @Override
-    public ServerResponse join(Integer groupId, Integer userId, String groupName) {
+    public ServerResponse join(Integer groupId, String userId, String groupName) {
         //用key 先查询出 队伍的id，然后插入一条 groupid，userid，队员信息
 //        GroupMembers members = new GroupMembers(groupId,userId,0,0,groupName);
         GroupMembers members = new GroupMembers();
@@ -99,9 +99,13 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      * @param userId
      */
     @Override
-    public ServerResponse agreeSomeone(Integer groupId, Integer headId, Integer userId) {
-
-        int i = membersMapper.selectIndentity(headId, groupId);
+    public ServerResponse agreeSomeone(Integer groupId, String headId, String userId) {
+        int i = 0;
+        try {
+            i = membersMapper.selectIndentity(headId, groupId);
+        }catch (Exception e){
+            return ServerResponse.createByErrorMessage("参数不和要求");
+        }
         log.info("******* 组id{},用户id{}权限信息是{}",groupId,headId,i);
         if (i == 0){
             //无同意权限

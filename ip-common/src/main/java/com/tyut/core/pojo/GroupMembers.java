@@ -22,7 +22,7 @@ public class GroupMembers implements Serializable {
 
     private Integer groupId;
 
-    private Integer userId;
+    private String userId;
 
     private Integer userIdentity;
 

@@ -91,7 +91,7 @@ public class GroupServiceImpl implements GroupService {
      * @param userId
      */
     @Override
-    public ServerResponse selectGroupList(Integer userId) {
+    public ServerResponse selectGroupList(String userId) {
         Query nativeQuery = entityManager.createNativeQuery("select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id from ip_user as u,ip_group_members m where u.user_id=m.user_id and u.user_id = ? GROUP BY m.group_id ORDER BY m.group_id DESC");
         List<Object> resultList = nativeQuery.setParameter(1, userId).getResultList();
         List<GroupsVo> list = new ArrayList<>();

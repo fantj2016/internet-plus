@@ -3,7 +3,7 @@
 <mapper namespace="com.tyut.user.dao.NewsMapper" >
   <resultMap id="BaseResultMap" type="com.tyut.core.pojo.News" >
     <id column="news_id" property="newsId" jdbcType="INTEGER" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="news_status" property="newsStatus" jdbcType="INTEGER" />
     <result column="news_create_time" property="newsCreateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -25,7 +25,7 @@
     ,
     <include refid="Blob_Column_List" />
     from ip_news
-    where user_id = #{userId,jdbcType=INTEGER}  order by news_id desc
+    where user_id = #{userId,jdbcType=VARCHAR}  order by news_id desc
   </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
@@ -42,7 +42,7 @@
   <insert id="insert" parameterType="com.tyut.core.pojo.News" >
     insert into ip_news (news_id, user_id, news_status, 
       news_create_time, news_content)
-    values (#{newsId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{newsStatus,jdbcType=INTEGER}, 
+    values (#{newsId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{newsStatus,jdbcType=INTEGER},
       #{newsCreateTime,jdbcType=TIMESTAMP}, #{newsContent,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tyut.core.pojo.News" >
@@ -69,7 +69,7 @@
         #{newsId,jdbcType=INTEGER},
       </if>
       <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
+        #{userId,jdbcType=VARCHAR},
       </if>
       <if test="newsStatus != null" >
         #{newsStatus,jdbcType=INTEGER},
@@ -95,7 +95,7 @@
     update ip_news
     <set >
       <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=VARCHAR},
       </if>
       <if test="newsStatus != null" >
         news_status = #{newsStatus,jdbcType=INTEGER},
@@ -111,7 +111,7 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tyut.core.pojo.News" >
     update ip_news
-    set user_id = #{userId,jdbcType=INTEGER},
+    set user_id = #{userId,jdbcType=VARCHAR},
       news_status = #{newsStatus,jdbcType=INTEGER},
       news_create_time = #{newsCreateTime,jdbcType=TIMESTAMP},
       news_content = #{newsContent,jdbcType=LONGVARCHAR}
@@ -119,7 +119,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.News" >
     update ip_news
-    set user_id = #{userId,jdbcType=INTEGER},
+    set user_id = #{userId,jdbcType=VARCHAR},
       news_status = #{newsStatus,jdbcType=INTEGER},
       news_create_time = #{newsCreateTime,jdbcType=TIMESTAMP}
     where news_id = #{newsId,jdbcType=INTEGER}

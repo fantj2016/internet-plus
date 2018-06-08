@@ -15,7 +15,7 @@ public interface UserService {
     /** 更新*/
     ServerResponse update(User user);
     /** 查询单个*/
-    ServerResponse selectById(int id);
+    ServerResponse selectById(String id);
     /** 根据email查询密码 */
     String selectPasswdByEmail(String email);
     /** 根据 phone 查询密码 */
