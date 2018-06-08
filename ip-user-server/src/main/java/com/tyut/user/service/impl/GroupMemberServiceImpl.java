@@ -47,6 +47,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      * @param groupName
      */
     @Override
+    @Transactional
     public ServerResponse join(Integer groupId, String userId, String groupName) {
         //用key 先查询出 队伍的id，然后插入一条 groupid，userid，队员信息
 //        GroupMembers members = new GroupMembers(groupId,userId,0,0,groupName);
@@ -60,7 +61,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (save == null){
             return ServerResponse.createBySuccessMessage("申请失败");
         }
-        newsService.addNews(userId,"已通知队长，请等待队长同意");
+        newsService.addNews(userId,"申请已通知队长，请等待队长同意");
         return ServerResponse.createBySuccessMessage("申请成功");
     }
 
@@ -99,6 +100,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      * @param userId
      */
     @Override
+    @Transactional
     public ServerResponse agreeSomeone(Integer groupId, String headId, String userId) {
         int i = 0;
         try {
@@ -117,5 +119,30 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         }
         newsService.addNews(userId,"队长已同意你加入队伍,请刷新查看我的队伍");
         return ServerResponse.createBySuccessMessage("用户加入成功");
+    }
+
+    /**
+     * 移除某位队员
+     */
+    @Override
+    @Transactional
+    public ServerResponse removeSomeone(Integer groupId, String headId, String userId) {
+        int i = 0;
+        try {
+            i = membersMapper.selectIndentity(headId, groupId);
+        }catch (Exception e){
+            return ServerResponse.createByErrorMessage("参数不和要求");
+        }
+        log.info("******* 组id{},用户id{}权限信息是{}",groupId,headId,i);
+        if (i == 0){
+            //无同意权限
+            return ServerResponse.createByErrorMessage("该用户没有权限");
+        }
+        int i1 = membersMapper.deleteSomeone(groupId, userId);
+        if (i1 == 0){
+            return ServerResponse.createByErrorMessage("用户移除失败");
+        }
+        newsService.addNews(userId,"队长已把你移除队伍");
+        return ServerResponse.createBySuccessMessage("用户移除成功");
     }
 }

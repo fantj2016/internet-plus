@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  message-service:
+    image: 服务镜像比如:massage-service:lastest
+
+
+  user-service:
+    image: user-service:latest
+#    还需要执行啥命令
+    command:
+    - "--mysql.address=192.168.0.1"
+
+  user-edge-service:
+    image: user-edge-service:lastest
+    #依赖于什么
+    links:
+    - user-service
+    - message-service
+    command:
+    - "--redis.address=192.168.0.1"
+
+
+  course-service:
+    image: course-service:latest
+    links:
+    - user-service
+    command:
+    - "--mysql.address=192.168.0.1"
+    - "--zookeeper.address=192.168.0.1"
+
+  course-edge-service:
+    image: course-edge-service:latest
+
+
+  api-gateway-zuul:
+    image: api-gateway-zuul:latest
+    links:
+    - user-edge-service
+#    端口映射
+    ports:
+    - 8080:8080
+
+
+    compose文件启动命令
+    docker-compose up -d
+    停止命令
+    docker-compose down
+
+    查看docker运行服务的日志,先执行 docker ps|grep user 查看id号
+    docker logs id
+
+    进到docker里的某一服务
+    docker exec -it id bash
+
+    单独启动某一服务
+    docker-compose up -d xxx-service

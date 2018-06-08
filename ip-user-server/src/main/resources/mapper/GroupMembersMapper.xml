@@ -28,6 +28,11 @@
     delete from ip_group_members
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <!--deleteSomeone-->
+  <delete id="deleteSomeone"  parameterType="com.tyut.core.pojo.GroupMembers" >
+    delete from ip_group_members
+    where user_id = #{userId,jdbcType=VARCHAR} and group_id = #{groupId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.tyut.core.pojo.GroupMembers" >
     insert into ip_group_members (id, group_id, group_name, 
       user_id, user_identity, user_status

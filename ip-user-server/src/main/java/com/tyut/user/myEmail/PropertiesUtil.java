@@ -1,5 +1,6 @@
 package com.tyut.user.myEmail;
 
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -8,7 +9,7 @@ import java.util.ResourceBundle;
  * PropertiesUtil是用于读取*.properties配置文件的工具类
  * Created by Fant.J.
  */
-public class PropertiesUtil {
+public class PropertiesUtil  implements Serializable {
     private final ResourceBundle resource;
     private final String fileName;
 

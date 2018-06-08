@@ -8,10 +8,12 @@ import com.tyut.core.response.ServerResponse;
 import com.tyut.user.repostory.GroupMemRepostory;
 import com.tyut.user.repostory.GroupRepostory;
 import com.tyut.user.service.GroupService;
+import com.tyut.user.service.NewsService;
 import com.tyut.user.vo.GroupVo;
 import com.tyut.user.vo.GroupsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -36,6 +38,8 @@ public class GroupServiceImpl implements GroupService {
     private GroupRepostory groupRepostory;
     @Autowired
     private GroupMemRepostory memRepostory;
+    @Autowired
+    private NewsService newsService;
     /**
      * 创建队伍
      *
@@ -43,6 +47,7 @@ public class GroupServiceImpl implements GroupService {
      */
     @ServiceLog
     @Override
+    @Transactional
     public ServerResponse create(Group group) {
 
         group.setGroupStatus(0);
@@ -61,6 +66,7 @@ public class GroupServiceImpl implements GroupService {
         members.setUserStatus(1);
         members.setGroupName(save.getGroupName());
         memRepostory.save(members);
+        newsService.addNews(group.getGroupHeaderId(),"队伍创建成功,队名:"+group.getGroupName()+"口令:"+save.getGroupKey());
         return ServerResponse.createBySuccess(save.getGroupKey(),"创建队伍成功");
     }
 

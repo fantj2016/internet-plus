@@ -23,4 +23,6 @@ public interface GroupMembersMapper {
     int updateStatus(@Param("groupId") Integer groupId,@Param("userId") String userId);
     /** 查询用户是否是队长 */
     int selectIndentity(@Param("userId") String userId,@Param("groupId") Integer groupId);
+    /** 删除某个队员 */
+    int deleteSomeone(@Param("groupId") Integer groupId,@Param("userId") String userId);
 }

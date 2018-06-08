@@ -48,10 +48,20 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <!--dubbo 依赖-->
+        <!--<dependency>-->
+            <!--<groupId>io.dubbo.springboot</groupId>-->
+            <!--<artifactId>spring-boot-starter-dubbo</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
         <dependency>
-            <groupId>io.dubbo.springboot</groupId>
-            <artifactId>spring-boot-starter-dubbo</artifactId>
-            <version>1.0.0</version>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.2</version>
         </dependency>
         <!--junit 测试工具-->
         <dependency>
@@ -102,6 +112,16 @@
             <artifactId>mail</artifactId>
             <version>1.4.7</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>cn.outofmemory</groupId>-->
+            <!--<artifactId>my-tools</artifactId>-->
+            <!--<version>2.5.0</version>-->
+            <!--<type>jar</type>-->
+            <!--<scope>system</scope>-->
+            <!--<systemPath>${basedir}/lib/mylib1.jar</systemPath>-->
+        <!--</dependency>-->
+
+
     </dependencies>
 
     <!--<build>-->

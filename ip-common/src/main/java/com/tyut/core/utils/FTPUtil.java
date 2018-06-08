@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
  * 2018/4/27 21:30
  */
 @Slf4j
-public class FTPUtil {
+public class FTPUtil implements Serializable {
 
 
     private static String ftpIp = PropertiesUtil.getProperty("ftp.server.ip");

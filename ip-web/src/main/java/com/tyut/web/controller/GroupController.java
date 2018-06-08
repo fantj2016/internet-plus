@@ -65,10 +65,19 @@ public class GroupController {
     @ApiOperation("队长同意用户加入")
     @PostMapping("/agree")
     public ServerResponse agreeSomeone(@ApiParam("队伍id")@RequestParam Integer groupId,
-                                       @ApiParam("登录用户id") @RequestParam String headId,
+                                       @ApiParam("登录用户(假设该用户是队长)id") @RequestParam String headId,
                                        @ApiParam("需要同意的队员id")@RequestParam String userId){
         return memberService.agreeSomeone(groupId,headId,userId);
     }
+
+    @ApiOperation("队长移除队员")
+    @PostMapping("/remove")
+    public ServerResponse removeSomeone(@ApiParam("队伍id")@RequestParam Integer groupId,
+                                        @ApiParam("登录用户(假设该用户是队长)id") @RequestParam String headId,
+                                        @ApiParam("需要移除的队员id")@RequestParam String userId){
+        return memberService.removeSomeone(groupId,headId,userId);
+    }
+
 
     @ApiOperation("获取用户参加的所有队伍")
     @GetMapping("/{userId}/myGroup")

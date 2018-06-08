@@ -2,11 +2,13 @@ package com.tyut.core.constants;
 
 import com.tyut.core.utils.FTPUtil;
 
+import java.io.Serializable;
+
 /**
  * Created by Fant.J.
  * 2018/5/3 11:57
  */
-public class ConsParams {
+public class ConsParams implements Serializable {
 
     public interface Portrait{
         String BOY_PORTRAIT = "/portrait/boy.png";

@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -28,6 +29,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.annotation.Inherited;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -205,6 +207,7 @@ public class UserServiceImpl implements UserService {
      * @param path
      */
     @Override
+    @Transactional
     public ServerResponse uploadFile(MultipartFile file, String path,String username) {
         String fileName = file.getOriginalFilename();
         //扩展名
@@ -252,7 +255,7 @@ public class UserServiceImpl implements UserService {
      * @param email
      */
     @Override
-    @Async
+    @Transactional
     public ServerResponse findPasswd(String email){
         String uuid = UUID.randomUUID().toString().replace("-","");
         try {
@@ -284,6 +287,7 @@ public class UserServiceImpl implements UserService {
      * 2.找回密码-有效校验
      */
     @Override
+    @Transactional
     public ServerResponse isValid(String valid) {
         // 查询最新一条 valid 是否有效
         ChangePasswd latest = changePasswdRepostory.findLatest(valid);
@@ -311,6 +315,7 @@ public class UserServiceImpl implements UserService {
      * 3.找回密码-修改密码
      */
     @Override
+    @Transactional
     public ServerResponse updatePasswd(String passwd,String valid) {
         // 再次验证
         ServerResponse response = isValid( valid);

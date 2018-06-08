@@ -6,6 +6,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Properties;
 
@@ -13,7 +14,7 @@ import java.util.Properties;
  * 邮件发送类
  * Created by Fant.J.
  */
-public class MailSender {
+public class MailSender implements Serializable {
     //邮件实体
     private static MailEntity mail = new MailEntity();
 
