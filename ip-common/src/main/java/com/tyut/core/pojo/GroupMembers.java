@@ -22,6 +22,8 @@ public class GroupMembers implements Serializable {
 
     private Integer groupId;
 
+    private Integer groupType;
+
     private String userId;
 
     private Integer userIdentity;

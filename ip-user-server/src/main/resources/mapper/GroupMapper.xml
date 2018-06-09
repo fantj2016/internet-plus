@@ -10,12 +10,13 @@
     <result column="group_type" property="groupType" jdbcType="INTEGER" />
     <result column="group_key" property="groupKey" jdbcType="VARCHAR" />
     <result column="group_status" property="groupStatus" jdbcType="INTEGER" />
+    <result column="group_address" property="groupAddress" jdbcType="VARCHAR" />
     <result column="group_create_time" property="groupCreateTime" jdbcType="TIMESTAMP" />
     <result column="group_update_time" property="groupUpdateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     group_id, group_name, group_header_id, group_school_id, group_phone, group_type, 
-    group_key, group_status, group_create_time, group_update_time
+    group_key, group_status, group_address,group_create_time, group_update_time
   </sql>
 
 

@@ -5,7 +5,12 @@ import com.tyut.core.pojo.Competition;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.notice.repostory.CompetitionRepostory;
 import com.tyut.notice.service.CompetitionService;
+import com.tyut.notice.vo.CompetitionTitleListVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Fant.J.
@@ -37,6 +42,10 @@ public class CompetitionServiceImpl  implements CompetitionService {
      */
     @Override
     public ServerResponse selectTitleList() {
-        return null;
+        List<CompetitionTitleListVo> competitions = repostory.selectTitleList();
+        if (StringUtils.isEmpty(competitions)){
+            return ServerResponse.createByErrorMessage("查询失败");
+        }
+        return ServerResponse.createBySuccess(competitions);
     }
 }

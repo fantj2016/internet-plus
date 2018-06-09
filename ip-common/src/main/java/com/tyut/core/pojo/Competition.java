@@ -20,6 +20,10 @@ public class Competition  implements Serializable {
 
     private String cptName;
 
+    private String cptContent;
+
+    private String cptIntro;
+
     private Date cptApplyTime;
 
     private Date cptStartTime;
@@ -28,10 +32,9 @@ public class Competition  implements Serializable {
 
     private Integer cptSupportId;
 
+    private Integer cptStatus;
+
     private Date cptCreateTime;
 
     private Date cptUpdateTime;
-
-    private String cptContent;
-
 }

@@ -64,6 +64,7 @@ public class GroupServiceImpl implements GroupService {
         members.setUserId(group.getGroupHeaderId());
         members.setUserIdentity(1);
         members.setUserStatus(1);
+        members.setGroupType(group.getGroupType());
         members.setGroupName(save.getGroupName());
         memRepostory.save(members);
         newsService.addNews(group.getGroupHeaderId(),"队伍创建成功,队名:"+group.getGroupName()+",口令:"+save.getGroupKey()+",快通知你的小伙伴吧!");
@@ -98,7 +99,7 @@ public class GroupServiceImpl implements GroupService {
      */
     @Override
     public ServerResponse selectGroupList(String userId) {
-        Query nativeQuery = entityManager.createNativeQuery("select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id from ip_user as u,ip_group_members m where u.user_id=m.user_id and m.user_status =1 and u.user_id = ? GROUP BY m.group_id ORDER BY m.group_id DESC");
+        Query nativeQuery = entityManager.createNativeQuery("select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id,c.cpt_name,g.group_key from ip_user as u,ip_group_members m,ip_competition c,ip_group g   where u.user_id=m.user_id and m.user_status =1 and m.group_type=c.cpt_id  and g.group_id = m.group_id and u.user_id = ? GROUP BY m.group_id ORDER BY m.group_id DESC");
         List<Object> resultList = nativeQuery.setParameter(1, userId).getResultList();
         List<GroupsVo> list = new ArrayList<>();
         for (Object o : resultList) {
@@ -110,6 +111,8 @@ public class GroupServiceImpl implements GroupService {
             view.setGroupId((Integer) rowArray[3]);
             view.setUserIdentity((Integer) rowArray[4]);
             view.setId((Integer) rowArray[5]);
+            view.setCptName((String)rowArray[6]);
+            view.setGroupKey((String)rowArray[7]);
             list.add(view);
         }
         list.forEach(p-> System.out.println(p.toString()));

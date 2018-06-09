@@ -33,6 +33,8 @@ public class Group  implements Serializable {
 
     private Integer groupStatus;
 
+    private String groupAddress;
+
     private Date groupCreateTime;
 
     private Date groupUpdateTime;

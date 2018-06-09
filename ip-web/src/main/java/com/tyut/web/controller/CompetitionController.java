@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Fant.J.
  * 2018/5/6 16:08
  */
-@Api("竞赛APi")
+@Api(description = "赛题APi")
 @RestController
 @RequestMapping("/cpt")
 public class CompetitionController {
@@ -23,10 +23,17 @@ public class CompetitionController {
     private CompetitionService competitionService;
 
 
-    @ApiOperation("获取竞赛公告")
+    @ApiOperation("获取赛题详情")
     @GetMapping("/{id}")
     @Cacheable(value = "cpt",key = "'getOne' + #id")
     public ServerResponse getOne(@PathVariable Integer id){
         return competitionService.selectById(id);
+    }
+
+
+    @ApiOperation("获取赛题列表")
+    @GetMapping("/list")
+    public ServerResponse getTitleList(){
+        return competitionService.selectTitleList();
     }
 }

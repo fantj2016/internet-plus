@@ -39,6 +39,7 @@ public class GroupController {
         group.setGroupPhone(groupCreateDto.getGroupPhone());
         group.setGroupHeaderId(groupCreateDto.getGroupHeaderId());
         group.setGroupType(groupCreateDto.getGroupType());
+        group.setGroupAddress(groupCreateDto.getGroupAddress());
         return groupService.create(group);
     }
 

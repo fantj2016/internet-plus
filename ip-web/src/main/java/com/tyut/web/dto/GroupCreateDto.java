@@ -18,4 +18,6 @@ public class GroupCreateDto  implements Serializable {
     private String groupPhone;
 
     private Integer groupType;
+
+    private String groupAddress;
 }
