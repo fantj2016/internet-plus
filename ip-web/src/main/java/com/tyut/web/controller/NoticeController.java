@@ -34,7 +34,7 @@ public class NoticeController {
     }
 
 
-    @Cacheable(value = "notice", key = "'getAll' + #id")
+    @Cacheable(value = "notice", key = "'getAll' + #page+#size")
     @ApiOperation(value = "根据page(起始页)和size(每页条数)获取公告列表")
     @GetMapping("/list/{page}/{size}")
     @ResponseBody
@@ -45,5 +45,4 @@ public class NoticeController {
         }
         return noticeService.selectAll(page,size);
     }
-
 }
