@@ -33,7 +33,7 @@ public class GroupMemServiceImpl implements GroupMemberService {
      */
     @Override
     @Transactional
-    public ServerResponse join(Integer groupId,Integer userId,String groupName) {
+    public ServerResponse join(Integer groupId,String userId,String groupName) {
         //用key 先查询出 队伍的id，然后插入一条 groupid，userid，队员信息
 //        GroupMembers members = new GroupMembers(groupId,userId,0,0,groupName);
         GroupMembers members = new GroupMembers();
