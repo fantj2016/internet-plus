@@ -84,4 +84,10 @@ public class GroupController {
     public ServerResponse getMyGroup(@PathVariable String userId){
         return groupService.selectGroupList(userId);
     }
+
+    @ApiOperation("查询队名是否可用")
+    @GetMapping("/isExist/{groupName}")
+    public ServerResponse isGroupNameExist(@PathVariable String groupName){
+        return groupService.isGroupNameExist(groupName);
+    }
 }
