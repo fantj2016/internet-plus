@@ -19,7 +19,7 @@
 
 
 
-  <select id="selectNewsList" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+  <select id="selectNewsList" resultMap="ResultMapWithBLOBs">
     select
     news_id, news_status, news_create_time
     ,

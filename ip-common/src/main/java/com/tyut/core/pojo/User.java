@@ -12,8 +12,6 @@ import java.util.Date;
 @Table(name = "ip_user")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class User  implements Serializable {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @GeneratedValue(generator = "jpa-uuid")
     @Column(length = 32)
