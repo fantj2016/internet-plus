@@ -1,6 +1,5 @@
 package com.tyut.core.pojo;
 
-import com.sun.istack.internal.Nullable;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -32,14 +31,12 @@ public class User  implements Serializable {
     @Column(nullable = false)
     private Integer userEducation;
     @Column(nullable = false)
-    @Nullable
     private String userSchool;
     @Column(nullable = false)
     private Integer userSchoolId;
     @Column(nullable = false)
     private String userAcademy;
     @Column(nullable = false)
-    @Nullable
     private Integer userAcademyId;
     @Column(nullable = false)
     private String userProfession;
