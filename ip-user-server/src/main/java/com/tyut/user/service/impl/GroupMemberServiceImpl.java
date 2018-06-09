@@ -51,6 +51,11 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     public ServerResponse join(Integer groupId, String userId, String groupName) {
         //用key 先查询出 队伍的id，然后插入一条 groupid，userid，队员信息
 //        GroupMembers members = new GroupMembers(groupId,userId,0,0,groupName);
+        //判断该用户是否已在队伍中
+        boolean exsitSomeone = isExsitSomeone(userId, groupId);
+        if (exsitSomeone){
+            return ServerResponse.createByErrorMessage("申请已提交，请耐心等待!");
+        }
         GroupMembers members = new GroupMembers();
         members.setGroupId(groupId);
         members.setUserId(userId);
@@ -144,5 +149,21 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         }
         newsService.addNews(userId,"队长已把你移除队伍");
         return ServerResponse.createBySuccessMessage("用户移除成功");
+    }
+
+    /**
+     * 查询某位用户是否存在在某个队伍
+     * false表示不存在，true表示已存在
+     * @param userId
+     * @param groupId
+     */
+    @Override
+    public boolean isExsitSomeone(String userId, Integer groupId) {
+        int exsitSomeone = membersMapper.isExsitSomeone(groupId, userId);
+        log.info("*** 该用户是否存在某个队伍"+exsitSomeone);
+        if (exsitSomeone != 0){
+            return true;
+        }
+        return false;
     }
 }

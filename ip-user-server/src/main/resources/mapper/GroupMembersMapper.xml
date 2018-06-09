@@ -13,7 +13,13 @@
   <sql id="Base_Column_List" >
     id, group_id, group_name, user_id, user_identity, user_status,group_type
   </sql>
+  <!--isExsitSomeone-->
 
+  <select id="isExsitSomeone" resultType="int">
+    select count(*)
+    from ip_group_members
+    where user_id = #{userId,jdbcType=VARCHAR} and group_id = #{groupId,jdbcType=INTEGER}
+  </select>
   <select id="selectIndentity" resultType="int">
     select user_identity
     from ip_group_members

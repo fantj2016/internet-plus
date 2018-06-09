@@ -1,5 +1,6 @@
 package com.tyut.user.service;
 
+import com.mysql.fabric.Server;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.response.ServerResponse;
 
@@ -16,4 +17,6 @@ public interface GroupMemberService {
     ServerResponse agreeSomeone(Integer groupId, String headId, String userId);
     /** 移除某位队员 */
     ServerResponse removeSomeone(Integer groupId, String headId, String userId);
+    /** 查询某位用户是否存在在某个队伍 */
+    boolean isExsitSomeone(String userId,Integer groupId);
 }

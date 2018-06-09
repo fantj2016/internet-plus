@@ -2,6 +2,7 @@ package com.tyut.user.service.impl;
 
 import com.tyut.core.pojo.UserEdu;
 import com.tyut.user.repostory.UserEduRepository;
+import com.tyut.user.service.GroupMemberService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,13 @@ public class UserEduServiceImplTest {
     @Test
     public void upload() throws IOException {
 
+    }
+
+
+    @Autowired
+    private GroupMemberService groupMemberService;
+    @Test
+    public void isExsitSomeone() {
+        groupMemberService.isExsitSomeone("14",60013);
     }
 }
