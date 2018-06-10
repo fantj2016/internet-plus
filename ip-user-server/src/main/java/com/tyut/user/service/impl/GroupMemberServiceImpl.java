@@ -41,10 +41,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     /**
      * 加入队伍
-     *
-     * @param groupId
-     * @param userId
-     * @param groupName
      */
     @Override
     @Transactional
@@ -54,7 +50,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         //判断该用户是否已在队伍中
         boolean exsitSomeone = isExsitSomeone(userId, groupId);
         if (exsitSomeone){
-            return ServerResponse.createByErrorMessage("申请已提交，请耐心等待!");
+            return ServerResponse.createByErrorMessage("申请已提交或已经加入!");
         }
         GroupMembers members = new GroupMembers();
         members.setGroupId(groupId);
@@ -72,8 +68,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     /**
      * 根据groupid 查询队伍
-     *
-     * @param groupId
      */
     @Override
     public ServerResponse findGroupsByGroupId(Integer groupId) {
@@ -99,10 +93,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     /**
      * 同意用户加入队伍
-     *
-     * @param groupId
-     * @param headId
-     * @param userId
      */
     @Override
     @Transactional
@@ -154,8 +144,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     /**
      * 查询某位用户是否存在在某个队伍
      * false表示不存在，true表示已存在
-     * @param userId
-     * @param groupId
      */
     @Override
     public boolean isExsitSomeone(String userId, Integer groupId) {

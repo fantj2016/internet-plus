@@ -42,8 +42,6 @@ public class GroupServiceImpl implements GroupService {
     private NewsService newsService;
     /**
      * 创建队伍
-     *
-     * @param group
      */
     @ServiceLog
     @Override
@@ -73,8 +71,6 @@ public class GroupServiceImpl implements GroupService {
 
     /**
      * 根据key 查询队伍
-     *
-     * @param key
      */
     @Override
     public ServerResponse selectByKey(String key) {
@@ -94,8 +90,6 @@ public class GroupServiceImpl implements GroupService {
 
     /**
      * 通过用户id查询  用户所在的 队伍列表
-     *
-     * @param userId
      */
     @Override
     public ServerResponse selectGroupList(String userId) {
@@ -121,8 +115,6 @@ public class GroupServiceImpl implements GroupService {
 
     /**
      * 查看队伍名字是否存在
-     *
-     * @param groupName
      */
     @Override
     public ServerResponse isGroupNameExist(String groupName) {

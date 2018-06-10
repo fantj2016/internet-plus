@@ -26,8 +26,6 @@ public class NewsServiceImpl implements NewsService {
     private NewsMapper newsMapper;
     /**
      * 查询消息列表
-     *
-     * @param userId
      */
     @Override
     public ServerResponse selectNewsList(String userId,Integer pageNum,Integer pageSize) {
@@ -45,8 +43,6 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * 消息状态修改（已读）
-     *
-     * @param newsId
      */
     @Override
     public ServerResponse hasRead(Integer newsId) {
@@ -59,9 +55,6 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * 增加消息
-     *
-     * @param userId
-     * @param content
      */
     @Override
     public ServerResponse addNews(String userId, String content) {
