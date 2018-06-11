@@ -28,6 +28,8 @@ public interface UserService {
     ServerResponse selectMe(String str);
     /** 上传头像和文件 */
     ServerResponse uploadFile(MultipartFile file, String path,String username);
+    /** 上传头像 */
+    ServerResponse uploadPortrait(String username,User user);
     /** 1.找回密码-发送邮件 */
     ServerResponse findPasswd(String email) throws InterruptedException;
     /** 2.找回密码-有效校验 */

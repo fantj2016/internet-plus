@@ -50,7 +50,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         //判断该用户是否已在队伍中
         boolean exsitSomeone = isExsitSomeone(userId, groupId);
         if (exsitSomeone){
-            return ServerResponse.createByErrorMessage("申请已提交或已经加入!");
+            return ServerResponse.createByErrorMessage("无需重复提交!");
         }
         GroupMembers members = new GroupMembers();
         members.setGroupId(groupId);

@@ -7,7 +7,7 @@ import com.tyut.core.response.ServerResponse;
 import com.tyut.core.utils.FTPUtil;
 import com.tyut.core.vo.UserVo;
 import com.tyut.user.dao.UserMapper;
-import com.tyut.user.dto.UserDto;
+import com.tyut.core.vo.GetMeVo;
 import com.tyut.user.myEmail.MailSender;
 import com.tyut.user.myEmail.emailEnum.MailContentTypeEnum;
 import com.tyut.user.repostory.ChangePasswdRepostory;
@@ -19,20 +19,16 @@ import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
-import java.lang.annotation.Inherited;
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 /**
  * Created by Fant.J.
@@ -125,8 +121,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 判断 phone 是否存在
-     *
-     * @param phone
      */
     @Override
     public ServerResponse isExistPhone(String phone) {
@@ -141,19 +135,17 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 通过 手机或者 邮箱 查询 个人信息
-     *
-     * @param str
      */
     @Override
     public ServerResponse selectMe(String str) {
-        String common_sql = "select u.user_id,u.user_phone,s.school_name as user_school,u.user_email,u.user_name,u.user_academy,e.edu_name as user_education,u.user_grade,u.user_profession,u.user_sex,u.user_stu_num,u.user_portrait  from ip_user as u,ip_school as s,ip_user_edu as e  where u.user_school_id=s.id and u.user_education=e.edu_id";
+        String common_sql = "select u.user_id,u.user_phone,s.school_name as user_school,u.user_email,u.user_name,u.user_academy,e.edu_name as user_education,u.user_grade,u.user_profession,u.user_sex,u.user_stu_num,u.user_portrait,u.user_education as user_education_id,u.user_school_id  " +
+                "from ip_user as u,ip_school as s,ip_user_edu as e  " +
+                "where u.user_school_id=s.id and u.user_education=e.edu_id";
         if (CheckFormat.isEmail(str)){
-//            UserDto user = userRepository.selectByEmail(str);
-
             Query nativeQuery = entityManager.createNativeQuery(common_sql+" and u.user_email=?1");
             Object result = nativeQuery.setParameter(1, str).getSingleResult();
             Object[] o = (Object[]) result;
-            UserDto userDto = new UserDto();
+            GetMeVo userDto = new GetMeVo();
             userDto.setUserId((String)o[0]);
             userDto.setUserPhone((String)o[1]);
             userDto.setUserSchool((String)o[2]);
@@ -166,17 +158,18 @@ public class UserServiceImpl implements UserService {
             userDto.setUserSex((Integer)o[9]);
             userDto.setUserStuNum((String)o[10]);
             userDto.setUserPortrait((String)o[11]);
+            userDto.setUserEducationId((Integer)o[12]);
+            userDto.setUserSchoolId((Integer)o[13]);
             if (userDto == null){
                 return ServerResponse.createByErrorMessage("该账号不存在");
             }
             return ServerResponse.createBySuccess(userDto);
         }
         if (CheckFormat.isPhone(str)){
-//            UserDto user = userRepository.selectByPhone(str);
             Query nativeQuery = entityManager.createNativeQuery(common_sql+"  and u.user_phone=?1");
             Object result = nativeQuery.setParameter(1, str).getSingleResult();
             Object[] o = (Object[]) result;
-            UserDto userDto = new UserDto();
+            GetMeVo userDto = new GetMeVo();
             userDto.setUserId((String)o[0]);
             userDto.setUserPhone((String)o[1]);
             userDto.setUserSchool((String)o[2]);
@@ -189,7 +182,8 @@ public class UserServiceImpl implements UserService {
             userDto.setUserSex((Integer)o[9]);
             userDto.setUserStuNum((String)o[10]);
             userDto.setUserPortrait((String)o[11]);
-
+            userDto.setUserEducationId((Integer)o[12]);
+            userDto.setUserSchoolId((Integer)o[13]);
             if (userDto == null){
                 return ServerResponse.createByErrorMessage("该账号不存在");
             }
@@ -209,36 +203,56 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public ServerResponse uploadFile(MultipartFile file, String path,String username) {
-        String fileName = file.getOriginalFilename();
-        //扩展名
-        //abc.jpg
-        String fileExtensionName = fileName.substring(fileName.lastIndexOf(".")+1);
-        log.info("获取到的文件是{},后缀是{}",fileName,fileExtensionName);
-        String uploadFileName = UUID.randomUUID().toString()+"."+fileExtensionName;
-        log.info("开始上传文件,上传文件的文件名:{},上传的路径:{},新文件名:{}",fileName,path,uploadFileName);
+//        String fileName = file.getOriginalFilename();
+//        //扩展名
+//        String fileExtensionName = fileName.substring(fileName.lastIndexOf(".")+1);
+//        log.info("获取到的文件是{},后缀是{}",fileName,fileExtensionName);
+//        String uploadFileName = UUID.randomUUID().toString()+"."+fileExtensionName;
+//        log.info("开始上传文件,上传文件的文件名:{},上传的路径:{},新文件名:{}",fileName,path,uploadFileName);
+//
+//        File fileDir = new File(path);
+//        if(!fileDir.exists()){
+//            fileDir.setWritable(true);
+//            fileDir.mkdirs();
+//        }
+//        File targetFile = new File(path,uploadFileName);
+//        try {
+//            file.transferTo(targetFile);
+//            //文件已经上传成功了
+//            FTPUtil.uploadFile(Lists.newArrayList(targetFile));
+//            //已经上传到ftp服务器上
+//            targetFile.delete();
+//        } catch (IOException e) {
+//            log.error("上传文件异常",e);
+//            return ServerResponse.createByErrorMessage("上传文件异常");
+//        }
+//        String name = targetFile.getName();
+//        log.info("targetFile.getName():{}",name);
+//        //存入数据库  FTPUtil.getFtpIp()
+//        User user = new User();
+//        user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/iamge"+name);
+//        log.info("修改后的用户头像地址：{}",user.getUserPortrait());
 
-        File fileDir = new File(path);
-        if(!fileDir.exists()){
-            fileDir.setWritable(true);
-            fileDir.mkdirs();
-        }
-        File targetFile = new File(path,uploadFileName);
-        try {
-            file.transferTo(targetFile);
-            //文件已经上传成功了
-            FTPUtil.uploadFile(Lists.newArrayList(targetFile));
-            //已经上传到ftp服务器上
-            targetFile.delete();
-        } catch (IOException e) {
-            log.error("上传文件异常",e);
-            return ServerResponse.createByErrorMessage("上传文件异常");
-        }
-        String name = targetFile.getName();
-        log.info("targetFile.getName():{}",name);
-        //存入数据库  FTPUtil.getFtpIp()
-        User user = new User();
-        user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/iamge"+name);
-        log.info("修改后的用户头像地址：{}",user.getUserPortrait());
+
+
+/*        if (CheckFormat.isPhone(username)){
+            user.setUserPhone(username);
+            userMapper.updatePortraitByPhone(user);
+        }else if (CheckFormat.isEmail(username)){
+            user.setUserEmail(username);
+            userMapper.updatePortraitByEmail(user);
+        }*/
+        return null;
+    }
+
+    /**
+     * 上传头像
+     *
+     * @param user
+     */
+    @Override
+    public ServerResponse uploadPortrait(String username,User user) {
+
         if (CheckFormat.isPhone(username)){
             user.setUserPhone(username);
             userMapper.updatePortraitByPhone(user);
@@ -246,7 +260,7 @@ public class UserServiceImpl implements UserService {
             user.setUserEmail(username);
             userMapper.updatePortraitByEmail(user);
         }
-        return null;
+        return ServerResponse.createBySuccessMessage("修改成功");
     }
 
     /**

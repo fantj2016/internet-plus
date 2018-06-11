@@ -1,5 +1,6 @@
 package com.tyut.user.util;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,7 +8,7 @@ import java.util.regex.Pattern;
  * Created by Fant.J.
  * 2018/5/3 16:23
  */
-public class CheckFormat {
+public class CheckFormat implements Serializable {
     public static boolean isEmail(String email){
         String check = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
         Pattern regex = Pattern.compile(check);

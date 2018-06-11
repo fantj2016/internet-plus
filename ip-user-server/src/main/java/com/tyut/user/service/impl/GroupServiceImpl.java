@@ -65,7 +65,7 @@ public class GroupServiceImpl implements GroupService {
         members.setGroupType(group.getGroupType());
         members.setGroupName(save.getGroupName());
         memRepostory.save(members);
-        newsService.addNews(group.getGroupHeaderId(),"队伍创建成功,队名:"+group.getGroupName()+",口令:"+save.getGroupKey()+",快通知你的小伙伴吧!");
+        newsService.addNews(group.getGroupHeaderId(),"队伍创建成功,队名："+group.getGroupName()+"\b口令："+save.getGroupKey()+"\b快通知你的小伙伴吧!");
         return ServerResponse.createBySuccess(save.getGroupKey(),"创建队伍成功");
     }
 

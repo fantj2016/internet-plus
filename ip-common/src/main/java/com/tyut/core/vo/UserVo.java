@@ -2,6 +2,8 @@ package com.tyut.core.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  *
  * Created by Fant.J.
@@ -9,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class UserVo {
+public class UserVo implements Serializable {
 
     private String userId;
 
