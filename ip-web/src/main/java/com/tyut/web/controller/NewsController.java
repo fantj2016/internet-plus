@@ -33,7 +33,7 @@ public class NewsController {
     }
 
     @ApiOperation("消息标记为已读")
-    @GetMapping("/hasRead")
+    @GetMapping("/hasRead/{newsId}")
     public ServerResponse hasRead(@PathVariable Integer newsId){
         return newsService.hasRead(newsId);
     }

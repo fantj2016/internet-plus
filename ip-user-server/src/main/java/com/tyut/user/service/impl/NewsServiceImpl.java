@@ -55,6 +55,9 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * 增加消息
+     *
+     * @param userId
+     * @param content
      */
     @Override
     public ServerResponse addNews(String userId, String content) {
