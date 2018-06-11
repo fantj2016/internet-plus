@@ -1,7 +1,6 @@
 package com.tyut.user.repostory;
 
 import com.tyut.core.pojo.User;
-import com.tyut.user.dto.UserDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
