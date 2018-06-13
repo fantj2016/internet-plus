@@ -16,4 +16,6 @@ public interface NewsService {
     ServerResponse hasRead(Integer newsId);
     /** 增加消息 */
     ServerResponse addNews(String userId,String content);
+    /** 查询未读消息个数 */
+    ServerResponse selectCountNotRead(String userId);
 }

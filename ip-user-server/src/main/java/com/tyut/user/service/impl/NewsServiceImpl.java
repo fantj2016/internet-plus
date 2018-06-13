@@ -72,4 +72,13 @@ public class NewsServiceImpl implements NewsService {
         }
         return ServerResponse.createBySuccessMessage("添加消息成功");
     }
+
+    /**
+     * 查询未读消息个数
+     */
+    @Override
+    public ServerResponse selectCountNotRead(String userId) {
+        int i = newsMapper.selectCountNotRead(userId);
+        return ServerResponse.createBySuccess(i);
+    }
 }

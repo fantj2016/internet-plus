@@ -4,7 +4,6 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.user.dao.GroupMembersMapper;
-import com.tyut.user.dao.NewsMapper;
 import com.tyut.user.repostory.GroupMemRepostory;
 import com.tyut.user.service.GroupMemberService;
 import com.tyut.user.vo.GroupMemVo;
@@ -149,9 +148,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     public boolean isExsitSomeone(String userId, Integer groupId) {
         int exsitSomeone = membersMapper.isExsitSomeone(groupId, userId);
         log.info("*** 该用户是否存在某个队伍"+exsitSomeone);
-        if (exsitSomeone != 0){
-            return true;
-        }
-        return false;
+        return exsitSomeone != 0;
     }
 }

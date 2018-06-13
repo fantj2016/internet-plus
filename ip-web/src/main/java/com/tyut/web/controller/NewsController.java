@@ -45,4 +45,9 @@ public class NewsController {
         return newsService.addNews(userId,content);
     }
 
+    @ApiOperation("查询用户未读消息数量")
+    @GetMapping("/countNotRead/{userId}")
+    public ServerResponse selectCountNotRead(@PathVariable String userId){
+        return newsService.selectCountNotRead(userId);
+    }
 }

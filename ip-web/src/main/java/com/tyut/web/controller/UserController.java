@@ -12,6 +12,8 @@ package com.tyut.web.controller;
         import io.swagger.annotations.ApiOperation;
         import lombok.extern.slf4j.Slf4j;
         import org.springframework.security.core.Authentication;
+        import org.springframework.transaction.annotation.Transactional;
+        import org.springframework.util.StringUtils;
         import org.springframework.web.bind.annotation.*;
         import org.springframework.web.multipart.MultipartFile;
         import org.springframework.web.servlet.ModelAndView;
@@ -41,6 +43,9 @@ public class UserController {
 
     @GetMapping("/me")
     public ServerResponse getCurrentUser(Authentication user)  {
+        if (StringUtils.isEmpty(user)){
+            return ServerResponse.createByErrorMessage("请先登录");
+        }
         String username = user.getName();
         log.info("从Authentication里获取到的username为{}",username);
         return userService.selectMe(username);
@@ -65,37 +70,15 @@ public class UserController {
 
     @ApiOperation("修改头像")
     @PostMapping("/updatePortrait")
+    @Transactional
     public ServerResponse upload(@RequestParam(value = "file",required = false) MultipartFile file,
                                  HttpServletRequest request,Authentication user){
 
+        if (StringUtils.isEmpty(user)){
+            return ServerResponse.createByErrorMessage("请先登录");
+        }
         String path = request.getSession().getServletContext().getRealPath("upload");
-        String fileName = file.getOriginalFilename();
-        //扩展名
-        String fileExtensionName = fileName.substring(fileName.lastIndexOf(".")+1);
-        log.info("获取到的文件是{},后缀是{}",fileName,fileExtensionName);
-        if (!isImage(fileExtensionName)){
-            log.info("图片格式错误{}");
-            return ServerResponse.createByErrorMessage("图片格式错误！");
-        }
-        String uploadFileName = UUID.randomUUID().toString().replace("-","")+"."+fileExtensionName;
-        log.info("开始上传文件,上传文件的文件名:{},上传的路径:{},新文件名:{}",fileName,path,uploadFileName);
-
-        File fileDir = new File(path);
-        if(!fileDir.exists()){
-            fileDir.setWritable(true);
-            fileDir.mkdirs();
-        }
-        File targetFile = new File(path,uploadFileName);
-        try {
-            file.transferTo(targetFile);
-            FTPUtil.uploadImage(Lists.newArrayList(targetFile));
-            targetFile.delete();
-        } catch (IOException e) {
-            log.error("上传文件异常",e);
-            return ServerResponse.createByErrorMessage("上传文件异常");
-        }
-        String name = targetFile.getName();
-        log.info("targetFile.getName():{}",name);
+        String name = uploadFile(file, path);
         User user1 = new User();
         user1.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/image/"+name);
         log.info("修改后的用户头像地址：{}",user1.getUserPortrait());
@@ -148,12 +131,7 @@ public class UserController {
             @RequestParam String rePasswd,
             @RequestParam String valid,
             ModelAndView mv){
-//        if (passwd != rePasswd){
-////            log.info("密码{},重复密码{}",passwd,rePasswd);
-////            mv.addObject("msg","两次密码输入不同");
-////            mv.setViewName("errorPage");
-////            return mv;
-////        }
+
         userService.updatePasswd(passwd,valid);
         mv.addObject("msg","密码修改成功!");
         mv.setViewName("success");
@@ -164,6 +142,9 @@ public class UserController {
 
 
 
+    /**
+     * 判断是 图片文件
+     */
     private static boolean isImage(String fileName){
         String reg = "(jpg)|(png)|(gif)|(bmp)|(GIF)|(JPG)|(PNG)|(JPEG)";
         Pattern pattern = Pattern.compile(reg);
@@ -171,5 +152,51 @@ public class UserController {
         boolean b = matcher.find();
         log.info("图片验证结果：{}",b);
         return b;
+    }
+
+    /**
+     * 判断是 压缩文件
+     */
+    private static boolean isZip(String fileName) {
+        String reg = "(RAR)|(ZIP)|(7Z)|(GZ)|(BZ)|(ACE)|(UHA)|(UDA)|(ZPAQ)";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(fileName.toUpperCase());
+        boolean b = matcher.find();
+        log.info("图片验证结果：{}", b);
+        return b;
+    }
+    /**
+     * 上传头像
+     */
+    public static String uploadFile(MultipartFile file,String path){
+        String fileName = file.getOriginalFilename();
+        //扩展名
+        String fileExtensionName = fileName.substring(fileName.lastIndexOf(".")+1);
+        log.info("获取到的文件是{},后缀是{}",fileName,fileExtensionName);
+        if (!isImage(fileExtensionName)){
+            log.info("图片格式错误{}");
+            //这里返回异常
+//            return "图片格式错误！";
+        }
+        String uploadFileName = UUID.randomUUID().toString().replace("-","")+"."+fileExtensionName;
+        log.info("开始上传文件,上传文件的文件名:{},上传的路径:{},新文件名:{}",fileName,path,uploadFileName);
+
+        File fileDir = new File(path);
+        if(!fileDir.exists()){
+            fileDir.setWritable(true);
+            fileDir.mkdirs();
+        }
+        File targetFile = new File(path,uploadFileName);
+        try {
+            file.transferTo(targetFile);
+            FTPUtil.uploadImage(Lists.newArrayList(targetFile));
+            targetFile.delete();
+        } catch (IOException e) {
+            log.error("上传文件异常",e);
+//            return "上传文件异常";
+        }
+        String name = targetFile.getName();
+        log.info("targetFile.getName():{}",name);
+        return name;
     }
 }

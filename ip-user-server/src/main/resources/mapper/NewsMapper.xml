@@ -17,7 +17,13 @@
     news_content
   </sql>
 
-
+  <!--selectCountNotRead-->
+  <select id="selectCountNotRead" resultType="java.lang.Integer">
+    select count(news_id)
+    from ip_news
+    where user_id = #{userId,jdbcType=VARCHAR}
+    and news_status = 0
+  </select>
 
   <select id="selectNewsList" resultMap="ResultMapWithBLOBs">
     select
@@ -82,7 +88,6 @@
       </if>
     </trim>
   </insert>
-
 
   <update id="hasRead" parameterType="java.lang.Integer" >
     update ip_news

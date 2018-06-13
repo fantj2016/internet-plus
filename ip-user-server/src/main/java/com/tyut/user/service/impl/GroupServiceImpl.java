@@ -47,7 +47,11 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public ServerResponse create(Group group) {
-
+        //查询队伍名是否存在
+        List<Group> exsitGroupName = groupRepostory.isExsitGroupName(group.getGroupName());
+        if (exsitGroupName.size() != 0){
+            return ServerResponse.createByErrorMessage("队名已被使用");
+        }
         group.setGroupStatus(0);
         group.setGroupCreateTime(new Date());
         group.setGroupKey(UUID.randomUUID().toString().replace("-",""));
@@ -74,17 +78,17 @@ public class GroupServiceImpl implements GroupService {
      */
     @Override
     public ServerResponse selectByKey(String key) {
-        Query nativeQuery = entityManager.createNativeQuery("select g.group_id,g.group_name from ip_group g WHERE g.group_key=?");
+        Query nativeQuery = entityManager.createNativeQuery(
+                "select g.group_id,g.group_name from ip_group g WHERE g.group_key=?");
         Object singleResult = nativeQuery.setParameter(1, key).getSingleResult();
             Object[] rowArray = (Object[]) singleResult;
             GroupVo groupVo = new GroupVo();
             groupVo.setGroupId(((Integer) rowArray[0]));
             groupVo.setGroupName((String) rowArray[1]);
 
-        if (groupVo == null){
+        if (StringUtils.isEmpty(groupVo)){
             return ServerResponse.createByErrorMessage("该队伍不存在");
         }
-//        log.info(list.toString());
         return ServerResponse.createBySuccess(groupVo);
     }
 
@@ -93,7 +97,11 @@ public class GroupServiceImpl implements GroupService {
      */
     @Override
     public ServerResponse selectGroupList(String userId) {
-        Query nativeQuery = entityManager.createNativeQuery("select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id,c.cpt_name,g.group_key from ip_user as u,ip_group_members m,ip_competition c,ip_group g   where u.user_id=m.user_id and m.user_status =1 and m.group_type=c.cpt_id  and g.group_id = m.group_id and u.user_id = ? GROUP BY m.group_id ORDER BY m.group_id DESC");
+        Query nativeQuery = entityManager.createNativeQuery(
+                "select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id,c.cpt_name,g.group_key " +
+                        "from ip_user as u,ip_group_members m,ip_competition c,ip_group g   " +
+                        "where u.user_id=m.user_id and m.user_status =1 and m.group_type=c.cpt_id  and g.group_id = m.group_id and u.user_id = ? " +
+                        "GROUP BY m.group_id ORDER BY m.group_id DESC");
         List<Object> resultList = nativeQuery.setParameter(1, userId).getResultList();
         List<GroupsVo> list = new ArrayList<>();
         for (Object o : resultList) {
@@ -123,6 +131,6 @@ public class GroupServiceImpl implements GroupService {
         if (exsitGroupName.size()==0) {
             return ServerResponse.createBySuccessMessage("队名可以使用");
         }
-        return ServerResponse.createByErrorMessage("队名已占用");
+        return ServerResponse.createByErrorMessage("队名已被使用");
     }
 }
