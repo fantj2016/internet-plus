@@ -72,7 +72,7 @@ public class UserController {
 /*    @ApiOperation("修改头像")
     @PostMapping("/updatePortrait")
     @Transactional*/
-    public ServerResponse upload(@RequestParam(value = "file",required = false) MultipartFile file,
+/*    public ServerResponse upload(@RequestParam(value = "file",required = false) MultipartFile file,
                                  HttpServletRequest request,Authentication user){
 
         if (StringUtils.isEmpty(user)){
@@ -84,7 +84,7 @@ public class UserController {
         user1.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/image/"+name);
         log.info("修改后的用户头像地址：{}",user1.getUserPortrait());
         return userService.uploadPortrait(user.getName(),user1);
-    }
+    }*/
 
     @ApiOperation("修改头像")
     @PostMapping("/updatePortrait")

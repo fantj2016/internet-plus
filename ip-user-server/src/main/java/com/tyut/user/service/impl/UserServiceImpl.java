@@ -262,7 +262,7 @@ public class UserServiceImpl implements UserService {
             user.setUserEmail(username);
             userMapper.updatePortraitByEmail(user);
         }
-        return ServerResponse.createBySuccessMessage("修改成功");
+        return ServerResponse.createBySuccess("修改成功",user.getUserPortrait());
     }
 
     /**
