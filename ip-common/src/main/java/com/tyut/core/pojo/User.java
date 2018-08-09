@@ -45,6 +45,8 @@ public class User  implements Serializable {
     @Column(nullable = false)
     private String userPortrait;
     @Column(nullable = false)
+    private Integer userStatus;
+    @Column(nullable = false)
     private Date userCreateTime;
     @Column(nullable = false)
     private Date userUpdateTime;

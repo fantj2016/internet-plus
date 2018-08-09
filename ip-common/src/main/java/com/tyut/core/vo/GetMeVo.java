@@ -26,6 +26,7 @@ public class GetMeVo implements Serializable {
     private String userPortrait;
     private Integer userEducationId;
     private Integer userSchoolId;
+    private Integer userStatus;
 //
 //    public UserDto(Integer userId, String userPhone, String userSchool, String userEmail, String userName, String userAcademy, String userEducation, String userGrade, String userProfession, Integer userSex, String userStuNum, String userPortrait) {
 //        this.userId = userId;

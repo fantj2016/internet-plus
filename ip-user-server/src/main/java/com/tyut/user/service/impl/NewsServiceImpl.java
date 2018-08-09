@@ -54,6 +54,20 @@ public class NewsServiceImpl implements NewsService {
     }
 
     /**
+     * 消息状态修改（忽略）
+     *
+     * @param newsId
+     */
+    @Override
+    public ServerResponse hasIgnore(Integer newsId) {
+        int i = newsMapper.hasIgnore(newsId);
+        if (i!=0){
+            return ServerResponse.createBySuccessMessage("消息已忽略");
+        }
+        return ServerResponse.createByErrorMessage("修改消息状态出错");
+    }
+
+    /**
      * 增加消息
      *
      * @param userId
@@ -65,6 +79,7 @@ public class NewsServiceImpl implements NewsService {
         news.setUserId(userId);
         news.setNewsContent(content);
         news.setNewsCreateTime(new Date());
+        news.setNewsIgnore(0);
         news.setNewsStatus(0);
         int insert = newsMapper.insert(news);
         if (insert!=1){
@@ -78,6 +93,7 @@ public class NewsServiceImpl implements NewsService {
      */
     @Override
     public ServerResponse selectCountNotRead(String userId) {
+        //在这里可以加一个防止横向越权的操作（防止授权用户互相查看信息）
         int i = newsMapper.selectCountNotRead(userId);
         return ServerResponse.createBySuccess(i);
     }

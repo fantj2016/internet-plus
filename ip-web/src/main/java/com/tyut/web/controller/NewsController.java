@@ -38,6 +38,17 @@ public class NewsController {
         return newsService.hasRead(newsId);
     }
 
+
+
+    @ApiOperation("消息标记为忽略")
+    @GetMapping("/hasIgnore/{newsId}")
+    public ServerResponse hasIgnore(@PathVariable Integer newsId){
+        return newsService.hasIgnore(newsId);
+    }
+
+
+
+
     @ApiOperation("添加消息")
     @PostMapping("/add")
     public ServerResponse addNews(@RequestParam String userId,

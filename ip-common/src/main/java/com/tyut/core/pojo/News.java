@@ -24,6 +24,8 @@ public class News implements Serializable {
 
     private String userId;
 
+    private Integer newsIgnore;
+
     private Integer newsStatus;
 
     private Date newsCreateTime;

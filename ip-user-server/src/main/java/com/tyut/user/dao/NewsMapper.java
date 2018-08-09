@@ -24,6 +24,8 @@ public interface NewsMapper {
 
     /** 修改为已读 */
     int hasRead(Integer newsId);
+    /** 修改为忽略 */
+    int hasIgnore(Integer newsId);
     /** 查询未读数量 */
     int selectCountNotRead(String userId);
 

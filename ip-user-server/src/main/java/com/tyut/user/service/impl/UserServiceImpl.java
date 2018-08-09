@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ServerResponse selectMe(String str) {
-        String common_sql = "select u.user_id,u.user_phone,s.school_name as user_school,u.user_email,u.user_name,u.user_academy,e.edu_name as user_education,u.user_grade,u.user_profession,u.user_sex,u.user_stu_num,u.user_portrait,u.user_education as user_education_id,u.user_school_id  " +
+        String common_sql = "select u.user_id,u.user_phone,s.school_name as user_school,u.user_email,u.user_name,u.user_academy,e.edu_name as user_education,u.user_grade,u.user_profession,u.user_sex,u.user_stu_num,u.user_portrait,u.user_education as user_education_id,u.user_school_id,u.user_status  " +
                 "from ip_user as u,ip_school as s,ip_user_edu as e  " +
                 "where u.user_school_id=s.id and u.user_education=e.edu_id";
         if (CheckFormat.isEmail(str)){
@@ -160,6 +160,7 @@ public class UserServiceImpl implements UserService {
             userDto.setUserPortrait((String)o[11]);
             userDto.setUserEducationId((Integer)o[12]);
             userDto.setUserSchoolId((Integer)o[13]);
+            userDto.setUserStatus((Integer)o[14]);
             if (userDto == null){
                 return ServerResponse.createByErrorMessage("该账号不存在");
             }
@@ -184,6 +185,7 @@ public class UserServiceImpl implements UserService {
             userDto.setUserPortrait((String)o[11]);
             userDto.setUserEducationId((Integer)o[12]);
             userDto.setUserSchoolId((Integer)o[13]);
+            userDto.setUserStatus((Integer)o[14]);
             if (userDto == null){
                 return ServerResponse.createByErrorMessage("该账号不存在");
             }

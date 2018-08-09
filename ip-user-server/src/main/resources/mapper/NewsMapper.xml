@@ -5,13 +5,14 @@
     <id column="news_id" property="newsId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="news_status" property="newsStatus" jdbcType="INTEGER" />
+    <result column="news_ignore" property="newsIgnore" jdbcType="INTEGER" />
     <result column="news_create_time" property="newsCreateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tyut.core.pojo.News" extends="BaseResultMap" >
     <result column="news_content" property="newsContent" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    news_id, user_id, news_status, news_create_time
+    news_id, user_id, news_status,news_ignore, news_create_time
   </sql>
   <sql id="Blob_Column_List" >
     news_content
@@ -22,7 +23,7 @@
     select count(news_id)
     from ip_news
     where user_id = #{userId,jdbcType=VARCHAR}
-    and news_status = 0
+    and (news_status + news_ignore) &lt; 1
   </select>
 
   <select id="selectNewsList" resultMap="ResultMapWithBLOBs">
@@ -46,9 +47,9 @@
     where news_id = #{newsId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tyut.core.pojo.News" >
-    insert into ip_news (news_id, user_id, news_status, 
+    insert into ip_news (news_id, user_id, news_status, news_ignore,
       news_create_time, news_content)
-    values (#{newsId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{newsStatus,jdbcType=INTEGER},
+    values (#{newsId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{newsStatus,jdbcType=INTEGER},#{newsIgnore,jdbcType=INTEGER},
       #{newsCreateTime,jdbcType=TIMESTAMP}, #{newsContent,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tyut.core.pojo.News" >
@@ -92,6 +93,12 @@
   <update id="hasRead" parameterType="java.lang.Integer" >
     update ip_news
     set news_status = 1
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+
+  <update id="hasIgnore" parameterType="java.lang.Integer" >
+    update ip_news
+    set news_ignore = 1
     where news_id = #{newsId,jdbcType=INTEGER}
   </update>
 

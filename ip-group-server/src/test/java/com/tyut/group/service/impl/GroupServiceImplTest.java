@@ -33,7 +33,7 @@ public class GroupServiceImplTest {
         Group group = new Group();
         group.setGroupName("云顶队");
         group.setGroupType(3);
-        group.setGroupHeaderId(1);
+//        group.setGroupHeaderId(1);
         group.setGroupPhone("15235951681");
         groupService.create(group);
     }
@@ -46,7 +46,7 @@ public class GroupServiceImplTest {
 
     @Test
     public void testJoin(){
-        memService.join(60008,12,"sdf");
+//        memService.join(60008,12,"sdf");
     }
 
     @Test

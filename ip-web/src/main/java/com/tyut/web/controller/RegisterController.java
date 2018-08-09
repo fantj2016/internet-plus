@@ -87,6 +87,7 @@ public class RegisterController {
             user.setUserAcademyId(1);
             user.setUserSchoolId(registerDto.getSchoolId());
             user.setUserProfession(registerDto.getProfession());
+            user.setUserStatus(0);
             //Sun Jan 01 2012 00:00:00 GMT+0800 (中国标准时间)
             //Mon Jan 01 2018 00:00:00 GMT+0800 (中国标准时间)
             String[] split = registerDto.getGrade().split(" ");

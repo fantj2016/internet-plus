@@ -21,7 +21,6 @@ package com.tyut.web.controller;
         import javax.servlet.http.HttpServletRequest;
         import java.io.File;
         import java.io.IOException;
-        import java.io.UnsupportedEncodingException;
         import java.util.Date;
         import java.util.UUID;
         import java.util.regex.Matcher;

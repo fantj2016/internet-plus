@@ -14,6 +14,8 @@ public interface NewsService {
     ServerResponse selectNewsList(String userId,Integer pageNum,Integer pageSize);
     /** 消息状态修改（已读）*/
     ServerResponse hasRead(Integer newsId);
+    /** 消息状态修改（忽略）*/
+    ServerResponse hasIgnore(Integer newsId);
     /** 增加消息 */
     ServerResponse addNews(String userId,String content);
     /** 查询未读消息个数 */
