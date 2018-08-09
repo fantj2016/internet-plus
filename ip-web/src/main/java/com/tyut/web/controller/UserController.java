@@ -8,6 +8,7 @@ package com.tyut.web.controller;
         import com.tyut.core.response.ServerResponse;
         import com.tyut.core.utils.FTPUtil;
         import com.tyut.user.service.UserService;
+        import com.tyut.web.util.Base64ToFile;
         import io.swagger.annotations.Api;
         import io.swagger.annotations.ApiOperation;
         import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,11 @@ package com.tyut.web.controller;
         import org.springframework.web.bind.annotation.*;
         import org.springframework.web.multipart.MultipartFile;
         import org.springframework.web.servlet.ModelAndView;
+        import sun.misc.BASE64Decoder;
+        import sun.misc.BASE64Encoder;
 
         import javax.servlet.http.HttpServletRequest;
-        import java.io.File;
-        import java.io.IOException;
+        import java.io.*;
         import java.util.Date;
         import java.util.UUID;
         import java.util.regex.Matcher;
@@ -67,9 +69,9 @@ public class UserController {
         return userService.update(user);
     }
 
-    @ApiOperation("修改头像")
+/*    @ApiOperation("修改头像")
     @PostMapping("/updatePortrait")
-    @Transactional
+    @Transactional*/
     public ServerResponse upload(@RequestParam(value = "file",required = false) MultipartFile file,
                                  HttpServletRequest request,Authentication user){
 
@@ -78,6 +80,31 @@ public class UserController {
         }
         String path = request.getSession().getServletContext().getRealPath("upload");
         String name = uploadFile(file, path);
+        User user1 = new User();
+        user1.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/image/"+name);
+        log.info("修改后的用户头像地址：{}",user1.getUserPortrait());
+        return userService.uploadPortrait(user.getName(),user1);
+    }
+
+    @ApiOperation("修改头像")
+    @PostMapping("/updatePortrait")
+    public ServerResponse updatePortrait(Authentication user,@RequestParam String imgStr
+                                            ,HttpServletRequest request) throws IOException {
+        if (StringUtils.isEmpty(user)){
+            return ServerResponse.createByErrorMessage("请先登录");
+        }
+        // 图像数据为空
+        if (imgStr == null) {
+            return ServerResponse.createByErrorMessage("图像数据为空");
+        }
+        String path = request.getSession().getServletContext().getRealPath("upload");
+        File newFile = Base64ToFile.base64ToFile(imgStr,path);
+        String name = newFile.getName();
+        FTPUtil.uploadImage(Lists.newArrayList(newFile));
+        boolean delete = newFile.delete();
+        if (!delete){
+            log.info("本地头像删除失败");
+        }
         User user1 = new User();
         user1.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/image/"+name);
         log.info("修改后的用户头像地址：{}",user1.getUserPortrait());

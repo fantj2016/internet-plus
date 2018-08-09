@@ -74,6 +74,7 @@
     </dependencies>
 
     <build>
+        <finalName>school-server</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
