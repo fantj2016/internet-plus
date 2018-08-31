@@ -1,9 +1,13 @@
 package com.tyut.user.service.impl;
 
+import com.google.common.collect.Lists;
 import com.tyut.core.constants.ConsParams;
 import com.tyut.core.pojo.ChangePasswd;
 import com.tyut.core.pojo.User;
+import com.tyut.core.pojo.UserFile;
 import com.tyut.core.response.ServerResponse;
+import com.tyut.core.utils.Base64ToFile;
+import com.tyut.core.utils.CheckFormat;
 import com.tyut.core.utils.FTPUtil;
 import com.tyut.core.vo.UserVo;
 import com.tyut.user.dao.UserMapper;
@@ -11,21 +15,20 @@ import com.tyut.core.vo.GetMeVo;
 import com.tyut.user.myEmail.MailSender;
 import com.tyut.user.myEmail.emailEnum.MailContentTypeEnum;
 import com.tyut.user.repostory.ChangePasswdRepostory;
+import com.tyut.user.repostory.UserFileRepository;
 import com.tyut.user.repostory.UserRepository;
 import com.tyut.user.service.UserService;
-import com.tyut.user.util.CheckFormat;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -46,6 +49,8 @@ public class UserServiceImpl implements UserService {
     private EntityManager entityManager;
     @Autowired
     private ChangePasswdRepostory changePasswdRepostory;
+    @Autowired
+    private UserFileRepository fileRepository;
 
     /**
      * 增加
@@ -82,10 +87,7 @@ public class UserServiceImpl implements UserService {
             return ServerResponse.createByErrorMessage("找不到该用户");
         }
         UserVo userVo = new UserVo();
-        userVo.setUserId(user.getUserId());
-        userVo.setUserName(user.getUserName());
-        userVo.setUserPhone(user.getUserPhone());
-        userVo.setUserSchoolId(user.getUserSchoolId());
+        BeanUtils.copyProperties(user,userVo);
         return ServerResponse.createBySuccess(userVo);
     }
 
@@ -145,116 +147,81 @@ public class UserServiceImpl implements UserService {
             Query nativeQuery = entityManager.createNativeQuery(common_sql+" and u.user_email=?1");
             Object result = nativeQuery.setParameter(1, str).getSingleResult();
             Object[] o = (Object[]) result;
-            GetMeVo userDto = new GetMeVo();
-            userDto.setUserId((String)o[0]);
-            userDto.setUserPhone((String)o[1]);
-            userDto.setUserSchool((String)o[2]);
-            userDto.setUserEmail((String)o[3]);
-            userDto.setUserName((String)o[4]);
-            userDto.setUserAcademy((String)o[5]);
-            userDto.setUserEducation((String)o[6]);
-            userDto.setUserGrade((String)o[7]);
-            userDto.setUserProfession((String)o[8]);
-            userDto.setUserSex((Integer)o[9]);
-            userDto.setUserStuNum((String)o[10]);
-            userDto.setUserPortrait((String)o[11]);
-            userDto.setUserEducationId((Integer)o[12]);
-            userDto.setUserSchoolId((Integer)o[13]);
-            userDto.setUserStatus((Integer)o[14]);
-            if (userDto == null){
-                return ServerResponse.createByErrorMessage("该账号不存在");
-            }
-            return ServerResponse.createBySuccess(userDto);
+            return ServerResponse.createBySuccess(converse(o));
         }
         if (CheckFormat.isPhone(str)){
             Query nativeQuery = entityManager.createNativeQuery(common_sql+"  and u.user_phone=?1");
             Object result = nativeQuery.setParameter(1, str).getSingleResult();
             Object[] o = (Object[]) result;
-            GetMeVo userDto = new GetMeVo();
-            userDto.setUserId((String)o[0]);
-            userDto.setUserPhone((String)o[1]);
-            userDto.setUserSchool((String)o[2]);
-            userDto.setUserEmail((String)o[3]);
-            userDto.setUserName((String)o[4]);
-            userDto.setUserAcademy((String)o[5]);
-            userDto.setUserEducation((String)o[6]);
-            userDto.setUserGrade((String)o[7]);
-            userDto.setUserProfession((String)o[8]);
-            userDto.setUserSex((Integer)o[9]);
-            userDto.setUserStuNum((String)o[10]);
-            userDto.setUserPortrait((String)o[11]);
-            userDto.setUserEducationId((Integer)o[12]);
-            userDto.setUserSchoolId((Integer)o[13]);
-            userDto.setUserStatus((Integer)o[14]);
-            if (userDto == null){
-                return ServerResponse.createByErrorMessage("该账号不存在");
-            }
-            log.info(userDto.toString());
-            return ServerResponse.createBySuccess(userDto);
+            return ServerResponse.createBySuccess(converse(o));
         }
         log.info(str);
         return ServerResponse.createByErrorMessage("用户名格式不正确");
     }
 
+
+
     /**
-     * 上传头像和文件
-     *
-     * @param file
-     * @param path
+     * 上传文件
      */
     @Override
     @Transactional
-    public ServerResponse uploadFile(MultipartFile file, String path,String username) {
-//        String fileName = file.getOriginalFilename();
-//        //扩展名
-//        String fileExtensionName = fileName.substring(fileName.lastIndexOf(".")+1);
-//        log.info("获取到的文件是{},后缀是{}",fileName,fileExtensionName);
-//        String uploadFileName = UUID.randomUUID().toString()+"."+fileExtensionName;
-//        log.info("开始上传文件,上传文件的文件名:{},上传的路径:{},新文件名:{}",fileName,path,uploadFileName);
-//
-//        File fileDir = new File(path);
-//        if(!fileDir.exists()){
-//            fileDir.setWritable(true);
-//            fileDir.mkdirs();
-//        }
-//        File targetFile = new File(path,uploadFileName);
-//        try {
-//            file.transferTo(targetFile);
-//            //文件已经上传成功了
-//            FTPUtil.uploadFile(Lists.newArrayList(targetFile));
-//            //已经上传到ftp服务器上
-//            targetFile.delete();
-//        } catch (IOException e) {
-//            log.error("上传文件异常",e);
-//            return ServerResponse.createByErrorMessage("上传文件异常");
-//        }
-//        String name = targetFile.getName();
-//        log.info("targetFile.getName():{}",name);
-//        //存入数据库  FTPUtil.getFtpIp()
-//        User user = new User();
-//        user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/iamge"+name);
-//        log.info("修改后的用户头像地址：{}",user.getUserPortrait());
+    public ServerResponse uploadFile(String username, String imgStr,String path,String type) throws IOException {
+        String ftpFilePath = "";
+        int fileType = 0;//0是证明，1是作品
+        File newFile = null;
+        if (CheckFormat.isImage(type)){
+                String fileName = UUID.randomUUID().toString().replace("-","")+".jpg";
+                newFile = Base64ToFile.base64ToFile(imgStr,path,fileName);
+                log.info("file isImage");
+                FTPUtil.uploadImage(Lists.newArrayList(newFile));
+                ftpFilePath = "/image/";
+            }else if (CheckFormat.isZip(type)){
+                String fileName = UUID.randomUUID().toString().replace("-","")+".zip";
+                newFile = Base64ToFile.base64ToFile(imgStr,path,fileName);
+                log.info("file isZip");
+                FTPUtil.uploadZip(Lists.newArrayList(newFile));
+                ftpFilePath = "/works/";
+                fileType = 1;
+            }
+        assert newFile != null;
+        String name = newFile.getName();
+        log.info("newFile.getName::::::::::"+name);
+        String fileExtensionName = name.substring(name.lastIndexOf(".")+1);
+        log.info("fileExtensionName:::::::::::::"+fileExtensionName);
 
 
-
-/*        if (CheckFormat.isPhone(username)){
-            user.setUserPhone(username);
-            userMapper.updatePortraitByPhone(user);
-        }else if (CheckFormat.isEmail(username)){
-            user.setUserEmail(username);
-            userMapper.updatePortraitByEmail(user);
-        }*/
-        return null;
+        boolean delete = newFile.delete();
+        if (!delete){ log.info("本地文件删除失败"); }
+        UserFile userFile = new UserFile();
+        userFile.setFileName(name);
+        userFile.setUsername(username);
+        userFile.setFileType(fileType);
+        userFile.setCptId(0);
+        userFile.setFileUrl(ConsParams.Portrait.PRIFIX_PORTRAIT+ftpFilePath+name);
+        log.info("文件地址：{}",userFile.getFileUrl());
+        UserFile save = fileRepository.save(userFile);
+        if (save != null){
+            return ServerResponse.createBySuccess("上传成功",userFile.getFileUrl());
+        }else {
+            return ServerResponse.createByErrorMessage("上传作品失败");
+        }
     }
 
     /**
      * 上传头像
-     *
-     * @param user
      */
     @Override
-    public ServerResponse uploadPortrait(String username,User user) {
-
+    public ServerResponse uploadPortrait(String username, String imgStr,String path) throws IOException {
+        String fileName = UUID.randomUUID().toString().replace("-","")+".jpg";
+        File newFile = Base64ToFile.base64ToFile(imgStr,path,fileName);
+        String name = newFile.getName();
+        FTPUtil.uploadImage(com.google.common.collect.Lists.newArrayList(newFile));
+        boolean delete = newFile.delete();
+        if (!delete){ log.info("本地头像删除失败"); }
+        User user = new User();
+        user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/image/"+name);
+        log.info("修改后的用户头像地址：{}",user.getUserPortrait());
         if (CheckFormat.isPhone(username)){
             user.setUserPhone(username);
             userMapper.updatePortraitByPhone(user);
@@ -353,5 +320,50 @@ public class UserServiceImpl implements UserService {
             log.info("修改密码 3：****** {} 密码修改失败",username);
             return ServerResponse.createByErrorMessage("密码修改失败");
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    GetMeVo converse(Object[] o){
+        GetMeVo userDto = new GetMeVo();
+        userDto.setUserId((String)o[0]);
+        userDto.setUserPhone((String)o[1]);
+        userDto.setUserSchool((String)o[2]);
+        userDto.setUserEmail((String)o[3]);
+        userDto.setUserName((String)o[4]);
+        userDto.setUserAcademy((String)o[5]);
+        userDto.setUserEducation((String)o[6]);
+        userDto.setUserGrade((String)o[7]);
+        userDto.setUserProfession((String)o[8]);
+        userDto.setUserSex((Integer)o[9]);
+        userDto.setUserStuNum((String)o[10]);
+        userDto.setUserPortrait((String)o[11]);
+        userDto.setUserEducationId((Integer)o[12]);
+        userDto.setUserSchoolId((Integer)o[13]);
+        userDto.setUserStatus((Integer)o[14]);
+        return userDto;
     }
 }

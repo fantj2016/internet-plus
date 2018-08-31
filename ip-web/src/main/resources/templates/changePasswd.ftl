@@ -7,7 +7,6 @@
 <body class="login-bg">
 
         <form method="post" class="layui-form" action="/changePasswd" >
-            <#--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>-->
             <input type="hidden" name="valid" value="${valid}"/>
             <input name="passwd" placeholder="密码"  type="password" lay-verify="required" class="layui-input" >
             <hr class="hr15">
@@ -18,3 +17,5 @@
 
 </body>
 </html>
+
+

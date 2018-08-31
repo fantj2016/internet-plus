@@ -40,7 +40,7 @@ public class FTPUtil implements Serializable {
     public static boolean uploadZip(List<File> fileList) throws IOException {
         FTPUtil ftpUtil = new FTPUtil(ftpIp,21,ftpUser,ftpPass);
         log.info("开始连接ftp服务器");
-        boolean result = ftpUtil.uploadFile("zipFile",fileList);
+        boolean result = ftpUtil.uploadFile("works",fileList);
         log.info("开始连接ftp服务器,结束上传,上传结果:{}",result);
         return result;
     }

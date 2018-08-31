@@ -3,13 +3,15 @@ package com.tyut.user.service;
 
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
-import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Created by Fant.J.
  * 2018/4/21 13:40
  */
-public interface UserService {
+public interface UserService extends Serializable {
     /** 增加*/
     ServerResponse insert(User user);
     /** 更新*/
@@ -26,10 +28,10 @@ public interface UserService {
     ServerResponse isExistPhone(String phone);
     /** 通过 手机或者 邮箱 查询 个人信息 */
     ServerResponse selectMe(String str);
-    /** 上传头像和文件 */
-    ServerResponse uploadFile(MultipartFile file, String path,String username);
     /** 上传头像 */
-    ServerResponse uploadPortrait(String username,User user);
+    ServerResponse uploadPortrait(String username,String imgStr,String path) throws IOException;
+    /** 上传证明（学生证/作品）*/
+    ServerResponse uploadFile(String username,String imgStr,String path,String type) throws IOException;
     /** 1.找回密码-发送邮件 */
     ServerResponse findPasswd(String email);
     /** 2.找回密码-有效校验 */

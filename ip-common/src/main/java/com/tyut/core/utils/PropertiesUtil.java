@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.Properties;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Properties;
  */
 @Slf4j
 @Configuration
-public class PropertiesUtil {
+public class PropertiesUtil implements Serializable {
 
 
     private static Properties props;

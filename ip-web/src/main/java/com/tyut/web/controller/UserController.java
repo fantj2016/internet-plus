@@ -12,6 +12,7 @@ package com.tyut.web.controller;
         import io.swagger.annotations.Api;
         import io.swagger.annotations.ApiOperation;
         import lombok.extern.slf4j.Slf4j;
+        import org.springframework.beans.BeanUtils;
         import org.springframework.security.core.Authentication;
         import org.springframework.transaction.annotation.Transactional;
         import org.springframework.util.StringUtils;
@@ -36,7 +37,6 @@ package com.tyut.web.controller;
 @Api(value = "/UserController",description = "用户登录接口")
 @RestController
 @Slf4j
-//@RequestMapping("/user")
 public class UserController {
 
     @Reference(version = "2.0.0")
@@ -56,68 +56,46 @@ public class UserController {
     @PostMapping("/update")
     public ServerResponse updateUser(UserUpdateVo userUpdateVo){
         User user = new User();
-        user.setUserName(userUpdateVo.getUserName());
-        user.setUserAcademy(userUpdateVo.getUserAcademy());
-        user.setUserId(userUpdateVo.getUserId());
+        BeanUtils.copyProperties(userUpdateVo,user);
         user.setUserUpdateTime(new Date());
-        user.setUserPhone(userUpdateVo.getUserPhone());
-        user.setUserSchoolId(userUpdateVo.getUserSchoolId());
-        user.setUserStuNum(userUpdateVo.getUserStuNum());
-        user.setUserGrade(userUpdateVo.getUserGrade());
-        user.setUserProfession(userUpdateVo.getUserProfession());
-        user.setUserEducation(userUpdateVo.getUserEducation());
         return userService.update(user);
     }
 
-/*    @ApiOperation("修改头像")
-    @PostMapping("/updatePortrait")
-    @Transactional*/
-/*    public ServerResponse upload(@RequestParam(value = "file",required = false) MultipartFile file,
-                                 HttpServletRequest request,Authentication user){
-
-        if (StringUtils.isEmpty(user)){
-            return ServerResponse.createByErrorMessage("请先登录");
-        }
-        String path = request.getSession().getServletContext().getRealPath("upload");
-        String name = uploadFile(file, path);
-        User user1 = new User();
-        user1.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/image/"+name);
-        log.info("修改后的用户头像地址：{}",user1.getUserPortrait());
-        return userService.uploadPortrait(user.getName(),user1);
-    }*/
-
-    @ApiOperation("修改头像")
+    @ApiOperation("修改/上传头像")
     @PostMapping("/updatePortrait")
     public ServerResponse updatePortrait(Authentication user,@RequestParam String imgStr
                                             ,HttpServletRequest request) throws IOException {
-        if (StringUtils.isEmpty(user)){
-            return ServerResponse.createByErrorMessage("请先登录");
-        }
+        //没有用户信息
+        if (StringUtils.isEmpty(user)){ return ServerResponse.createByErrorMessage("请先登录"); }
         // 图像数据为空
-        if (imgStr == null) {
-            return ServerResponse.createByErrorMessage("图像数据为空");
-        }
+        if (imgStr == null) { return ServerResponse.createByErrorMessage("图像数据为空"); }
         String path = request.getSession().getServletContext().getRealPath("upload");
-        File newFile = Base64ToFile.base64ToFile(imgStr,path);
-        String name = newFile.getName();
-        FTPUtil.uploadImage(Lists.newArrayList(newFile));
-        boolean delete = newFile.delete();
-        if (!delete){
-            log.info("本地头像删除失败");
-        }
-        User user1 = new User();
-        user1.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/image/"+name);
-        log.info("修改后的用户头像地址：{}",user1.getUserPortrait());
-        return userService.uploadPortrait(user.getName(),user1);
+        return userService.uploadPortrait(user.getName(),imgStr,path);
     }
+
+    @ApiOperation("上传证明(图片)")
+    @PostMapping("/uploadFile")
+    public ServerResponse uploadCertificate(Authentication user,@RequestParam String imgStr
+            ,@RequestParam String type, HttpServletRequest request) throws IOException {
+        //没有用户信息
+        if (StringUtils.isEmpty(user)){ return ServerResponse.createByErrorMessage("请先登录"); }
+        // 图像数据为空
+        if (imgStr == null) { return ServerResponse.createByErrorMessage("图像数据为空"); }
+        String path = request.getSession().getServletContext().getRealPath("upload");
+        return userService.uploadFile(user.getName(),imgStr,path,type);
+    }
+
 
     /**
      * 修改密码第一步
      * 发送email，并保存valid 和username
      */
-    @ApiOperation("修改密码（发送email）")
-    @PostMapping("/getEmail")
+    @ApiOperation("修改密码（发送email） 格式：/getEmail?username=15235951681")
+    @GetMapping("/getEmail")
     public ServerResponse sendEmail(@RequestParam String username){
+        if (username == null){
+            return ServerResponse.createByErrorMessage("用户账号不能为空");
+        }
         return userService.findPasswd(username);
     }
 
@@ -125,7 +103,6 @@ public class UserController {
      * 修改密码第二步
      * 用户点击邮件，通过valid校验有效 后跳转到修改密码页面
      * 校验 valid 真实性
-     * @return
      */
     @GetMapping("/findPasswd/{valid}")
     public ModelAndView findPasswd(
@@ -162,67 +139,5 @@ public class UserController {
         mv.addObject("msg","密码修改成功!");
         mv.setViewName("success");
         return mv;
-    }
-
-
-
-
-
-    /**
-     * 判断是 图片文件
-     */
-    private static boolean isImage(String fileName){
-        String reg = "(jpg)|(png)|(gif)|(bmp)|(GIF)|(JPG)|(PNG)|(JPEG)";
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(fileName);
-        boolean b = matcher.find();
-        log.info("图片验证结果：{}",b);
-        return b;
-    }
-
-    /**
-     * 判断是 压缩文件
-     */
-    private static boolean isZip(String fileName) {
-        String reg = "(RAR)|(ZIP)|(7Z)|(GZ)|(BZ)|(ACE)|(UHA)|(UDA)|(ZPAQ)";
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(fileName.toUpperCase());
-        boolean b = matcher.find();
-        log.info("图片验证结果：{}", b);
-        return b;
-    }
-    /**
-     * 上传头像
-     */
-    public static String uploadFile(MultipartFile file,String path){
-        String fileName = file.getOriginalFilename();
-        //扩展名
-        String fileExtensionName = fileName.substring(fileName.lastIndexOf(".")+1);
-        log.info("获取到的文件是{},后缀是{}",fileName,fileExtensionName);
-        if (!isImage(fileExtensionName)){
-            log.info("图片格式错误{}");
-            //这里返回异常
-//            return "图片格式错误！";
-        }
-        String uploadFileName = UUID.randomUUID().toString().replace("-","")+"."+fileExtensionName;
-        log.info("开始上传文件,上传文件的文件名:{},上传的路径:{},新文件名:{}",fileName,path,uploadFileName);
-
-        File fileDir = new File(path);
-        if(!fileDir.exists()){
-            fileDir.setWritable(true);
-            fileDir.mkdirs();
-        }
-        File targetFile = new File(path,uploadFileName);
-        try {
-            file.transferTo(targetFile);
-            FTPUtil.uploadImage(Lists.newArrayList(targetFile));
-            targetFile.delete();
-        } catch (IOException e) {
-            log.error("上传文件异常",e);
-//            return "上传文件异常";
-        }
-        String name = targetFile.getName();
-        log.info("targetFile.getName():{}",name);
-        return name;
     }
 }

@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.codehaus.jackson.type.JavaType;
 import org.codehaus.jackson.type.TypeReference;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 /**
@@ -15,7 +16,7 @@ import java.text.SimpleDateFormat;
  * 2018/4/21 14:08
  */
 @Slf4j
-public class JsonUtil {
+public class JsonUtil implements Serializable {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
 

@@ -2,11 +2,9 @@ package com.tyut.web.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.tyut.core.constants.ConsParams;
-import com.tyut.core.constants.SexEnum;
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ResponseCode;
 import com.tyut.core.response.ServerResponse;
-import com.tyut.core.utils.FTPUtil;
 import com.tyut.user.service.UserService;
 import com.tyut.web.dto.RegisterDto;
 import com.tyut.web.util.CheckFormat;
@@ -16,7 +14,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Created by Fant.J.
@@ -88,17 +85,14 @@ public class RegisterController {
             user.setUserSchoolId(registerDto.getSchoolId());
             user.setUserProfession(registerDto.getProfession());
             user.setUserStatus(0);
-            //Sun Jan 01 2012 00:00:00 GMT+0800 (中国标准时间)
-            //Mon Jan 01 2018 00:00:00 GMT+0800 (中国标准时间)
-            String[] split = registerDto.getGrade().split(" ");
-            user.setUserGrade(split[3]);
+            user.setUserGrade(registerDto.getGrade());
             user.setUserSex(registerDto.getSex());
             user.setUserEducation(registerDto.getEdu());
             user.setUserStuNum(registerDto.getNum());
             user.setUserSchool(" ");
             user.setUserUpdateTime(new Date());
             //默认头像
-            if (registerDto.getSex().equals(SexEnum.GIRL.getCode())){
+            if (registerDto.getSex().equals(ConsParams.SexEnum.GIRL.getCode())){
                 user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+ConsParams.Portrait.GIRL_PROTRAIT);
             }else {
                 user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+ConsParams.Portrait.BOY_PORTRAIT);

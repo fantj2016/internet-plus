@@ -53,4 +53,30 @@ public class ConsParams implements Serializable {
          */
         String PASSWD_NOT_EQUIST_MSG = "两次密码输入不一致";
     }
+
+    /**
+     * 性别ENUM
+     */
+    public enum SexEnum{
+        GIRL(0,"女"),
+        BOY(1,"男");
+        SexEnum(Integer code, String value) {
+            this.code = code;
+            this.value = value;
+        }
+        private Integer code;
+        private String value;
+        public Integer getCode() {
+            return code;
+        }
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+        public String getValue() {
+            return value;
+        }
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
 }

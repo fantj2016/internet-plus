@@ -7,6 +7,7 @@ import org.hibernate.engine.internal.Collections;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Collection;
  * 2018/5/20 15:41
  */
 @Slf4j
-public class PrintUtil {
+public class PrintUtil implements Serializable {
 
     /**
      * 打印日志
