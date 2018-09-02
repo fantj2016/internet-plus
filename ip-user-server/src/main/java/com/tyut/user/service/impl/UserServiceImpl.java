@@ -168,21 +168,24 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public ServerResponse uploadFile(String username, String imgStr,String path,String type) throws IOException {
         String ftpFilePath = "";
-        int fileType = 0;//0是证明，1是作品
+        int fileType = ConsParams.FileType.USER_FILE_OF_CERTIFY;
         File newFile = null;
         if (CheckFormat.isImage(type)){
-                String fileName = UUID.randomUUID().toString().replace("-","")+".jpg";
+                String fileName = UUID.randomUUID().toString().replace("-","")+
+                        ConsParams.FilePostfix.IMG_POSTFIX;
                 newFile = Base64ToFile.base64ToFile(imgStr,path,fileName);
                 log.info("file isImage");
                 FTPUtil.uploadImage(Lists.newArrayList(newFile));
-                ftpFilePath = "/image/";
+                ftpFilePath = ConsParams.FtpFilePath.FTP_IMG_PATH;
+
             }else if (CheckFormat.isZip(type)){
-                String fileName = UUID.randomUUID().toString().replace("-","")+".zip";
+                String fileName = UUID.randomUUID().toString().replace("-","")+
+                        ConsParams.FilePostfix.ZIP_POSTFIX;
                 newFile = Base64ToFile.base64ToFile(imgStr,path,fileName);
                 log.info("file isZip");
                 FTPUtil.uploadZip(Lists.newArrayList(newFile));
-                ftpFilePath = "/works/";
-                fileType = 1;
+                ftpFilePath = ConsParams.FtpFilePath.FTP_ZIP_PATH;
+                fileType = ConsParams.FileType.USER_FILE_OF_WORK;
             }
         assert newFile != null;
         String name = newFile.getName();
@@ -213,14 +216,15 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ServerResponse uploadPortrait(String username, String imgStr,String path) throws IOException {
-        String fileName = UUID.randomUUID().toString().replace("-","")+".jpg";
+        String fileName = UUID.randomUUID().toString().replace("-","")+
+                ConsParams.FilePostfix.IMG_POSTFIX;
         File newFile = Base64ToFile.base64ToFile(imgStr,path,fileName);
         String name = newFile.getName();
         FTPUtil.uploadImage(com.google.common.collect.Lists.newArrayList(newFile));
         boolean delete = newFile.delete();
         if (!delete){ log.info("本地头像删除失败"); }
         User user = new User();
-        user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+"/image/"+name);
+        user.setUserPortrait(ConsParams.Portrait.PRIFIX_PORTRAIT+ConsParams.FtpFilePath.FTP_IMG_PATH+name);
         log.info("修改后的用户头像地址：{}",user.getUserPortrait());
         if (CheckFormat.isPhone(username)){
             user.setUserPhone(username);
@@ -244,7 +248,160 @@ public class UserServiceImpl implements UserService {
         try {
             new MailSender()
                     .title("重设你的晋软杯账户密码")
-                    .content("<a href='"+ConsParams.Portrait.PRIFIX_PORTRAIT+"/findPasswd/"+uuid+"' target='_blank'> 点击此链接修改密码</a>")
+//                    .content("<a href='"+ConsParams.Portrait.PRIFIX_PORTRAIT+"/findPasswd/"+uuid+"' target='_blank'> 点击此链接修改密码</a>")
+                    .content("<!DOCTYPE html>\n" +
+                            "<html lang=\"en\">\n" +
+                            "\n" +
+                            "<head>\n" +
+                            "    <meta charset=\"UTF-8\">\n" +
+                            "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                            "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n" +
+                            "    <title>Document</title>\n" +
+                            "    <style>\n" +
+                            "        .box {\n" +
+                            "            width: 1140px;\n" +
+                            "            height: 680px;\n" +
+                            "            position: absolute;\n" +
+                            "\n" +
+                            "            top: 0;\n" +
+                            "            right: 0;\n" +
+                            "            bottom: 0;\n" +
+                            "            left: 0;\n" +
+                            "            margin: auto;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left {\n" +
+                            "            width: 790px;\n" +
+                            "            height: inherit;\n" +
+                            "            position: absolute;\n" +
+                            "            left: 0;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border {\n" +
+                            "            width: 666px;\n" +
+                            "            height: 534px;\n" +
+                            "            border: 2px dotted #cacaca;\n" +
+                            "            background: #eef0f2;\n" +
+                            "            position: absolute;\n" +
+                            "            top: 0;\n" +
+                            "            right: 0;\n" +
+                            "            bottom: 0;\n" +
+                            "            left: 0;\n" +
+                            "            margin: auto;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border .stamp {\n" +
+                            "            position: absolute;\n" +
+                            "            top: -36px;\n" +
+                            "            left: -40px;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border .logo {\n" +
+                            "            position: absolute;\n" +
+                            "            right: 20px;\n" +
+                            "            top: 24px;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border p {\n" +
+                            "            position: absolute;\n" +
+                            "            font-size: 16px;\n" +
+                            "            color: #595757;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border .p1 {\n" +
+                            "            left: 72px;\n" +
+                            "            top: 54px;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border .p2 {\n" +
+                            "            left: 106px;\n" +
+                            "            top: 130px;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border .p3 {\n" +
+                            "            right: 136px;\n" +
+                            "            top: 222px;\n" +
+                            "            color: #f42929;\n" +
+                            "            font-size: 14px;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border .p4 {\n" +
+                            "            left: 106px;\n" +
+                            "            bottom: 198px;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border .p5 {\n" +
+                            "            left: 106px;\n" +
+                            "            bottom: 140px;\n" +
+                            "        }\n" +
+                            "        .left .border .p6 {\n" +
+                            "            right: 52px;\n" +
+                            "            bottom: 52px;\n" +
+                            "        }\n" +
+                            "        .left .border .p7 {\n" +
+                            "            right: 52px;\n" +
+                            "            bottom: 24px;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .left .border .btn {\n" +
+                            "\n" +
+                            "            position: absolute;\n" +
+                            "            top: 200px;\n" +
+                            "            left: 84px;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .right-shadow {\n" +
+                            "            position: absolute;\n" +
+                            "            right: 350px;\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .right {\n" +
+                            "            width: 350px;\n" +
+                            "            height: inherit;\n" +
+                            "            position: absolute;\n" +
+                            "            right: 0;\n" +
+                            "            /* box-shadow: 0 -3px 10px #ccc; */\n" +
+                            "        }\n" +
+                            "\n" +
+                            "        .right img {\n" +
+                            "            /* object-fit: contain; */\n" +
+                            "            position: absolute;\n" +
+                            "            top: 0;\n" +
+                            "            right: 0;\n" +
+                            "            bottom: 0;\n" +
+                            "            left: 0;\n" +
+                            "            margin: auto;\n" +
+                            "        }\n" +
+                            "    </style>\n" +
+                            "</head>\n" +
+                            "\n" +
+                            "<body>\n" +
+                            "    <div class=\"box\">\n" +
+                            "        <div class=\"left\">\n" +
+                            "            <div class=\"border\">\n" +
+                            "                <img src=\"./img/stamp.png\" alt=\"\" class=\"stamp\">\n" +
+                            "                <img src=\"./img/logo.png\" alt=\"\" class=\"logo\">\n" +
+                            "                <p class=\"p1\">尊敬的 张女士：</p>\n" +
+                            "                <p class=\"p2\">您是否忘记密码？</p>\n" +
+                            //"<a href='"+ConsParams.Portrait.PRIFIX_PORTRAIT+"/findPasswd/"+uuid+"' target='_blank'> 点击此链接修改密码</a>"
+                            "                <a href=\""+ConsParams.Portrait.PRIFIX_PORTRAIT+"/findPasswd/"+uuid+"\" class=\"btn\" target=\"_blank\">\n" +
+                            "                    <img src=\"img/btn.png\" alt=\"\">\n" +
+                            "                </a>\n" +
+                            "                <p class=\"p3\">*注意此按钮24小时内有效</p>\n" +
+                            "                <p class=\"p4\">如若您不希望重设密码或并未请求更改密码，请忽略并删除邮件。</p>\n" +
+                            "                <p class=\"p5\">谢谢！</p>\n" +
+                            "                <p class=\"p6\">晋软杯官方团队</p>\n" +
+                            "                <p class=\"p7\">2018.9.13</p>\n" +
+                            "            </div>\n" +
+                            "        </div>\n" +
+                            "        <img src=\"./img/right-shadow.png\" alt=\"\" class=\"right-shadow\">\n" +
+                            "        <div class=\"right\">\n" +
+                            "            <img src=\"./img/right.png\" alt=\"\">\n" +
+                            "        </div>\n" +
+                            "    </div>\n" +
+                            "</body>\n" +
+                            "\n" +
+                            "</html>")
                     .contentType(MailContentTypeEnum.HTML)
                     .targets(new ArrayList<String>(){{
                         add(email); }}).send();

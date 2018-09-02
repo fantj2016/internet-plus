@@ -79,4 +79,25 @@ public class ConsParams implements Serializable {
             this.value = value;
         }
     }
+    /**
+     * 上传文件类型：0是证明，1是作品
+     */
+    public interface FileType{
+        int USER_FILE_OF_WORK = 1;
+        int USER_FILE_OF_CERTIFY = 0;
+    }
+    /**
+     * 文件后缀
+     */
+    public interface FilePostfix{
+        String IMG_POSTFIX = "jpg";
+        String ZIP_POSTFIX = "zip";
+    }
+    /**\
+     * Ftp 文件上传/获取  路径
+     */
+    public interface FtpFilePath{
+        String FTP_IMG_PATH = "/image/";
+        String FTP_ZIP_PATH = "/works/";
+    }
 }

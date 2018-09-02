@@ -91,12 +91,12 @@ public class UserController {
      * 发送email，并保存valid 和username
      */
     @ApiOperation("修改密码（发送email） 格式：/getEmail?username=15235951681")
-    @GetMapping("/getEmail")
-    public ServerResponse sendEmail(@RequestParam String username){
-        if (username == null){
+    @PostMapping("/getEmail")
+    public ServerResponse sendEmail(@RequestParam String email){
+        if (email == null){
             return ServerResponse.createByErrorMessage("用户账号不能为空");
         }
-        return userService.findPasswd(username);
+        return userService.findPasswd(email);
     }
 
     /**
