@@ -51,6 +51,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (exsitSomeone){
             return ServerResponse.createByErrorMessage("无需重复提交!");
         }
+
         GroupMembers members = new GroupMembers();
         members.setGroupId(groupId);
         members.setUserId(userId);
@@ -61,6 +62,11 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (save == null){
             return ServerResponse.createBySuccessMessage("申请失败");
         }
+        /**
+         * 通知队长
+         */
+        String headerUserId = getHeaderUserId(groupId);
+        newsService.addNews(headerUserId,"你创建的团队:"+groupName+"又有新申请啦！");
         newsService.addNews(userId,"申请已通知队长，请等待队长同意");
         return ServerResponse.createBySuccessMessage("申请成功");
     }
@@ -70,7 +76,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      */
     @Override
     public ServerResponse findGroupsByGroupId(Integer groupId) {
-        Query nativeQuery = em.createNativeQuery("select g.group_name,u.user_name,u.user_phone,g.user_identity,g.user_status from ip_group_members as g,ip_user as u where g.user_id=u.user_id and g.group_id=? ORDER BY g.user_identity desc,g.user_status desc");
+        Query nativeQuery = em.createNativeQuery("select g.group_name,u.user_name,u.user_phone,g.user_identity,g.user_status,u.user_id from ip_group_members as g,ip_user as u where g.user_id=u.user_id and g.group_id=? ORDER BY g.user_identity desc,g.user_status desc");
         List<Object> objects = nativeQuery.setParameter(1, groupId).getResultList();
         List<GroupMemVo> list = new ArrayList<>();
         for (Object o : objects) {
@@ -81,6 +87,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
             view.setUserPhone((String) rowArray[2]);
             view.setUserIdentity((Integer) rowArray[3]);
             view.setUserStatus((Integer) rowArray[4]);
+            view.setUserId((String) rowArray[5]);
             list.add(view);
         }
         if (!StringUtils.isEmpty(list)){
@@ -107,11 +114,39 @@ public class GroupMemberServiceImpl implements GroupMemberService {
             //无同意权限
             return ServerResponse.createByErrorMessage("该用户没有权限");
         }
-        int i1 = membersMapper.updateStatus(groupId, userId);
+        int i1 = membersMapper.updateAgreeStatus(groupId, userId);
         if (i1 == 0){
             return ServerResponse.createByErrorMessage("用户加入失败");
         }
         newsService.addNews(userId,"队长已同意你加入队伍,请刷新查看我的队伍");
+        return ServerResponse.createBySuccessMessage("用户加入成功");
+    }
+
+    /**
+     * 拒绝用户加入队伍
+     *
+     * @param groupId
+     * @param headId
+     * @param userId
+     */
+    @Override
+    public ServerResponse rejectSomeone(Integer groupId, String headId, String userId) {
+        int i = 0;
+        try {
+            i = membersMapper.selectIndentity(headId, groupId);
+        }catch (Exception e){
+            return ServerResponse.createByErrorMessage("参数不和要求");
+        }
+        log.info("******* 组id{},用户id{}权限信息是{}",groupId,headId,i);
+        if (i == 0){
+            //无同意权限
+            return ServerResponse.createByErrorMessage("该用户没有权限");
+        }
+        int i1 = membersMapper.updateRejectStatus(groupId, userId);
+        if (i1 == 0){
+            return ServerResponse.createByErrorMessage("拒绝操作失败");
+        }
+        newsService.addNews(userId,"队长拒绝你加入队伍,详手机联系对方");
         return ServerResponse.createBySuccessMessage("用户加入成功");
     }
 
@@ -149,5 +184,11 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         int exsitSomeone = membersMapper.isExsitSomeone(groupId, userId);
         log.info("*** 该用户是否存在某个队伍"+exsitSomeone);
         return exsitSomeone != 0;
+    }
+    /**
+     * 根据groupId 查询队长 的userID
+     */
+    public String getHeaderUserId(Integer groupId){
+        return membersMapper.getHeaderUserId(groupId);
     }
 }

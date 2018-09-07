@@ -31,7 +31,12 @@
     from ip_group_members
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <select id="getHeaderUserId" resultType="java.lang.String">
+    select user_id from ip_group_members
+    where group_id = #{groupId,jdbcType=INTEGER}
+    and user_identity = 1
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ip_group_members
     where id = #{id,jdbcType=INTEGER}
   </delete>
@@ -115,12 +120,16 @@
 
 
 
-  <update id="updateStatus" parameterType="com.tyut.core.pojo.GroupMembers" >
+  <update id="updateAgreeStatus" parameterType="com.tyut.core.pojo.GroupMembers" >
     update ip_group_members
     set user_status = 1
     where user_id = #{userId,jdbcType=VARCHAR} and group_id = #{groupId,jdbcType=INTEGER}
   </update>
-
+  <update id="updateRejectStatus" parameterType="com.tyut.core.pojo.GroupMembers" >
+    update ip_group_members
+    set user_status = 2
+    where user_id = #{userId,jdbcType=VARCHAR} and group_id = #{groupId,jdbcType=INTEGER}
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.GroupMembers" >
     update ip_group_members
     set group_id = #{groupId,jdbcType=INTEGER},

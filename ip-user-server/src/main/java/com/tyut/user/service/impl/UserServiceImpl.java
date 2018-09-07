@@ -202,6 +202,7 @@ public class UserServiceImpl implements UserService {
         userFile.setFileType(fileType);
         userFile.setCptId(0);
         userFile.setFileUrl(ConsParams.Portrait.PRIFIX_PORTRAIT+ftpFilePath+name);
+        userFile.setFileStatus(0);
         log.info("文件地址：{}",userFile.getFileUrl());
         UserFile save = fileRepository.save(userFile);
         if (save != null){

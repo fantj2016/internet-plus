@@ -21,4 +21,5 @@ public class UserFile implements Serializable {
     private String fileUrl;
     private String username;
     private Integer cptId;
+    private Integer fileStatus;
 }

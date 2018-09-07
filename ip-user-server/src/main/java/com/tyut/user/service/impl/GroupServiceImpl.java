@@ -79,12 +79,16 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public ServerResponse selectByKey(String key) {
         Query nativeQuery = entityManager.createNativeQuery(
-                "select g.group_id,g.group_name from ip_group g WHERE g.group_key=?");
+                "select g.group_id,g.group_name,g.group_phone,g.group_address,c.cpt_name from ip_group g,ip_competition c WHERE g.group_key=? and g.group_type=c.cpt_id");
         Object singleResult = nativeQuery.setParameter(1, key).getSingleResult();
             Object[] rowArray = (Object[]) singleResult;
             GroupVo groupVo = new GroupVo();
             groupVo.setGroupId(((Integer) rowArray[0]));
             groupVo.setGroupName((String) rowArray[1]);
+            groupVo.setGroupPhone((String) rowArray[2]);
+            groupVo.setGroupAddress((String) rowArray[3]);
+            groupVo.setCptName((String) rowArray[4]);
+            groupVo.setGroupKey(key);
 
         if (StringUtils.isEmpty(groupVo)){
             return ServerResponse.createByErrorMessage("该队伍不存在");
@@ -102,7 +106,7 @@ public class GroupServiceImpl implements GroupService {
                         "from ip_user as u,ip_group_members m,ip_competition c,ip_group g   " +
                         "where u.user_id=m.user_id and m.user_status =1 and m.group_type=c.cpt_id  and g.group_id = m.group_id and u.user_id = ? " +
                         "GROUP BY m.group_id ORDER BY m.group_id DESC");
-        List<Object> resultList = nativeQuery.setParameter(1, userId).getResultList();
+        List resultList = nativeQuery.setParameter(1, userId).getResultList();
         List<GroupsVo> list = new ArrayList<>();
         for (Object o : resultList) {
             Object[] rowArray = (Object[]) o;

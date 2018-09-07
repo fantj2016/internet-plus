@@ -90,8 +90,8 @@ public class ConsParams implements Serializable {
      * 文件后缀
      */
     public interface FilePostfix{
-        String IMG_POSTFIX = "jpg";
-        String ZIP_POSTFIX = "zip";
+        String IMG_POSTFIX = ".jpg";
+        String ZIP_POSTFIX = ".zip";
     }
     /**\
      * Ftp 文件上传/获取  路径

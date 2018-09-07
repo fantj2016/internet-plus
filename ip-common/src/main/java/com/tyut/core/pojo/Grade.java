@@ -25,4 +25,6 @@ public class Grade  implements Serializable {
     private Date gradeCreateTime;
 
     private Date gradeUpdateTime;
+
+    private Integer cptId;
 }

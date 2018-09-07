@@ -20,4 +20,20 @@ public class GroupVo implements Serializable {
      * 队伍名字
      */
     private String groupName;
+    /**
+     * 竞赛名字
+     */
+    private String cptName;
+    /**
+     * 加队口令
+     */
+    private String groupKey;
+    /**
+     * 队伍地址
+     */
+    private String groupAddress;
+    /**
+     * 联系方式
+     */
+    private String groupPhone;
 }

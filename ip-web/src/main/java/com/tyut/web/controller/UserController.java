@@ -75,7 +75,7 @@ public class UserController {
 
     @ApiOperation("上传证明(图片)")
     @PostMapping("/uploadFile")
-    public ServerResponse uploadCertificate(Authentication user,@RequestParam String imgStr
+    public ServerResponse uploadfile(Authentication user,@RequestParam String imgStr
             ,@RequestParam String type, HttpServletRequest request) throws IOException {
         //没有用户信息
         if (StringUtils.isEmpty(user)){ return ServerResponse.createByErrorMessage("请先登录"); }

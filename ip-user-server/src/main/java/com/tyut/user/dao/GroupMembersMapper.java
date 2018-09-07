@@ -20,11 +20,15 @@ public interface GroupMembersMapper {
 
     int updateByPrimaryKey(GroupMembers record);
     /** 同意用户加入（用户状态修改成1）*/
-    int updateStatus(@Param("groupId") Integer groupId,@Param("userId") String userId);
+    int updateAgreeStatus(@Param("groupId") Integer groupId,@Param("userId") String userId);
+    /** 拒绝用户加入（用户状态修改成2）*/
+    int updateRejectStatus(@Param("groupId") Integer groupId,@Param("userId") String userId);
     /** 查询用户是否是队长 */
     int selectIndentity(@Param("userId") String userId,@Param("groupId") Integer groupId);
     /** 删除某个队员 */
     int deleteSomeone(@Param("groupId") Integer groupId,@Param("userId") String userId);
     /** 查询是否存在某个用户 */
     int isExsitSomeone(@Param("groupId") Integer groupId,@Param("userId") String userId);
+    /** 根据groupId查询队长的UserId */
+    String getHeaderUserId(@Param("groupId") Integer groupId);
 }

@@ -26,4 +26,5 @@ public class GroupMemVo implements Serializable {
      * 是否通过申请（申请入队）
      */
     private Integer userStatus;
+    private String userId;
 }
