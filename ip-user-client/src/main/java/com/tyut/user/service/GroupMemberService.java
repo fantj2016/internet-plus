@@ -13,6 +13,8 @@ public interface GroupMemberService {
     ServerResponse findGroupsByGroupId(Integer groupId);
     /** 同意用户加入队伍 */
     ServerResponse agreeSomeone(Integer groupId, String headId, String userId);
+    /** 拒绝用户加入队伍 */
+    ServerResponse rejectSomeone(Integer groupId, String headId, String userId);
     /** 移除某位队员 */
     ServerResponse removeSomeone(Integer groupId, String headId, String userId);
 }

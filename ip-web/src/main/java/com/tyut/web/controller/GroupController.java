@@ -70,7 +70,13 @@ public class GroupController {
                                        @ApiParam("需要同意的队员id")@RequestParam String userId){
         return memberService.agreeSomeone(groupId,headId,userId);
     }
-
+    @ApiOperation("队长拒绝用户加入")
+    @PostMapping("/reject")
+    public ServerResponse rejectSomeone(@ApiParam("队伍id")@RequestParam Integer groupId,
+                                       @ApiParam("登录用户(假设该用户是队长)id") @RequestParam String headId,
+                                       @ApiParam("需要同意的队员id")@RequestParam String userId){
+        return memberService.rejectSomeone(groupId,headId,userId);
+    }
     @ApiOperation("队长移除队员")
     @PostMapping("/remove")
     public ServerResponse removeSomeone(@ApiParam("队伍id")@RequestParam Integer groupId,
