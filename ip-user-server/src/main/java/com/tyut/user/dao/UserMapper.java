@@ -23,4 +23,8 @@ public interface UserMapper {
     int updatePortraitByPhone(User record);
     /** 通过email 修改密码 */
     int updatePasswdByEmail(User user);
+
+    int updateStatusByEmail(String username);
+
+    int updateStatusByPhone(String username);
 }

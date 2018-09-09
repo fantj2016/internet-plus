@@ -46,16 +46,18 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.8-dmr</version>
-            <scope>compile</scope>
         </dependency>
         <!--dubbo 依赖-->
         <dependency>
-            <groupId>io.dubbo.springboot</groupId>
-            <artifactId>spring-boot-starter-dubbo</artifactId>
-            <version>1.0.0</version>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>0.1.0</version>
         </dependency>
-        <!--junit 测试工具-->
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.2</version>
+        </dependency>        <!--junit 测试工具-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

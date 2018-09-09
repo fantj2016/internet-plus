@@ -74,7 +74,7 @@ public class GroupController {
     @PostMapping("/reject")
     public ServerResponse rejectSomeone(@ApiParam("队伍id")@RequestParam Integer groupId,
                                        @ApiParam("登录用户(假设该用户是队长)id") @RequestParam String headId,
-                                       @ApiParam("需要同意的队员id")@RequestParam String userId){
+                                       @ApiParam("需要拒绝的队员id")@RequestParam String userId){
         return memberService.rejectSomeone(groupId,headId,userId);
     }
     @ApiOperation("队长移除队员")

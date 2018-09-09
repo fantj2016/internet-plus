@@ -5,6 +5,7 @@ package com.tyut.web.controller;
         import com.tyut.core.constants.ConsParams;
         import com.tyut.core.dto.UserUpdateVo;
         import com.tyut.core.pojo.User;
+        import com.tyut.core.pojo.UserFile;
         import com.tyut.core.response.ServerResponse;
         import com.tyut.core.utils.FTPUtil;
         import com.tyut.user.service.UserService;
@@ -74,15 +75,46 @@ public class UserController {
     }
 
     @ApiOperation("上传证明(图片)")
-    @PostMapping("/uploadFile")
-    public ServerResponse uploadfile(Authentication user,@RequestParam String imgStr
-            ,@RequestParam String type, HttpServletRequest request) throws IOException {
+    @PostMapping("/uploadCert")
+    public ServerResponse uploadCert(Authentication user,@RequestParam String imgStr
+            , HttpServletRequest request) throws IOException {
         //没有用户信息
         if (StringUtils.isEmpty(user)){ return ServerResponse.createByErrorMessage("请先登录"); }
         // 图像数据为空
         if (imgStr == null) { return ServerResponse.createByErrorMessage("图像数据为空"); }
         String path = request.getSession().getServletContext().getRealPath("upload");
-        return userService.uploadFile(user.getName(),imgStr,path,type);
+        return userService.uploadCert(user.getName(),imgStr,path);
+    }
+    @ApiOperation("上传作品")
+    @PostMapping("/uploadWork")
+    public ServerResponse uploadWork(Authentication user,MultipartFile file
+            , HttpServletRequest request) throws IOException {
+        //没有用户信息
+        if (StringUtils.isEmpty(user)){ return ServerResponse.createByErrorMessage("请先登录"); }
+        // 图像数据为空
+        if (file == null) { return ServerResponse.createByErrorMessage("图像数据为空"); }
+        String path = request.getSession().getServletContext().getRealPath("upload");
+        File folder = new File(path);
+        if (!folder.exists()){
+            folder.mkdirs();
+        }
+        String username = user.getName();
+        String fileName = UUID.randomUUID().toString().replace("-","")+
+                ConsParams.FilePostfix.ZIP_POSTFIX;
+        File localFile = new File(path,fileName);
+        file.transferTo(localFile);
+        FTPUtil.uploadZip(Lists.newArrayList(localFile));
+        boolean delete = localFile.delete();
+        if (delete != true){log.info("本地zip删除失败");}
+        UserFile userFile = new UserFile();
+        userFile.setFileName(fileName);
+        userFile.setUsername(username);
+        userFile.setFileType(ConsParams.FileType.USER_FILE_OF_WORK);
+        userFile.setCptId(0);
+        userFile.setFileUrl(ConsParams.Portrait.PRIFIX_PORTRAIT+ConsParams.FtpFilePath.FTP_ZIP_PATH+fileName);
+        userFile.setFileStatus(0);
+        log.info("文件地址：{}",userFile.getFileUrl());
+        return userService.uploadWork(userFile);
     }
 
 

@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -162,15 +163,15 @@ public class UserServiceImpl implements UserService {
 
 
     /**
-     * 上传文件
+     * 上传证明
      */
     @Override
     @Transactional
-    public ServerResponse uploadFile(String username, String imgStr,String path,String type) throws IOException {
+    public ServerResponse uploadCert(String username, String imgStr,String path) throws IOException {
         String ftpFilePath = "";
         int fileType = ConsParams.FileType.USER_FILE_OF_CERTIFY;
         File newFile = null;
-        if (CheckFormat.isImage(type)){
+//        if (CheckFormat.isImage(type)){
                 String fileName = UUID.randomUUID().toString().replace("-","")+
                         ConsParams.FilePostfix.IMG_POSTFIX;
                 newFile = Base64ToFile.base64ToFile(imgStr,path,fileName);
@@ -178,15 +179,15 @@ public class UserServiceImpl implements UserService {
                 FTPUtil.uploadImage(Lists.newArrayList(newFile));
                 ftpFilePath = ConsParams.FtpFilePath.FTP_IMG_PATH;
 
-            }else if (CheckFormat.isZip(type)){
-                String fileName = UUID.randomUUID().toString().replace("-","")+
-                        ConsParams.FilePostfix.ZIP_POSTFIX;
-                newFile = Base64ToFile.base64ToFile(imgStr,path,fileName);
-                log.info("file isZip");
-                FTPUtil.uploadZip(Lists.newArrayList(newFile));
-                ftpFilePath = ConsParams.FtpFilePath.FTP_ZIP_PATH;
-                fileType = ConsParams.FileType.USER_FILE_OF_WORK;
-            }
+//            }else if (CheckFormat.isZip(type)){
+//                String fileName = UUID.randomUUID().toString().replace("-","")+
+//                        ConsParams.FilePostfix.ZIP_POSTFIX;
+//                newFile = Base64ToFile.base64ToFile(imgStr,path,fileName);
+//                log.info("file isZip");
+//                FTPUtil.uploadZip(Lists.newArrayList(newFile));
+//                ftpFilePath = ConsParams.FtpFilePath.FTP_ZIP_PATH;
+//                fileType = ConsParams.FileType.USER_FILE_OF_WORK;
+//            }
         assert newFile != null;
         String name = newFile.getName();
         log.info("newFile.getName::::::::::"+name);
@@ -204,6 +205,29 @@ public class UserServiceImpl implements UserService {
         userFile.setFileUrl(ConsParams.Portrait.PRIFIX_PORTRAIT+ftpFilePath+name);
         userFile.setFileStatus(0);
         log.info("文件地址：{}",userFile.getFileUrl());
+        UserFile save = fileRepository.save(userFile);
+        if (save != null && updateUserStatus(username) == 1){
+            return ServerResponse.createBySuccess("上传成功",userFile.getFileUrl());
+        }else {
+            return ServerResponse.createByErrorMessage("上传作品失败");
+        }
+    }
+
+    private int updateUserStatus(String username) {
+        int result = 0;
+        if (CheckFormat.isEmail(username)){
+            result = userMapper.updateStatusByEmail(username);
+        }else if (CheckFormat.isPhone(username)){
+            result = userMapper.updateStatusByPhone(username);
+        }
+        return result;
+    }
+
+    /**
+     * 上传作品
+     */
+    @Override
+    public ServerResponse uploadWork(UserFile userFile) throws IOException {
         UserFile save = fileRepository.save(userFile);
         if (save != null){
             return ServerResponse.createBySuccess("上传成功",userFile.getFileUrl());

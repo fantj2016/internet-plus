@@ -250,6 +250,17 @@
     where user_email = #{userEmail,jdbcType=VARCHAR}
   </update>
 
+  <update id="updateStatusByEmail" parameterType="com.tyut.core.pojo.User" >
+    update ip_user
+    set user_status = 2
+    where user_email = #{userEmail,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateStatusByPhone" parameterType="com.tyut.core.pojo.User" >
+    update ip_user
+    set user_status = 2
+    where user_phone = #{userPhone,jdbcType=VARCHAR}
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.User" >
     update ip_user
     <set >

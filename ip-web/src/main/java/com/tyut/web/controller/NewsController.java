@@ -26,7 +26,7 @@ public class NewsController {
     @ApiOperation("获取消息列表（分页）")
     @GetMapping("/{userId}/{pageNum}/{pageSize}/list")
     public ServerResponse selectNewsList(
-            @RequestParam(value = "pageNum",defaultValue = "0",required = false) Integer pageNum,
+            @PathVariable Integer pageNum,
             @PathVariable Integer pageSize,
             @PathVariable String userId){
         return newsService.selectNewsList(userId,pageNum,pageSize);

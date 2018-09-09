@@ -41,6 +41,8 @@ public class NoticeServiceImplTest {
         all.forEach(p-> System.out.println(p.toString()));*/
 
         Iterator<Notice> all = repostory.findAll(pageable).iterator();
+        Page<Notice> noticePage = repostory.findAll(pageable);
+        System.out.println("page对象============="+noticePage.toString());
         List<Notice> list = new ArrayList<Notice>();
         while (all.hasNext()){
             list.add(all.next());

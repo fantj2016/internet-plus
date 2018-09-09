@@ -36,9 +36,8 @@ public class NewsServiceImpl implements NewsService {
         if (StringUtils.isEmpty(news)){
             return ServerResponse.createByErrorMessage("查询消息列表失败");
         }
-        log.info("查询到的消息数目{}",appsPageInfo.getList());
-        appsPageInfo.getList().forEach(p-> System.out.println(p.toString()));
-        return ServerResponse.createBySuccess(appsPageInfo.getList());
+        log.info("查询到的消息appsPageInfo{}",appsPageInfo);
+        return ServerResponse.createBySuccess(appsPageInfo);
     }
 
     /**

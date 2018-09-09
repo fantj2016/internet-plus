@@ -5,19 +5,20 @@ import com.tyut.core.pojo.Notice;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.notice.repostory.NoticeRepostory;
 import com.tyut.notice.service.NoticeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Fant.J.
  * 2018/4/30 13:43
  */
+@Slf4j
 @Service(version = "2.0.0")
 public class NoticeServiceImpl implements NoticeService {
     @Autowired
@@ -42,15 +43,21 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public ServerResponse selectAll(Integer page,Integer size) {
         Pageable pageable = new PageRequest(page,size,Sort.Direction.DESC,"noticeId");
-        Iterator<Notice> all = noticeRepostory.findAll(pageable).iterator();
-        List<Notice> list = new ArrayList<Notice>();
+        Page<Notice> page1 = noticeRepostory.findAll(pageable);
+        Iterator<Notice> all =page1.iterator();
+                List<Notice> list = new ArrayList<Notice>();
         while (all.hasNext()){
-           list.add(all.next());
+            list.add(all.next());
         }
+        int totalPages = page1.getTotalPages();
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
+        map.put("total",totalPages);
+
         if (all == null){
             return ServerResponse.createByErrorMessage("查询公告列表失败");
         }
-        return ServerResponse.createBySuccess(list);
+        return ServerResponse.createBySuccess(map);
     }
 
 }

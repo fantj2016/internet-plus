@@ -34,6 +34,7 @@ public interface UserRepository extends JpaRepository<User, String> {
      * (用户登录返回使用)
      * 根据id查询 用户 名字+id+电话+学校
      */
+    @Override
     @Query(value = "select u.userId,u.userPhone,u.userSchoolId,u.userName from User u where  u.userId =:id")
     User findOne(@Param("id")String id);
 

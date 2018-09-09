@@ -2,7 +2,9 @@ package com.tyut.user.service;
 
 
 import com.tyut.core.pojo.User;
+import com.tyut.core.pojo.UserFile;
 import com.tyut.core.response.ServerResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -31,8 +33,10 @@ public interface UserService extends Serializable{
     ServerResponse selectMe(String str);
     /** 上传头像 */
     ServerResponse uploadPortrait(String username,String imgStr,String path) throws IOException;
-    /** 上传作品（学生证/作品）*/
-    ServerResponse uploadFile( String username,String imgStr,String path,String type) throws IOException;
+    /** 上传证明（学生证）*/
+    ServerResponse uploadCert(String username,String imgStr,String path) throws IOException;
+    /** 上传作品 */
+    ServerResponse uploadWork(UserFile userFile) throws IOException;
     /** 1.找回密码-发送邮件 */
     ServerResponse findPasswd(String email) throws InterruptedException;
     /** 2.找回密码-有效校验 */
