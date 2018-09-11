@@ -89,16 +89,6 @@ public class FTPUtil implements Serializable {
         return isSuccess;
     }
 
-
-
-
-
-
-
-
-
-
-
     private String ip;
     private int port;
     private String user;

@@ -7,6 +7,8 @@ import com.tyut.notice.repostory.NoticeRepostory;
 import com.tyut.notice.service.NoticeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import java.util.*;
  */
 @Slf4j
 @Service(version = "2.0.0")
+@CacheConfig(cacheNames = "notice")
 public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private NoticeRepostory noticeRepostory;
@@ -30,6 +33,7 @@ public class NoticeServiceImpl implements NoticeService {
      * @param id
      */
     @Override
+    @Cacheable(key = "'selectById'+#id")
     public ServerResponse selectById(Integer id) {
         if (id == null){
             return ServerResponse.createBySuccessMessage("请传入正确的参数id");

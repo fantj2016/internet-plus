@@ -7,28 +7,23 @@ package com.tyut.web.controller;
         import com.tyut.core.pojo.User;
         import com.tyut.core.pojo.UserFile;
         import com.tyut.core.response.ServerResponse;
+        import com.tyut.core.utils.CheckFormat;
         import com.tyut.core.utils.FTPUtil;
         import com.tyut.user.service.UserService;
-        import com.tyut.web.util.Base64ToFile;
         import io.swagger.annotations.Api;
         import io.swagger.annotations.ApiOperation;
         import lombok.extern.slf4j.Slf4j;
         import org.springframework.beans.BeanUtils;
         import org.springframework.security.core.Authentication;
-        import org.springframework.transaction.annotation.Transactional;
         import org.springframework.util.StringUtils;
         import org.springframework.web.bind.annotation.*;
         import org.springframework.web.multipart.MultipartFile;
         import org.springframework.web.servlet.ModelAndView;
-        import sun.misc.BASE64Decoder;
-        import sun.misc.BASE64Encoder;
 
         import javax.servlet.http.HttpServletRequest;
         import java.io.*;
         import java.util.Date;
         import java.util.UUID;
-        import java.util.regex.Matcher;
-        import java.util.regex.Pattern;
 
 /**
  * Created by Fant.J.
@@ -88,17 +83,19 @@ public class UserController {
     @ApiOperation("上传作品")
     @PostMapping("/uploadWork")
     public ServerResponse uploadWork(Authentication user,MultipartFile file
-            , HttpServletRequest request) throws IOException {
+            , HttpServletRequest request,@RequestParam Integer cptId ) throws IOException {
         //没有用户信息
         if (StringUtils.isEmpty(user)){ return ServerResponse.createByErrorMessage("请先登录"); }
         // 图像数据为空
         if (file == null) { return ServerResponse.createByErrorMessage("图像数据为空"); }
         String path = request.getSession().getServletContext().getRealPath("upload");
         File folder = new File(path);
-        if (!folder.exists()){
-            folder.mkdirs();
-        }
+        if (!folder.exists()){ folder.mkdirs(); }
         String username = user.getName();
+        String uploadFileName = file.getName();
+        if (!CheckFormat.isZip(uploadFileName.substring(uploadFileName.lastIndexOf(".")+1))){
+            return ServerResponse.createByErrorMessage("上传文件格式错误");
+        }
         String fileName = UUID.randomUUID().toString().replace("-","")+
                 ConsParams.FilePostfix.ZIP_POSTFIX;
         File localFile = new File(path,fileName);
@@ -110,7 +107,7 @@ public class UserController {
         userFile.setFileName(fileName);
         userFile.setUsername(username);
         userFile.setFileType(ConsParams.FileType.USER_FILE_OF_WORK);
-        userFile.setCptId(0);
+        userFile.setCptId(cptId);
         userFile.setFileUrl(ConsParams.Portrait.PRIFIX_PORTRAIT+ConsParams.FtpFilePath.FTP_ZIP_PATH+fileName);
         userFile.setFileStatus(0);
         log.info("文件地址：{}",userFile.getFileUrl());

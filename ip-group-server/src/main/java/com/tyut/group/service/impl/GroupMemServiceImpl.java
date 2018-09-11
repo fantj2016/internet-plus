@@ -8,7 +8,9 @@ import com.tyut.group.vo.GroupMemVo;
 import com.tyut.group.repostroy.GroupMemRepostory;
 import com.tyut.group.service.GroupMemberService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -21,6 +23,7 @@ import java.util.List;
  */
 @Service(version = "2.0.5")
 @Slf4j
+@CacheConfig(cacheNames = "group")
 public class GroupMemServiceImpl implements GroupMemberService {
 
     @Autowired
@@ -32,6 +35,10 @@ public class GroupMemServiceImpl implements GroupMemberService {
      * 加入队伍
      */
     @Override
+//    @Caching(
+//            cacheable = @Cacheable(key = "'groupsByUserId'+#userId"),
+//            put = @CachePut(key = "'groupInfo' + #groupId")
+//    )
     @Transactional
     public ServerResponse join(Integer groupId,String userId,String groupName) {
         //用key 先查询出 队伍的id，然后插入一条 groupid，userid，队员信息
@@ -55,6 +62,7 @@ public class GroupMemServiceImpl implements GroupMemberService {
      * @param groupId
      */
     @Override
+//    @Cacheable(key = "'groupInfo' + #groupId")
     public ServerResponse findAllBygGroupId(Integer groupId) {
         List<Object> objects = memRepostory.findAllByGroupId(groupId);
         List<GroupMemVo> list = new ArrayList<>();
@@ -96,6 +104,4 @@ public class GroupMemServiceImpl implements GroupMemberService {
         }
         return ServerResponse.createByErrorMessage("用户加入失败");
     }
-
-
 }

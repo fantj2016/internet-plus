@@ -16,6 +16,7 @@ import java.util.List;
  * 2018/4/30 15:38
  */
 @Service(version = "2.0.0")
+@CacheConfig(cacheNames = "guest")
 public class GuestServiceImpl implements GuestService {
     @Autowired
     private GuestRepostory guestRepostory;

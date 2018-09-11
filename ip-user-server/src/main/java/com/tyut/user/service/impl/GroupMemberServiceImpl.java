@@ -9,6 +9,7 @@ import com.tyut.user.service.GroupMemberService;
 import com.tyut.user.vo.GroupMemVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -21,7 +22,6 @@ import java.util.List;
  * 2018/5/31 20:03
  */
 @Service(version = "2.0.0")
-
 @Slf4j
 public class GroupMemberServiceImpl implements GroupMemberService {
 
@@ -34,6 +34,8 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     private GroupMembersMapper membersMapper;
     @Autowired
     private NewsServiceImpl newsService;
+    @Autowired
+    StringRedisTemplate redisTemplate;
 
 
 
@@ -58,6 +60,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         members.setUserIdentity(0);
         members.setUserStatus(0);
         members.setGroupName(groupName);
+//        redisTemplate.opsForValue().append("GroupMembers"+groupId,members.toString());
         GroupMembers save = memRepostory.save(members);
         if (save == null){
             return ServerResponse.createBySuccessMessage("申请失败");
@@ -76,7 +79,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      */
     @Override
     public ServerResponse findGroupsByGroupId(Integer groupId) {
-        Query nativeQuery = em.createNativeQuery("select g.group_name,u.user_name,u.user_phone,g.user_identity,g.user_status,u.user_id from ip_group_members as g,ip_user as u where g.user_id=u.user_id and g.group_id=? ORDER BY g.user_identity desc,g.user_status desc");
+        Query nativeQuery = em.createNativeQuery("select g.group_name,u.user_name,u.user_phone,g.user_identity,g.user_status,u.user_id from ip_group_members as g,ip_user as u where g.user_id=u.user_id and g.group_id=? and g.user_status!=2 ORDER BY g.user_identity desc,g.user_status desc");
         List<Object> objects = nativeQuery.setParameter(1, groupId).getResultList();
         List<GroupMemVo> list = new ArrayList<>();
         for (Object o : objects) {

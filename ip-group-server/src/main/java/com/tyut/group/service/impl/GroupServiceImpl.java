@@ -11,7 +11,10 @@ import com.tyut.group.repostroy.GroupMemRepostory;
 import com.tyut.group.repostroy.GroupRepostory;
 import com.tyut.group.service.GroupService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -26,6 +29,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Service(version = "2.0.5")
+@CacheConfig(cacheNames = "group")
 public class GroupServiceImpl implements GroupService {
 
     @Autowired
@@ -89,6 +93,7 @@ public class GroupServiceImpl implements GroupService {
      * @param userId
      */
     @Override
+//    @Cacheable(key = "'groupsByUserId'+#userId")
     public ServerResponse selectGroupList(Integer userId) {
         List<Object> resultList = memRepostory.findAllByUserId(userId);
         List<GroupsVo> list = new ArrayList<>();

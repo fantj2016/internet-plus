@@ -36,4 +36,8 @@ public class GroupVo implements Serializable {
      * 联系方式
      */
     private String groupPhone;
+    /**
+     * 竞赛id
+     */
+    private Integer cptId;
 }

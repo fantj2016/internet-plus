@@ -6,7 +6,10 @@ import com.tyut.core.response.ServerResponse;
 import com.tyut.notice.repostory.CompetitionRepostory;
 import com.tyut.notice.service.CompetitionService;
 import com.tyut.notice.vo.CompetitionTitleListVo;
+import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.List;
  * 2018/5/6 16:05
  */
 @Service(version = "2.0.0")
+@CacheConfig(cacheNames = "cpt")
 public class CompetitionServiceImpl  implements CompetitionService {
 
 
@@ -29,6 +33,7 @@ public class CompetitionServiceImpl  implements CompetitionService {
      * @param id
      */
     @Override
+    @Cacheable(key = "'selectById'+#id")
     public ServerResponse selectById(Integer id) {
         Competition one = repostory.findOne(id);
         if (one != null){

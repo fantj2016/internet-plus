@@ -79,7 +79,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public ServerResponse selectByKey(String key) {
         Query nativeQuery = entityManager.createNativeQuery(
-                "select g.group_id,g.group_name,g.group_phone,g.group_address,c.cpt_name from ip_group g,ip_competition c WHERE g.group_key=? and g.group_type=c.cpt_id");
+                "select g.group_id,g.group_name,g.group_phone,g.group_address,c.cpt_name,c.cpt_id from ip_group g,ip_competition c WHERE g.group_key=? and g.group_type=c.cpt_id");
         Object singleResult = nativeQuery.setParameter(1, key).getSingleResult();
             Object[] rowArray = (Object[]) singleResult;
             GroupVo groupVo = new GroupVo();
@@ -88,6 +88,7 @@ public class GroupServiceImpl implements GroupService {
             groupVo.setGroupPhone((String) rowArray[2]);
             groupVo.setGroupAddress((String) rowArray[3]);
             groupVo.setCptName((String) rowArray[4]);
+            groupVo.setCptId((Integer) rowArray[5]);
             groupVo.setGroupKey(key);
 
         if (StringUtils.isEmpty(groupVo)){
@@ -138,3 +139,25 @@ public class GroupServiceImpl implements GroupService {
         return ServerResponse.createByErrorMessage("队名已被使用");
     }
 }
+//        truncate table ip_user_file;
+//        truncate table ip_academy              ;
+//        truncate table ip_activity             ;
+//        truncate table ip_admin                ;
+//        truncate table ip_change_passwd        ;
+//        truncate table ip_competition          ;
+//        truncate table ip_cpt_grade            ;
+//        truncate table ip_cpt_support          ;
+//        truncate table ip_file                 ;
+//        truncate table ip_group                ;
+//        truncate table ip_group_members        ;
+//        truncate table ip_guest                ;
+//        truncate table ip_image                ;
+//        truncate table ip_news                 ;
+//        truncate table ip_notice               ;
+//        truncate table ip_province             ;
+//        truncate table ip_result               ;
+//        truncate table ip_school               ;
+//        truncate table ip_title                ;
+//        truncate table ip_user                 ;
+//        truncate table ip_user_edu             ;
+//        truncate table ip_user_file  ;
