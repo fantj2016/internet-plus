@@ -1,6 +1,7 @@
 package com.tyut.web.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.tyut.core.utils.CheckFormat;
 import com.tyut.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.AuthorityUtils;
