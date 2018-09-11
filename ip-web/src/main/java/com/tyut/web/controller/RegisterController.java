@@ -5,6 +5,7 @@ import com.tyut.core.constants.ConsParams;
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ResponseCode;
 import com.tyut.core.response.ServerResponse;
+import com.tyut.core.utils.CheckFormat;
 import com.tyut.user.service.UserService;
 import com.tyut.web.dto.RegisterDto;
 import io.swagger.annotations.Api;
