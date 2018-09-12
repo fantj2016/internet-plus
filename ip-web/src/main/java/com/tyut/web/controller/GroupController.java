@@ -52,8 +52,11 @@ public class GroupController {
 
     @ApiOperation("通过两个id加入队伍")
     @PostMapping("/join")
-    public ServerResponse joinGroup(@RequestParam Integer groupId,@RequestParam String groupName,@RequestParam String userId){
-        return memberService.join(groupId,userId,groupName);
+    public ServerResponse joinGroup(@RequestParam Integer groupId,
+                                    @RequestParam String groupName,
+                                    @RequestParam String userId,
+                                    @RequestParam Integer cptId){
+        return memberService.join(groupId,userId,groupName,cptId);
     }
 
     @ApiOperation("通过groupId 查询队员列表")

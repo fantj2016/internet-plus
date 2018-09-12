@@ -8,7 +8,7 @@ import com.tyut.core.response.ServerResponse;
  */
 public interface GroupMemberService {
     /** 加入队伍 */
-    ServerResponse join(Integer groupId, String userId, String groupName);
+    ServerResponse join(Integer groupId, String userId, String groupName,Integer cptId);
     /** 根据groupid 查询队伍 */
     ServerResponse findGroupsByGroupId(Integer groupId);
     /** 同意用户加入队伍 */
