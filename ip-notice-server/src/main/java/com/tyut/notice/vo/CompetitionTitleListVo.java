@@ -22,6 +22,17 @@ public class CompetitionTitleListVo implements Serializable {
 
     private String cptImg;
 
+    private String cptIcon;
+
     private Integer cptStatus;
 
+    public CompetitionTitleListVo(Integer cptId, String cptType, String cptName, String cptIntro, String cptImg, String cptIcon, Integer cptStatus) {
+        this.cptId = cptId;
+        this.cptType = cptType;
+        this.cptName = cptName;
+        this.cptIntro = cptIntro;
+        this.cptImg = cptImg;
+        this.cptIcon = cptIcon;
+        this.cptStatus = cptStatus;
+    }
 }
