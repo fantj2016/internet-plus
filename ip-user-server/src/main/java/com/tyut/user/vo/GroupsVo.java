@@ -27,6 +27,16 @@ public class GroupsVo implements Serializable {
 
     private String groupKey;
 
+    private Integer cptId;
+
+    private String cptType;
+
+    private String cptIcon;
+
+    private String cptImg;
+
+    private Integer cptStatus;
+
 //    @ManyToOne
 //    private User user;
 

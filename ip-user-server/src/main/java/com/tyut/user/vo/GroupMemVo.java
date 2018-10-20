@@ -23,8 +23,18 @@ public class GroupMemVo implements Serializable {
      */
     private Integer userIdentity;
     /**
-     * 是否通过申请（申请入队）
+     * 是否成功加入
+     */
+    private Integer userStatusForGroup;
+
+    private String userId;
+
+    private String userPortrait;
+
+    private String userSchool;
+
+    /**
+     * 用户认证状态
      */
     private Integer userStatus;
-    private String userId;
 }

@@ -103,7 +103,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public ServerResponse selectGroupList(String userId) {
         Query nativeQuery = entityManager.createNativeQuery(
-                "select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id,c.cpt_name,g.group_key " +
+                "select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id,c.cpt_name,g.group_key," +
+                                        "c.cpt_id,c.cpt_type,c.cpt_icon,c.cpt_img,c.cpt_status " +
                         "from ip_user as u,ip_group_members m,ip_competition c,ip_group g   " +
                         "where u.user_id=m.user_id and m.user_status =1 and m.group_type=c.cpt_id  and g.group_id = m.group_id and u.user_id = ? " +
                         "GROUP BY m.group_id ORDER BY m.group_id DESC");
@@ -120,6 +121,11 @@ public class GroupServiceImpl implements GroupService {
             view.setId((Integer) rowArray[5]);
             view.setCptName((String)rowArray[6]);
             view.setGroupKey((String)rowArray[7]);
+            view.setCptId((Integer) rowArray[8]);
+            view.setCptType((String)rowArray[9]);
+            view.setCptIcon((String)rowArray[10]);
+            view.setCptImg((String)rowArray[11]);
+            view.setCptStatus((Integer) rowArray[12]);
             list.add(view);
         }
         list.forEach(p-> System.out.println(p.toString()));

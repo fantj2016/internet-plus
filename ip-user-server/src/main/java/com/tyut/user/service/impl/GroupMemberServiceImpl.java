@@ -80,7 +80,12 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      */
     @Override
     public ServerResponse findGroupsByGroupId(Integer groupId) {
-        Query nativeQuery = em.createNativeQuery("select g.group_name,u.user_name,u.user_phone,g.user_identity,g.user_status,u.user_id from ip_group_members as g,ip_user as u where g.user_id=u.user_id and g.group_id=? and g.user_status!=2 ORDER BY g.user_identity desc,g.user_status desc");
+        Query nativeQuery = em.createNativeQuery(
+                "select g.group_name,u.user_name,u.user_phone,g.user_identity,g.user_status as user_status_for_group,u.user_id," +
+                            "u.user_portrait,s.school_name,u.user_status " +
+                        "from ip_group_members as g,ip_user as u, ip_school s " +
+                        "where s.id=u.user_school_id and g.user_id=u.user_id and g.group_id=? and g.user_status!=2 " +
+                        "ORDER BY g.user_identity desc,g.user_status desc");
         List<Object> objects = nativeQuery.setParameter(1, groupId).getResultList();
         List<GroupMemVo> list = new ArrayList<>();
         for (Object o : objects) {
@@ -90,8 +95,11 @@ public class GroupMemberServiceImpl implements GroupMemberService {
             view.setUserName((String) rowArray[1]);
             view.setUserPhone((String) rowArray[2]);
             view.setUserIdentity((Integer) rowArray[3]);
-            view.setUserStatus((Integer) rowArray[4]);
+            view.setUserStatusForGroup((Integer) rowArray[4]);
             view.setUserId((String) rowArray[5]);
+            view.setUserPortrait((String) rowArray[6]);
+            view.setUserSchool((String) rowArray[7]);
+            view.setUserStatus((Integer) rowArray[8]);
             list.add(view);
         }
         if (!StringUtils.isEmpty(list)){

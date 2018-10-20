@@ -14,16 +14,14 @@ public class CompetitionTitleListVo implements Serializable {
 
     private Integer cptId;
 
+    private String cptType;
+
     private String cptName;
 
     private String cptIntro;
 
-    public CompetitionTitleListVo() {
-    }
+    private String cptImg;
 
-    public CompetitionTitleListVo(Integer cptId, String cptName, String cptIntro) {
-        this.cptId = cptId;
-        this.cptName = cptName;
-        this.cptIntro = cptIntro;
-    }
+    private Integer cptStatus;
+
 }

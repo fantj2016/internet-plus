@@ -1,29 +1,29 @@
 package com.tyut.web.controller;
 
-        import com.alibaba.dubbo.config.annotation.Reference;
-        import com.google.common.collect.Lists;
-        import com.tyut.core.constants.ConsParams;
-        import com.tyut.core.dto.UserUpdateVo;
-        import com.tyut.core.pojo.User;
-        import com.tyut.core.pojo.UserFile;
-        import com.tyut.core.response.ServerResponse;
-        import com.tyut.core.utils.CheckFormat;
-        import com.tyut.core.utils.FTPUtil;
-        import com.tyut.user.service.UserService;
-        import io.swagger.annotations.Api;
-        import io.swagger.annotations.ApiOperation;
-        import lombok.extern.slf4j.Slf4j;
-        import org.springframework.beans.BeanUtils;
-        import org.springframework.security.core.Authentication;
-        import org.springframework.util.StringUtils;
-        import org.springframework.web.bind.annotation.*;
-        import org.springframework.web.multipart.MultipartFile;
-        import org.springframework.web.servlet.ModelAndView;
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.google.common.collect.Lists;
+import com.tyut.core.constants.ConsParams;
+import com.tyut.core.dto.UserUpdateVo;
+import com.tyut.core.pojo.User;
+import com.tyut.core.pojo.UserFile;
+import com.tyut.core.response.ServerResponse;
+import com.tyut.core.utils.CheckFormat;
+import com.tyut.core.utils.FTPUtil;
+import com.tyut.user.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
-        import javax.servlet.http.HttpServletRequest;
-        import java.io.*;
-        import java.util.Date;
-        import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Fant.J.

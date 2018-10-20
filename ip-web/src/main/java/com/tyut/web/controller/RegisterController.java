@@ -11,6 +11,7 @@ import com.tyut.web.dto.RegisterDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -74,7 +75,6 @@ public class RegisterController {
         //如果两次密码相同
         if (StringUtils.equals(registerDto.getPassword(),registerDto.getCheckPassword())){
             User user = new User();
-//            user.setUserId(UUID.randomUUID().toString().replace("-",""));
             user.setUserName(registerDto.getUserName());
             user.setUserPasswd(registerDto.getPassword());
             user.setUserStuNum(registerDto.getNum());
