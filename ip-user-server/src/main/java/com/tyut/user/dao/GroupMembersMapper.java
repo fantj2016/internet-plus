@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @Mapper
 public interface GroupMembersMapper {
@@ -31,4 +33,6 @@ public interface GroupMembersMapper {
     int isExsitSomeone(@Param("groupId") Integer groupId,@Param("userId") String userId);
     /** 根据groupId查询队长的UserId */
     String getHeaderUserId(@Param("groupId") Integer groupId);
+    /** 根据 用户id 查询 详细信息 */
+    List<GroupMembers> queryInfoByUserId(String userId);
 }

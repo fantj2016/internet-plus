@@ -17,4 +17,12 @@ public interface GroupMemberService {
     ServerResponse rejectSomeone(Integer groupId, String headId, String userId);
     /** 移除某位队员 */
     ServerResponse removeSomeone(Integer groupId, String headId, String userId);
+    /** 邀请某人加入 */
+    ServerResponse inviteSomeone(Integer groupId, String userName,String userPhone);
+    /** 查询是否有被邀请信息 */
+    ServerResponse queryBeInvited(String userId);
+    /** 退出队伍 */
+    ServerResponse quitGroup(String userId,Integer groupId);
+    /** 接受邀请加入队伍  */
+    ServerResponse updateInvite(String userId, Integer memberId);
 }

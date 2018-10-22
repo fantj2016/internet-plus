@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.tyut.core.pojo.Group;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.response.ServerResponse;
+import com.tyut.group.dao.GroupMapper;
 import com.tyut.group.repostroy.GroupMemJpa;
 import com.tyut.group.vo.GroupVo;
 import com.tyut.group.vo.GroupsVo;
@@ -38,6 +39,8 @@ public class GroupServiceImpl implements GroupService {
     private GroupMemRepostory memRepostory;
     @Autowired
     private GroupMemJpa groupMemJpa;
+    @Autowired
+    private GroupMapper groupMapper;
 
     /**
      * 创建队伍
@@ -117,16 +120,20 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public ServerResponse queryGroupInfo(String groupKey) {
-        Group group = groupRepostory.queryGroupInfoByKey(groupKey);
+/*        Group group = groupRepostory.queryGroupInfoByKey(groupKey);
         if (group == null){
             return ServerResponse.createByErrorMessage("查询队伍信息失败");
         }
-        return ServerResponse.createBySuccess(group);
+        return ServerResponse.createBySuccess(group);*/
+        return null;
     }
 
     @Override
     public ServerResponse updateGroupInfo(Group group) {
-//        groupRepostory.
-        return null;
+        int i = groupMapper.updateByGroupKeySelective(group);
+        if (i != 1){
+            return ServerResponse.createByErrorMessage("修改失败");
+        }
+        return ServerResponse.createBySuccess("修改成功");
     }
 }

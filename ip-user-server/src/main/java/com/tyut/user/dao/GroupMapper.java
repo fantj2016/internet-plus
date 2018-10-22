@@ -22,10 +22,12 @@ public interface GroupMapper {
 
     Group selectByPrimaryKey(Integer groupId);
 
-    int updateByPrimaryKeySelective(Group record);
-
     int updateByPrimaryKey(Group record);
 
     /** 根据 key 查询队伍 */
     List<GroupVo> selectByKey(@Param("key") String key);
+    /** 通过key查询队伍详情 */
+    Group queryInfo(String key);
+    /** 通过key 修改队伍详情 */
+    int updateInfoSelective( Group group);
 }

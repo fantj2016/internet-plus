@@ -24,8 +24,8 @@ public interface GroupRepostory extends JpaRepository<Group,Integer> {
     List<Object> selectByKey(@Param("key") String key);
 
     /** 根据 key 查询队伍详细信息 */
-    @Query(value = "select new com.tyut.core.pojo.Group(groupName, groupPhone, groupType, groupAddress) from ip_group g where g.group_key=?1")
-    Group queryGroupInfoByKey(@Param("key") String key);
+//    @Query(value = "select new com.tyut.core.pojo.Group(groupName, groupPhone, groupType, groupAddress) from ip_group g where g.group_key=?1")
+//    Group queryGroupInfoByKey(@Param("key") String key);
 
     @Modifying
     @Query("update ")

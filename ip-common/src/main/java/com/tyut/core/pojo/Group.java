@@ -38,13 +38,4 @@ public class Group  implements Serializable {
     private Date groupCreateTime;
 
     private Date groupUpdateTime;
-
-
-    public Group(Integer groupId,String groupName, String groupPhone, Integer groupType, String groupAddress) {
-        this.groupId = groupId;
-        this.groupName = groupName;
-        this.groupPhone = groupPhone;
-        this.groupType = groupType;
-        this.groupAddress = groupAddress;
-    }
 }

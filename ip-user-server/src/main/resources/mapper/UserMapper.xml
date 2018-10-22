@@ -32,7 +32,16 @@
     from ip_user
     where user_id = #{userId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+
+
+  <select id="queryIdByNameAndPhone" resultType="java.lang.String" >
+    select u.user_id
+    from ip_user u
+    where u.user_name = #{userName,jdbcType=VARCHAR}
+    and u.user_phone =#{userPhone,jdbcType=VARCHAR}
+  </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ip_user
     where user_id = #{userId,jdbcType=VARCHAR}
   </delete>

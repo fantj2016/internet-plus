@@ -51,5 +51,4 @@ public interface UserRepository extends JpaRepository<User, String> {
 //    @Query(nativeQuery = true,value = "select u.user_id,u.user_phone,s.school_name,u.user_email,u.user_name,u.user_academy,u.user_education,u.user_grade,u.user_profession,u.user_sex,u.user_stu_num,u.user_portrait  from ip_user as u,ip_school as s where u.user_school_id=s.id and u.user_email=?1")
 //    Object  selectByEmail(@Param("email") String email);
 
-
 }

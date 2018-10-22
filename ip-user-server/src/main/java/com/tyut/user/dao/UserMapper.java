@@ -27,4 +27,7 @@ public interface UserMapper {
     int updateStatusByEmail(String username);
 
     int updateStatusByPhone(String username);
+
+    /** 根据 名字+手机号 查询用户uuid */
+    String queryIdByNameAndPhone(String userName,String userPhone);
 }

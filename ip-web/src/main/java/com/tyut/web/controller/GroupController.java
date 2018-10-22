@@ -1,6 +1,7 @@
 package com.tyut.web.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.mysql.fabric.Server;
 import com.tyut.core.pojo.Group;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.user.service.GroupMemberService;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -99,5 +101,48 @@ public class GroupController {
     @GetMapping("/isExist/{groupName}")
     public ServerResponse isGroupNameExist(@PathVariable String groupName){
         return groupService.isGroupNameExist(groupName);
+    }
+
+    @ApiOperation("查询团队信息")
+    @GetMapping("/queryInfo/{groupKey}")
+    public ServerResponse queryGroupInfoByKey(@PathVariable String groupKey){
+        return groupService.queryGroupInfo(groupKey);
+    }
+
+    @ApiOperation("修改队伍信息")
+    @PostMapping("/updateInfo")
+    public ServerResponse updateGroupInfo(Group group){
+        if (StringUtils.isEmpty(group.getGroupKey())){
+            return ServerResponse.createByErrorMessage("group key 不存在!");
+        }
+        return groupService.updateGroupInfo(group);
+    }
+
+    @ApiOperation("邀请某人加入队伍")
+    @PostMapping("/inviteSomeone")
+    public ServerResponse inviteSomeone(@RequestParam Integer groupId,
+                                        @RequestParam String userName,
+                                        @RequestParam String userPhone){
+       return memberService.inviteSomeone(groupId,userName,userPhone);
+    }
+
+    @ApiOperation("查看是否有邀请参加队伍的信息")
+    @GetMapping("/queryBeInvited/{userId}")
+    public ServerResponse queryBeInvited(@PathVariable String userId){
+        return memberService.queryBeInvited(userId);
+    }
+
+    @ApiOperation("接受邀请加入队伍")
+    @PostMapping("/agreeInvite")
+    public ServerResponse agreeInvite(@RequestParam String userId,
+                                      @ApiParam("队员表中的主键id") @RequestParam Integer groupId){
+        return memberService.updateInvite(userId,groupId);
+    }
+
+    @ApiOperation("退出队伍")
+    @PostMapping("/quitGroup")
+    public ServerResponse inviteSomeone(@RequestParam Integer groupId,
+                                        @RequestParam String userId){
+        return memberService.quitGroup(userId,groupId);
     }
 }

@@ -1,10 +1,15 @@
 package com.tyut.user.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.tyut.core.pojo.Group;
 import com.tyut.core.pojo.GroupMembers;
+import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.user.dao.GroupMembersMapper;
+import com.tyut.user.dao.UserMapper;
 import com.tyut.user.repostory.GroupMemRepostory;
+import com.tyut.user.repostory.GroupRepostory;
+import com.tyut.user.repostory.UserRepository;
 import com.tyut.user.service.GroupMemberService;
 import com.tyut.user.vo.GroupMemVo;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +41,14 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     private NewsServiceImpl newsService;
     @Autowired
     StringRedisTemplate redisTemplate;
-
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private GroupRepostory groupRepostory;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private GroupServiceImpl groupService;
 
 
 
@@ -52,6 +64,12 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         boolean exsitSomeone = isExsitSomeone(userId, groupId);
         if (exsitSomeone){
             return ServerResponse.createByErrorMessage("无需重复提交!");
+        }
+
+        //判断该用于已经参加过此类活动
+        boolean checkResult = groupService.querySomeoneHaveJoinOneCpt(userId, cptId);
+        if (!checkResult){
+            return ServerResponse.createByErrorMessage("你已参加过本类型的比赛");
         }
 
         GroupMembers members = new GroupMembers();
@@ -197,6 +215,88 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         log.info("*** 该用户是否存在某个队伍"+exsitSomeone);
         return exsitSomeone != 0;
     }
+
+    /**
+     * 邀请某人加入
+     *
+     * @param userName
+     * @param userPhone
+     */
+    @Override
+    @Transactional
+    public ServerResponse inviteSomeone(Integer groupId,String userName, String userPhone) {
+        // 获取用户的 uuid
+        String userId = userMapper.queryIdByNameAndPhone(userName, userPhone);
+        if (StringUtils.isEmpty(userId)){
+            return ServerResponse.createByErrorMessage("该用户还未注册");
+        }
+        Group one = groupRepostory.findOne(groupId);
+        GroupMembers groupMembers = new GroupMembers();
+        groupMembers.setGroupId(groupId);
+        groupMembers.setGroupType(one.getGroupType());
+        groupMembers.setGroupName(one.getGroupName());
+        groupMembers.setUserIdentity(0);
+        groupMembers.setUserStatus(-1);
+        groupMembers.setUserId(userId);
+
+        GroupMembers check = groupRepostory.save(groupMembers);
+        if (check == null){
+            return ServerResponse.createByErrorMessage("该用户信息拉取失败,请重试");
+        }
+        User header = userRepository.findOne(one.getGroupHeaderId());
+        //发通知
+        newsService.addNews(userId,"队长: "+header.getUserName() +" 邀请你加入他的队伍: "+one.getGroupName()+" 请去我的队伍页面进行确认。 ");
+
+        return ServerResponse.createBySuccessMessage("邀请成功,请耐心等待同意.");
+    }
+
+    /**
+     * 查询是否有被邀请信息
+     *
+     * @param userId
+     */
+    @Override
+    public ServerResponse queryBeInvited(String userId) {
+        List<GroupMembers> groupMembers = membersMapper.queryInfoByUserId(userId);
+        if (groupMembers == null){
+            return ServerResponse.createBySuccessMessage("没有关于你的消息。");
+        }
+        return ServerResponse.createBySuccess(groupMembers);
+    }
+
+    /**
+     * 退出队伍
+     *
+     * @param userId
+     * @param groupId
+     */
+    @Override
+    public ServerResponse quitGroup(String userId, Integer groupId) {
+        int i = membersMapper.deleteSomeone(groupId, userId);
+        if (i != 1){
+            return ServerResponse.createByErrorMessage("退出失败");
+        }
+        return ServerResponse.createBySuccessMessage("成功退出");
+    }
+
+    /**
+     * 接受邀请加入队伍
+     */
+    @Override
+    public ServerResponse updateInvite(String userId, Integer groupId) {
+        List<GroupMembers> groupMembers = membersMapper.queryInfoByUserId(userId);
+        if (groupMembers != null){
+            for (GroupMembers groupMember: groupMembers){
+                if (groupMember.getId().equals(groupId)){
+                    //改变用户状态
+                    membersMapper.updateAgreeStatus(groupId,userId);
+                    return ServerResponse.createBySuccessMessage("加入成功");
+                }
+            }
+        }
+        return ServerResponse.createByErrorMessage("加入失败(未被邀请)");
+    }
+
     /**
      * 根据groupId 查询队长 的userID
      */

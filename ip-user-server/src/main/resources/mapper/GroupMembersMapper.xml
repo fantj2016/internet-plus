@@ -25,6 +25,12 @@
     from ip_group_members
     where user_id = #{userId,jdbcType=VARCHAR} and group_id = #{groupId,jdbcType=INTEGER}
   </select>
+
+  <select id="queryInfoByUserId" resultMap="BaseResultMap">
+    select *
+    from ip_group_members
+    where user_id = #{userId,jdbcType=VARCHAR} and user_status= -1
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

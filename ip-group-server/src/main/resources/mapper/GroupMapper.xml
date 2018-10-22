@@ -176,6 +176,49 @@
   </update>
 
 
+  <update id="updateByGroupKeySelective" parameterType="com.tyut.core.pojo.Group" >
+    update ip_group
+    <set >
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupHeaderId != null" >
+        group_header_id = #{groupHeaderId,jdbcType=INTEGER},
+      </if>
+      <if test="groupSchoolId != null" >
+        group_school_id = #{groupSchoolId,jdbcType=INTEGER},
+      </if>
+      <if test="groupPhone != null" >
+        group_phone = #{groupPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="groupType != null" >
+        group_type = #{groupType,jdbcType=INTEGER},
+      </if>
+      <if test="groupKey != null" >
+        group_key = #{groupKey,jdbcType=VARCHAR},
+      </if>
+      <if test="groupStatus != null" >
+        group_status = #{groupStatus,jdbcType=INTEGER},
+      </if>
+      <if test="groupCreateTime != null" >
+        group_create_time = #{groupCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupUpdateTime != null" >
+        group_update_time = #{groupUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupAcademyId != null" >
+        group_academy_id = #{groupAcademyId,jdbcType=INTEGER},
+      </if>
+      <if test="groupEmail != null" >
+        group_email = #{groupEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="groupHeader != null" >
+        group_header = #{groupHeader,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where group_key = #{groupKey,jdbcType=VARCHAR}
+  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.tyut.core.pojo.Group" >
     update ip_group
     set group_name = #{groupName,jdbcType=VARCHAR},

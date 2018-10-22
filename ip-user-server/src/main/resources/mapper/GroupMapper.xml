@@ -26,7 +26,8 @@
     <include refid="Base_Column_List" />
     from ip_group
     where group_id = #{groupId,jdbcType=INTEGER}
-  </select>  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
     from ip_group
@@ -40,13 +41,11 @@
     insert into ip_group (group_id, group_name, group_header_id, 
       group_school_id, group_phone, group_type, 
       group_key, group_status, group_create_time, 
-      group_update_time, group_academy_id, group_email, 
-      group_header)
+      group_update_time)
     values (#{groupId,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{groupHeaderId,jdbcType=VARCHAR},
       #{groupSchoolId,jdbcType=INTEGER}, #{groupPhone,jdbcType=VARCHAR}, #{groupType,jdbcType=INTEGER}, 
-      #{groupKey,jdbcType=VARCHAR}, #{groupStatus,jdbcType=INTEGER}, #{groupCreateTime,jdbcType=TIMESTAMP}, 
-      #{groupUpdateTime,jdbcType=TIMESTAMP}, #{groupAcademyId,jdbcType=INTEGER}, #{groupEmail,jdbcType=VARCHAR}, 
-      #{groupHeader,jdbcType=VARCHAR})
+      #{groupKey,jdbcType=VARCHAR}, #{groupStatus,jdbcType=INTEGER}, #{groupCreateTime,jdbcType=TIMESTAMP},
+      #{groupUpdateTime,jdbcType=TIMESTAMP},jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tyut.core.pojo.Group" >
     insert into ip_group
@@ -81,15 +80,6 @@
       <if test="groupUpdateTime != null" >
         group_update_time,
       </if>
-      <if test="groupAcademyId != null" >
-        group_academy_id,
-      </if>
-      <if test="groupEmail != null" >
-        group_email,
-      </if>
-      <if test="groupHeader != null" >
-        group_header,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="groupId != null" >
@@ -122,18 +112,9 @@
       <if test="groupUpdateTime != null" >
         #{groupUpdateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="groupAcademyId != null" >
-        #{groupAcademyId,jdbcType=INTEGER},
-      </if>
-      <if test="groupEmail != null" >
-        #{groupEmail,jdbcType=VARCHAR},
-      </if>
-      <if test="groupHeader != null" >
-        #{groupHeader,jdbcType=VARCHAR},
-      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tyut.core.pojo.Group" >
+  <update id="updateInfoSelective" parameterType="com.tyut.core.pojo.Group" >
     update ip_group
     <set >
       <if test="groupName != null" >
@@ -163,17 +144,8 @@
       <if test="groupUpdateTime != null" >
         group_update_time = #{groupUpdateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="groupAcademyId != null" >
-        group_academy_id = #{groupAcademyId,jdbcType=INTEGER},
-      </if>
-      <if test="groupEmail != null" >
-        group_email = #{groupEmail,jdbcType=VARCHAR},
-      </if>
-      <if test="groupHeader != null" >
-        group_header = #{groupHeader,jdbcType=VARCHAR},
-      </if>
     </set>
-    where group_id = #{groupId,jdbcType=INTEGER}
+    where group_key = #{groupKey,jdbcType=VARCHAR}
   </update>
 
 
@@ -188,9 +160,14 @@
       group_status = #{groupStatus,jdbcType=INTEGER},
       group_create_time = #{groupCreateTime,jdbcType=TIMESTAMP},
       group_update_time = #{groupUpdateTime,jdbcType=TIMESTAMP},
-      group_academy_id = #{groupAcademyId,jdbcType=INTEGER},
-      group_email = #{groupEmail,jdbcType=VARCHAR},
-      group_header = #{groupHeader,jdbcType=VARCHAR}
     where group_id = #{groupId,jdbcType=INTEGER}
   </update>
+
+
+  <select id="queryInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from ip_group
+    where group_key = #{groupKey,jdbcType=VARCHAR}
+  </select>
 </mapper>

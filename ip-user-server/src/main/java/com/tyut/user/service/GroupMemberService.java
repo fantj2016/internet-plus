@@ -22,4 +22,12 @@ public interface GroupMemberService {
     ServerResponse removeSomeone(Integer groupId, String headId, String userId);
     /** 查询某位用户是否存在在某个队伍 */
     boolean isExsitSomeone(String userId,Integer groupId);
+    /** 邀请某人加入 */
+    ServerResponse inviteSomeone(Integer groupId, String userName,String userPhone);
+    /** 查询是否有被邀请信息 */
+    ServerResponse queryBeInvited(String userId);
+    /** 退出队伍 */
+    ServerResponse quitGroup(String userId,Integer groupId);
+    /** 接受邀请加入队伍  */
+    ServerResponse updateInvite(String userId, Integer memberId);
 }

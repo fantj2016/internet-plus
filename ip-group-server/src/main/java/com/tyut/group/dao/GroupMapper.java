@@ -21,6 +21,13 @@ public interface GroupMapper {
 
     int updateByPrimaryKeySelective(Group record);
 
+    /**
+     * 根据 key 更新 队伍信息
+     * @param record
+     * @return
+     */
+    int updateByGroupKeySelective(Group record);
+
     int updateByPrimaryKey(Group record);
 
     /** 根据 key 查询队伍 */

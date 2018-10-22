@@ -5,6 +5,8 @@ import com.tyut.core.aspect.ServiceLog;
 import com.tyut.core.pojo.Group;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.response.ServerResponse;
+import com.tyut.user.dao.GroupMapper;
+import com.tyut.user.dao.GroupMembersMapper;
 import com.tyut.user.repostory.GroupMemRepostory;
 import com.tyut.user.repostory.GroupRepostory;
 import com.tyut.user.service.GroupService;
@@ -40,6 +42,10 @@ public class GroupServiceImpl implements GroupService {
     private GroupMemRepostory memRepostory;
     @Autowired
     private NewsService newsService;
+    @Autowired
+    private GroupMapper groupMapper;
+    @Autowired
+    private GroupMembersMapper membersMapper;
     /**
      * 创建队伍
      */
@@ -47,11 +53,20 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public ServerResponse create(Group group) {
+
         //查询队伍名是否存在
         List<Group> exsitGroupName = groupRepostory.isExsitGroupName(group.getGroupName());
         if (exsitGroupName.size() != 0){
             return ServerResponse.createByErrorMessage("队名已被使用");
         }
+        // 查询该人是否创建活加入过 该比赛队伍
+        String userId = group.getGroupHeaderId();
+        Integer cptType = group.getGroupType();
+        boolean checkResult = querySomeoneHaveJoinOneCpt(userId, cptType);
+        if (!checkResult){
+            return ServerResponse.createByErrorMessage("你已参加过本类型的比赛");
+        }
+
         group.setGroupStatus(0);
         group.setGroupCreateTime(new Date());
         group.setGroupKey(UUID.randomUUID().toString().replace("-",""));
@@ -144,26 +159,47 @@ public class GroupServiceImpl implements GroupService {
         }
         return ServerResponse.createByErrorMessage("队名已被使用");
     }
+
+    /**
+     * 查询团队信息
+     *
+     * @param groupKey
+     */
+    @Override
+    public ServerResponse queryGroupInfo(String groupKey) {
+        Group group = groupMapper.queryInfo(groupKey);
+        if (StringUtils.isEmpty(group)){
+            return ServerResponse.createByErrorMessage("查询团队信息失败");
+        }
+        return ServerResponse.createBySuccess(group);
+    }
+
+    /**
+     * 更改团队信息
+     *
+     * @param group
+     */
+    @Override
+    public ServerResponse updateGroupInfo(Group group) {
+        int i = groupMapper.updateInfoSelective(group);
+        if (i != 1){
+            return ServerResponse.createByErrorMessage("团队信息更改失败");
+        }
+        return ServerResponse.createBySuccessMessage("团队信息修改成功");
+    }
+
+    /**
+     * 查询该学生是否已参加过本类型的比赛
+     */
+    boolean querySomeoneHaveJoinOneCpt(String userId, Integer cptType){
+        List<GroupMembers> groupMembers = membersMapper.queryInfoByUserId(userId);
+        if (groupMembers != null){
+            for (GroupMembers member : groupMembers){
+                if (member.getGroupType().equals(cptType)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
-//        truncate table ip_user_file;
-//        truncate table ip_academy              ;
-//        truncate table ip_activity             ;
-//        truncate table ip_admin                ;
-//        truncate table ip_change_passwd        ;
-//        truncate table ip_competition          ;
-//        truncate table ip_cpt_grade            ;
-//        truncate table ip_cpt_support          ;
-//        truncate table ip_file                 ;
-//        truncate table ip_group                ;
-//        truncate table ip_group_members        ;
-//        truncate table ip_guest                ;
-//        truncate table ip_image                ;
-//        truncate table ip_news                 ;
-//        truncate table ip_notice               ;
-//        truncate table ip_province             ;
-//        truncate table ip_result               ;
-//        truncate table ip_school               ;
-//        truncate table ip_title                ;
-//        truncate table ip_user                 ;
-//        truncate table ip_user_edu             ;
-//        truncate table ip_user_file  ;

@@ -20,4 +20,10 @@ public interface GroupService {
 
     /** 查看队伍名字是否存在 */
     ServerResponse isGroupNameExist(String groupName);
+
+    /** 查询团队信息 */
+    ServerResponse queryGroupInfo(String groupKey);
+
+    /** 更改团队信息 */
+    ServerResponse updateGroupInfo(Group group);
 }
