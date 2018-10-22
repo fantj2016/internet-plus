@@ -114,4 +114,19 @@ public class GroupServiceImpl implements GroupService {
         }
         return ServerResponse.createByErrorMessage("查询队员列表失败");
     }
+
+    @Override
+    public ServerResponse queryGroupInfo(String groupKey) {
+        Group group = groupRepostory.queryGroupInfoByKey(groupKey);
+        if (group == null){
+            return ServerResponse.createByErrorMessage("查询队伍信息失败");
+        }
+        return ServerResponse.createBySuccess(group);
+    }
+
+    @Override
+    public ServerResponse updateGroupInfo(Group group) {
+//        groupRepostory.
+        return null;
+    }
 }

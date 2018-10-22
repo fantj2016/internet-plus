@@ -18,4 +18,10 @@ public interface GroupService {
     /** 通过用户id查询  用户所在的 队伍列表 */
     ServerResponse selectGroupList(Integer userId);
 
+    /** 查询团队信息 */
+    ServerResponse queryGroupInfo(String groupKey);
+
+    /** 更改团队信息 */
+    ServerResponse updateGroupInfo(Group group);
+
 }

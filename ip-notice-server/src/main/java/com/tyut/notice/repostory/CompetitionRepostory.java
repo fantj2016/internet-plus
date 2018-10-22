@@ -18,7 +18,7 @@ public interface CompetitionRepostory extends JpaRepository<Competition,Integer>
 
 
     /** 查询 赛题列表 */
-    @Query("select new com.tyut.notice.vo.CompetitionTitleListVo(cptId,cptType,cptName,cptIntro,cptImg,cptIcon,cptStatus) from Competition c where c.cptStatus != 5")
+    @Query("select new com.tyut.notice.vo.CompetitionTitleListVo(cptId,cptType,cptName,cptIntro,cptImg,cptIcon,cptStatus) from Competition c where c.cptStatus <> 5")
     List<CompetitionTitleListVo> selectTitleList();
 
 }

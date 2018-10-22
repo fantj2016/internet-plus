@@ -2,6 +2,8 @@ package com.tyut.group.vo;
 
 import com.tyut.core.pojo.User;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
