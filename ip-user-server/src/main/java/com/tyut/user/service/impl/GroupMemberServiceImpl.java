@@ -227,6 +227,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     public ServerResponse inviteSomeone(Integer groupId,String userName, String userPhone) {
         // 获取用户的 uuid
         String userId = userMapper.queryIdByNameAndPhone(userName, userPhone);
+        log.info("拿到的userId是{}",userId);
         if (StringUtils.isEmpty(userId)){
             return ServerResponse.createByErrorMessage("该用户还未注册");
         }
@@ -243,7 +244,8 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (check == null){
             return ServerResponse.createByErrorMessage("该用户信息拉取失败,请重试");
         }
-        User header = userRepository.findOne(one.getGroupHeaderId());
+        User header = userMapper.queryMemberSimpleInfo(one.getGroupHeaderId());
+//        User header = userRepository.findOne(one.getGroupHeaderId());
         //发通知
         newsService.addNews(userId,"队长: "+header.getUserName() +" 邀请你加入他的队伍: "+one.getGroupName()+" 请去我的队伍页面进行确认。 ");
 
@@ -287,14 +289,14 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         List<GroupMembers> groupMembers = membersMapper.queryInfoByUserId(userId);
         if (groupMembers != null){
             for (GroupMembers groupMember: groupMembers){
-                if (groupMember.getId().equals(groupId)){
+                if (groupMember.getGroupId().equals(groupId)){
                     //改变用户状态
                     membersMapper.updateAgreeStatus(groupId,userId);
                     return ServerResponse.createBySuccessMessage("加入成功");
                 }
             }
         }
-        return ServerResponse.createByErrorMessage("加入失败(未被邀请)");
+        return ServerResponse.createBySuccessMessage("加入失败(未被邀请)");
     }
 
     /**

@@ -27,12 +27,17 @@
     user_grade, user_portrait, user_create_time, user_update_time, user_status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from ip_user
     where user_id = #{userId,jdbcType=VARCHAR}
   </select>
 
+  <select id="queryMemberSimpleInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select user_phone,user_school_id,user_name
+    from ip_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
 
   <select id="queryIdByNameAndPhone" resultType="java.lang.String" >
     select u.user_id

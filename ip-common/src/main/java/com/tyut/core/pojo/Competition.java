@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "ip_competition")
 public class Competition  implements Serializable {
 
-    private static final long serialVersionUID = -3999125971536227608L;
+//    private static final long serialVersionUID = -3999125971536227608L;
 
     @Id
     @GeneratedValue

@@ -2,6 +2,7 @@ package com.tyut.user.dao;
 
 import com.tyut.core.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Mapper
@@ -29,5 +30,7 @@ public interface UserMapper {
     int updateStatusByPhone(String username);
 
     /** 根据 名字+手机号 查询用户uuid */
-    String queryIdByNameAndPhone(String userName,String userPhone);
+    String queryIdByNameAndPhone(@Param("userName") String userName, @Param("userPhone") String userPhone);
+
+    User queryMemberSimpleInfo(String groupHeaderId);
 }
