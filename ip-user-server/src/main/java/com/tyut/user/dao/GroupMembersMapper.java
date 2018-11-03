@@ -35,4 +35,5 @@ public interface GroupMembersMapper {
     String getHeaderUserId(@Param("groupId") Integer groupId);
     /** 根据 用户id 查询 详细信息 */
     List<GroupMembers> queryInfoByUserId(String userId);
+    int isJoinCpt(@Param("userId") String userId,@Param("cptId") Integer cptId);
 }

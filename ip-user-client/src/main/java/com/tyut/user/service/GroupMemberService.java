@@ -25,4 +25,8 @@ public interface GroupMemberService {
     ServerResponse quitGroup(String userId,Integer groupId);
     /** 接受邀请加入队伍  */
     ServerResponse updateInvite(String userId, Integer memberId);
+    /** 添加指导教师 */
+    ServerResponse addTeacher(Integer groupId, String headId, String teacherName, String teacherPhone);
+    /** 删除指导老师 */
+    ServerResponse removeTeacher(Integer teacherId, String userId, Integer groupId);
 }

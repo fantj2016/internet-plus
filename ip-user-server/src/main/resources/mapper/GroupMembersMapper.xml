@@ -20,6 +20,13 @@
     from ip_group_members
     where user_id = #{userId,jdbcType=VARCHAR} and group_id = #{groupId,jdbcType=INTEGER}
   </select>
+
+  <select id="isJoinCpt" resultType="int">
+    select count(*)
+    from ip_group_members
+    where user_id = #{userId,jdbcType=VARCHAR} and group_type = #{cptId,jdbcType=INTEGER}
+  </select>
+
   <select id="selectIndentity" resultType="int">
     select user_identity
     from ip_group_members

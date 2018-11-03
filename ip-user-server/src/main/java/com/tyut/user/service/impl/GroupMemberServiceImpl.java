@@ -3,12 +3,14 @@ package com.tyut.user.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.tyut.core.pojo.Group;
 import com.tyut.core.pojo.GroupMembers;
+import com.tyut.core.pojo.Teacher;
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.user.dao.GroupMembersMapper;
 import com.tyut.user.dao.UserMapper;
 import com.tyut.user.repostory.GroupMemRepostory;
 import com.tyut.user.repostory.GroupRepostory;
+import com.tyut.user.repostory.TeacherRepostory;
 import com.tyut.user.repostory.UserRepository;
 import com.tyut.user.service.GroupMemberService;
 import com.tyut.user.vo.GroupMemVo;
@@ -49,6 +51,8 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     private UserRepository userRepository;
     @Autowired
     private GroupServiceImpl groupService;
+    @Autowired
+    private TeacherRepostory teacherRepostory;
 
 
 
@@ -120,6 +124,14 @@ public class GroupMemberServiceImpl implements GroupMemberService {
             view.setUserStatus((Integer) rowArray[8]);
             list.add(view);
         }
+        //在这里添加老师信息
+        Teacher byGroupId = teacherRepostory.findByGroupId(groupId);
+        GroupMemVo groupMemVo = new GroupMemVo();
+        groupMemVo.setUserName(byGroupId.getTeacherName());
+        groupMemVo.setUserPhone(byGroupId.getTeacherPhone());
+        groupMemVo.setUserIdentity(2);
+        groupMemVo.setUserId(byGroupId.toString());
+        list.add(groupMemVo);
         if (!StringUtils.isEmpty(list)){
             log.info("findAllBygGroupId: *****"+list);
             return ServerResponse.createBySuccess(list);
@@ -133,14 +145,9 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     @Override
     @Transactional
     public ServerResponse agreeSomeone(Integer groupId, String headId, String userId) {
-        int i = 0;
-        try {
-            i = membersMapper.selectIndentity(headId, groupId);
-        }catch (Exception e){
-            return ServerResponse.createByErrorMessage("参数不和要求");
-        }
-        log.info("******* 组id{},用户id{}权限信息是{}",groupId,headId,i);
-        if (i == 0){
+
+        boolean isHeader = isHeader(headId, groupId);
+        if (!isHeader){
             //无同意权限
             return ServerResponse.createByErrorMessage("该用户没有权限");
         }
@@ -154,30 +161,10 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     /**
      * 拒绝用户加入队伍
-     *
-     * @param groupId
-     * @param headId
-     * @param userId
      */
     @Override
     public ServerResponse rejectSomeone(Integer groupId, String headId, String userId) {
-        int i = 0;
-        try {
-            i = membersMapper.selectIndentity(headId, groupId);
-        }catch (Exception e){
-            return ServerResponse.createByErrorMessage("参数不和要求");
-        }
-        log.info("******* 组id{},用户id{}权限信息是{}",groupId,headId,i);
-        if (i == 0){
-            //无同意权限
-            return ServerResponse.createByErrorMessage("该用户没有权限");
-        }
-        int i1 = membersMapper.updateRejectStatus(groupId, userId);
-        if (i1 == 0){
-            return ServerResponse.createByErrorMessage("拒绝操作失败");
-        }
-        newsService.addNews(userId,"队长拒绝你加入队伍,详手机联系对方");
-        return ServerResponse.createBySuccessMessage("用户加入成功");
+        return  removeSomeone(groupId, headId, userId);
     }
 
     /**
@@ -186,16 +173,14 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     @Override
     @Transactional
     public ServerResponse removeSomeone(Integer groupId, String headId, String userId) {
-        int i = 0;
-        try {
-            i = membersMapper.selectIndentity(headId, groupId);
-        }catch (Exception e){
-            return ServerResponse.createByErrorMessage("参数不和要求");
-        }
-        log.info("******* 组id{},用户id{}权限信息是{}",groupId,headId,i);
-        if (i == 0){
+
+        boolean isHeader = isHeader(headId, groupId);
+        if (!isHeader){
             //无同意权限
             return ServerResponse.createByErrorMessage("该用户没有权限");
+        }
+        if (headId.equals(userId)){
+            return ServerResponse.createByErrorMessage("不能移除本人!");
         }
         int i1 = membersMapper.deleteSomeone(groupId, userId);
         if (i1 == 0){
@@ -218,15 +203,13 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     /**
      * 邀请某人加入
-     *
-     * @param userName
-     * @param userPhone
      */
     @Override
     @Transactional
     public ServerResponse inviteSomeone(Integer groupId,String userName, String userPhone) {
         // 获取用户的 uuid
         String userId = userMapper.queryIdByNameAndPhone(userName, userPhone);
+
         log.info("拿到的userId是{}",userId);
         if (StringUtils.isEmpty(userId)){
             return ServerResponse.createByErrorMessage("该用户还未注册");
@@ -239,7 +222,10 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         groupMembers.setUserIdentity(0);
         groupMembers.setUserStatus(-1);
         groupMembers.setUserId(userId);
-
+        boolean checkResult = groupService.querySomeoneHaveJoinOneCpt(userId, one.getGroupType());
+        if (!checkResult){
+            return ServerResponse.createByErrorMessage("该用户已参加过本类型的比赛");
+        }
         GroupMembers check = groupRepostory.save(groupMembers);
         if (check == null){
             return ServerResponse.createByErrorMessage("该用户信息拉取失败,请重试");
@@ -254,8 +240,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     /**
      * 查询是否有被邀请信息
-     *
-     * @param userId
      */
     @Override
     public ServerResponse queryBeInvited(String userId) {
@@ -268,9 +252,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     /**
      * 退出队伍
-     *
-     * @param userId
-     * @param groupId
      */
     @Override
     public ServerResponse quitGroup(String userId, Integer groupId) {
@@ -300,9 +281,79 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     }
 
     /**
+     * 添加指导教师
+     */
+    @Override
+    public ServerResponse addTeacher(Integer groupId, String headId, String teacherName, String teacherPhone) {
+        //校验 header 身份
+        boolean header = isHeader(headId, groupId);
+        if (!header){
+            return ServerResponse.createByErrorMessage("非队长不能操作");
+        }
+        Teacher teacher = new Teacher();
+        teacher.setGroupId(groupId);
+        teacher.setTeacherName(teacherName);
+        teacher.setTeacherPhone(teacherPhone);
+        try {
+            Teacher save = teacherRepostory.save(teacher);
+            if (save == null){
+                return ServerResponse.createByErrorMessage("添加失败");
+            }
+        }catch (Exception e){
+            return ServerResponse.createByErrorMessage("添加失败");
+        }
+
+        return ServerResponse.createBySuccessMessage("添加成功");
+    }
+
+    @Override
+    public ServerResponse removeTeacher(Integer teacherId, String userId, Integer groupId) {
+        // 校验队长身份
+        boolean header = isHeader(userId, groupId);
+        if (!header){
+            return ServerResponse.createByErrorMessage("没有权限");
+        }
+        try {
+            teacherRepostory.delete(teacherId);
+        }catch (Exception e) {
+
+        }
+        return ServerResponse.createBySuccessMessage("删除成功");
+    }
+
+
+    /**
      * 根据groupId 查询队长 的userID
      */
     public String getHeaderUserId(Integer groupId){
         return membersMapper.getHeaderUserId(groupId);
+    }
+    /**
+     * 查询该用户是否已经参加过该比赛
+     */
+    public boolean isJoinCpt(String userId,Integer cptId){
+        int joinCpt = membersMapper.isJoinCpt(userId, cptId);
+        return joinCpt == 0;
+    }
+    /**
+     * 查询身份是否是队长
+     */
+    public boolean isHeader(String headId, Integer groupId){
+       int  i = membersMapper.selectIndentity(headId, groupId);
+        return i != 0;
+    }
+    /**
+     * 查询该学生是否已参加过本类型的比赛
+     */
+    boolean querySomeoneHaveJoinOneCpt(String userId, Integer cptType){
+        List<GroupMembers> groupMembers = membersMapper.queryInfoByUserId(userId);
+        if (groupMembers != null){
+            for (GroupMembers member : groupMembers){
+                if (member.getGroupType().equals(cptType)){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

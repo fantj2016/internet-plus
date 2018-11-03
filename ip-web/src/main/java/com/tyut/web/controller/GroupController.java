@@ -145,4 +145,22 @@ public class GroupController {
                                         @RequestParam String userId){
         return memberService.quitGroup(userId,groupId);
     }
+
+    @ApiOperation("添加指导老师,只有队长能添加")
+    @PostMapping("/addTeacher")
+    public ServerResponse addTeacher(@RequestParam Integer groupId,
+                                     @RequestParam String userId,
+                                     @RequestParam String teacherName,
+                                     @RequestParam String teacherPhone){
+
+       return memberService.addTeacher(groupId,userId,teacherName,teacherPhone);
+    }
+
+    @ApiOperation("删除指导老师")
+    @GetMapping("/delTeacher/{teacherId}/{userId}/{groupId}")
+    public ServerResponse delTeacher(@PathVariable Integer teacherId,
+                                     @PathVariable String userId,
+                                     @PathVariable Integer groupId){
+        return memberService.removeTeacher(teacherId,userId,groupId);
+    }
 }
