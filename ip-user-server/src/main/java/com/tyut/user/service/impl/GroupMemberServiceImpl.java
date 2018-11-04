@@ -1,19 +1,20 @@
 package com.tyut.user.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.tyut.core.pojo.Group;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.pojo.Teacher;
 import com.tyut.core.pojo.User;
 import com.tyut.core.response.ServerResponse;
+import com.tyut.user.dao.GroupMapper;
 import com.tyut.user.dao.GroupMembersMapper;
 import com.tyut.user.dao.UserMapper;
-import com.tyut.user.repostory.GroupMemRepostory;
-import com.tyut.user.repostory.GroupRepostory;
-import com.tyut.user.repostory.TeacherRepostory;
-import com.tyut.user.repostory.UserRepository;
+import com.tyut.user.repostory.*;
 import com.tyut.user.service.GroupMemberService;
+import com.tyut.user.vo.CompetitionTitleListVo;
 import com.tyut.user.vo.GroupMemVo;
+import com.tyut.user.vo.GroupsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -23,6 +24,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by Fant.J.
@@ -53,7 +55,10 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     private GroupServiceImpl groupService;
     @Autowired
     private TeacherRepostory teacherRepostory;
-
+    @Autowired
+    private CompetitionRepostory competitionRepostory;
+    @Autowired
+    private GroupMapper groupMapper;
 
 
     /**
@@ -71,7 +76,9 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         }
 
         //判断该用于已经参加过此类活动
-        boolean checkResult = groupService.querySomeoneHaveJoinOneCpt(userId, cptId);
+        boolean checkResult = querySomeoneHaveJoinOneCpt(userId, cptId);
+        log.info("获取到的checkresult值"+checkResult);
+
         if (!checkResult){
             return ServerResponse.createByErrorMessage("你已参加过本类型的比赛");
         }
@@ -222,7 +229,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         groupMembers.setUserIdentity(0);
         groupMembers.setUserStatus(-1);
         groupMembers.setUserId(userId);
-        boolean checkResult = groupService.querySomeoneHaveJoinOneCpt(userId, one.getGroupType());
+        boolean checkResult = querySomeoneHaveJoinOneCpt(userId, one.getGroupType());
         if (!checkResult){
             return ServerResponse.createByErrorMessage("该用户已参加过本类型的比赛");
         }
@@ -343,13 +350,19 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         return i != 0;
     }
     /**
-     * 查询该学生是否已参加过本类型的比赛
+     * 查询该学生是否已参加过本类型的比赛,每个学生每一场比赛只能参加一次
      */
+    @Transactional
     boolean querySomeoneHaveJoinOneCpt(String userId, Integer cptType){
-        List<GroupMembers> groupMembers = membersMapper.queryInfoByUserId(userId);
-        if (groupMembers != null){
-            for (GroupMembers member : groupMembers){
-                if (member.getGroupType().equals(cptType)){
+        List<GroupsVo> groupMembers = groupService.selectGroupAllListByUserId(userId);
+//        log.info("获取到的list"+groupMembers.size());
+        // 获取当前所有使用的cptid
+        List<CompetitionTitleListVo> listVos = competitionRepostory.selectTitleList();
+//        listVos.forEach(e -> System.out.println(e.getCptId()));
+//        groupMembers.forEach(s -> System.out.println(s.getCptId()));
+        for (GroupsVo member : groupMembers){
+            for (CompetitionTitleListVo v:listVos) {
+                if (member.getCptId().equals(cptType) || v.getCptId().equals(member.getCptId())){
                     return false;
                 }
             }

@@ -11,6 +11,7 @@ import com.tyut.user.repostory.GroupMemRepostory;
 import com.tyut.user.repostory.GroupRepostory;
 import com.tyut.user.service.GroupService;
 import com.tyut.user.service.NewsService;
+import com.tyut.user.vo.CompetitionTitleListVo;
 import com.tyut.user.vo.GroupVo;
 import com.tyut.user.vo.GroupsVo;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,8 @@ public class GroupServiceImpl implements GroupService {
     private GroupMapper groupMapper;
     @Autowired
     private GroupMembersMapper membersMapper;
+    @Autowired
+    private GroupMemberServiceImpl memberImpl;
     /**
      * 创建队伍
      */
@@ -62,7 +65,7 @@ public class GroupServiceImpl implements GroupService {
         // 查询该人是否创建活加入过 该比赛队伍
         String userId = group.getGroupHeaderId();
         Integer cptType = group.getGroupType();
-        boolean checkResult = querySomeoneHaveJoinOneCpt(userId, cptType);
+        boolean checkResult = memberImpl.querySomeoneHaveJoinOneCpt(userId, cptType);
         if (!checkResult){
             return ServerResponse.createByErrorMessage("你已参加过本类型的比赛");
         }
@@ -117,32 +120,8 @@ public class GroupServiceImpl implements GroupService {
      */
     @Override
     public ServerResponse selectGroupList(String userId) {
-        Query nativeQuery = entityManager.createNativeQuery(
-                "select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id,c.cpt_name,g.group_key," +
-                                        "c.cpt_id,c.cpt_type,c.cpt_icon,c.cpt_img,c.cpt_status " +
-                        "from ip_user as u,ip_group_members m,ip_competition c,ip_group g   " +
-                        "where u.user_id=m.user_id and m.user_status =1 and m.group_type=c.cpt_id  and g.group_id = m.group_id and u.user_id = ? " +
-                        "GROUP BY m.group_id ORDER BY m.group_id DESC");
-        List resultList = nativeQuery.setParameter(1, userId).getResultList();
-        List<GroupsVo> list = new ArrayList<>();
-        for (Object o : resultList) {
-            Object[] rowArray = (Object[]) o;
-            GroupsVo view = new GroupsVo();
-            view.setUserName((String) rowArray[0]);
-            view.setUserPhone((String) rowArray[1]);
-            view.setGroupName((String) rowArray[2]);
-            view.setGroupId((Integer) rowArray[3]);
-            view.setUserIdentity((Integer) rowArray[4]);
-            view.setId((Integer) rowArray[5]);
-            view.setCptName((String)rowArray[6]);
-            view.setGroupKey((String)rowArray[7]);
-            view.setCptId((Integer) rowArray[8]);
-            view.setCptType((String)rowArray[9]);
-            view.setCptIcon((String)rowArray[10]);
-            view.setCptImg((String)rowArray[11]);
-            view.setCptStatus((Integer) rowArray[12]);
-            list.add(view);
-        }
+
+        List<GroupsVo> list = selectGroupListByUserId(userId);
         list.forEach(p-> System.out.println(p.toString()));
         return ServerResponse.createBySuccess(list);
     }
@@ -187,19 +166,63 @@ public class GroupServiceImpl implements GroupService {
         }
         return ServerResponse.createBySuccessMessage("团队信息修改成功");
     }
-
-    /**
-     * 查询该学生是否已参加过本类型的比赛
-     */
-    boolean querySomeoneHaveJoinOneCpt(String userId, Integer cptType){
-        List<GroupMembers> groupMembers = membersMapper.queryInfoByUserId(userId);
-        if (groupMembers != null){
-            for (GroupMembers member : groupMembers){
-                if (member.getGroupType().equals(cptType)){
-                    return false;
-                }
-            }
+    public List<GroupsVo> selectGroupListByUserId(String userId){
+                Query nativeQuery = entityManager.createNativeQuery(
+                "select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id,c.cpt_name,g.group_key," +
+                                        "c.cpt_id,c.cpt_type,c.cpt_icon,c.cpt_img,c.cpt_status " +
+                        "from ip_user as u,ip_group_members m,ip_competition c,ip_group g   " +
+                        "where u.user_id=m.user_id and m.user_status =1 and m.group_type=c.cpt_id  and g.group_id = m.group_id and u.user_id = ? " +
+                        "GROUP BY m.group_id ORDER BY m.group_id DESC");
+        List resultList = nativeQuery.setParameter(1, userId).getResultList();
+        List<GroupsVo> list = new ArrayList<>();
+        for (Object o : resultList) {
+            Object[] rowArray = (Object[]) o;
+            GroupsVo view = new GroupsVo();
+            view.setUserName((String) rowArray[0]);
+            view.setUserPhone((String) rowArray[1]);
+            view.setGroupName((String) rowArray[2]);
+            view.setGroupId((Integer) rowArray[3]);
+            view.setUserIdentity((Integer) rowArray[4]);
+            view.setId((Integer) rowArray[5]);
+            view.setCptName((String)rowArray[6]);
+            view.setGroupKey((String)rowArray[7]);
+            view.setCptId((Integer) rowArray[8]);
+            view.setCptType((String)rowArray[9]);
+            view.setCptIcon((String)rowArray[10]);
+            view.setCptImg((String)rowArray[11]);
+            view.setCptStatus((Integer) rowArray[12]);
+            list.add(view);
         }
-        return true;
+        return list;
     }
+    public List<GroupsVo> selectGroupAllListByUserId(String userId){
+                Query nativeQuery = entityManager.createNativeQuery(
+                "select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id,c.cpt_name,g.group_key," +
+                                        "c.cpt_id,c.cpt_type,c.cpt_icon,c.cpt_img,c.cpt_status " +
+                        "from ip_user as u,ip_group_members m,ip_competition c,ip_group g   " +
+                        "where u.user_id=m.user_id  and m.group_type=c.cpt_id  and g.group_id = m.group_id and u.user_id = ? " +
+                        "GROUP BY m.group_id ORDER BY m.group_id DESC");
+        List resultList = nativeQuery.setParameter(1, userId).getResultList();
+        List<GroupsVo> list = new ArrayList<>();
+        for (Object o : resultList) {
+            Object[] rowArray = (Object[]) o;
+            GroupsVo view = new GroupsVo();
+            view.setUserName((String) rowArray[0]);
+            view.setUserPhone((String) rowArray[1]);
+            view.setGroupName((String) rowArray[2]);
+            view.setGroupId((Integer) rowArray[3]);
+            view.setUserIdentity((Integer) rowArray[4]);
+            view.setId((Integer) rowArray[5]);
+            view.setCptName((String)rowArray[6]);
+            view.setGroupKey((String)rowArray[7]);
+            view.setCptId((Integer) rowArray[8]);
+            view.setCptType((String)rowArray[9]);
+            view.setCptIcon((String)rowArray[10]);
+            view.setCptImg((String)rowArray[11]);
+            view.setCptStatus((Integer) rowArray[12]);
+            list.add(view);
+        }
+        return list;
+    }
+
 }
