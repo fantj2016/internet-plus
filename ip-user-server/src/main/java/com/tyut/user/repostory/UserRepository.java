@@ -41,6 +41,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     /**
      * 根据 查询用户信息
      */
+    User findUserByUserId(String userId);
 //    @Query(value = "select new com.tyut.user.dto.UserDto(userId,userPhone,userSchool,userEmail,userName,userAcademy,userEducation,userGrade,userProfession,userSex,userStuNum,userPortrait)  from User u where u.userPhone=:phone group by u.userName")
 //    UserDto  selectByPhone(@Param("phone") String phone);
 //    @Query(value = "select new com.tyut.user.dto.UserDto(userId,userPhone,userSchool,userEmail,userName,userAcademy,userEducation,userGrade,userProfession,userSex,userStuNum,userPortrait)  from User u where u.userEmail=:email")

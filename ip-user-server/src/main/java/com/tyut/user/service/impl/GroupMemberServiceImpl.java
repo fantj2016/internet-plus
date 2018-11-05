@@ -264,9 +264,17 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     /**
      * 退出队伍
      */
+    @Transactional
     @Override
     public ServerResponse quitGroup(String userId, Integer groupId) {
         int i = membersMapper.deleteSomeone(groupId, userId);
+        /**
+         * 通知队长
+         */
+        String headerUserId = getHeaderUserId(groupId);
+        User userByUserId = userRepository.findUserByUserId(userId);
+        newsService.addNews(headerUserId,"用户"+userByUserId.getUserName()+"拒绝了你的邀请！");
+
         if (i != 1){
             return ServerResponse.createByErrorMessage("退出失败");
         }

@@ -1,6 +1,7 @@
 package com.tyut.user.repostory;
 
 import com.tyut.core.pojo.GroupMembers;
+import com.tyut.core.pojo.User;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -47,4 +48,5 @@ public interface GroupMemRepostory extends JpaRepository<GroupMembers,Integer> {
 //
     @Query("select g.userIdentity from  GroupMembers g where g.userId=?1 and g.groupId=?2")
     int selectIndentity(Integer userId,Integer groupId);
+
 }
