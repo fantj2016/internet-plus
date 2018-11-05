@@ -132,13 +132,17 @@ public class GroupMemberServiceImpl implements GroupMemberService {
             list.add(view);
         }
         //在这里添加老师信息
-        Teacher byGroupId = teacherRepostory.findByGroupId(groupId);
-        GroupMemVo groupMemVo = new GroupMemVo();
-        groupMemVo.setUserName(byGroupId.getTeacherName());
-        groupMemVo.setUserPhone(byGroupId.getTeacherPhone());
-        groupMemVo.setUserIdentity(2);
-        groupMemVo.setUserId(byGroupId.toString());
-        list.add(groupMemVo);
+        try {
+            Teacher byGroupId = teacherRepostory.findByGroupId(groupId);
+            if (byGroupId != null ) {
+                GroupMemVo groupMemVo = new GroupMemVo();
+                groupMemVo.setUserName(byGroupId.getTeacherName());
+                groupMemVo.setUserPhone(byGroupId.getTeacherPhone());
+                groupMemVo.setUserIdentity(2);
+                groupMemVo.setUserId(byGroupId.toString());
+                list.add(groupMemVo);
+            }
+        }catch(Exception e){}
         if (!StringUtils.isEmpty(list)){
             log.info("findAllBygGroupId: *****"+list);
             return ServerResponse.createBySuccess(list);
