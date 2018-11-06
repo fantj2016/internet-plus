@@ -2,10 +2,7 @@ package com.tyut.user.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
-import com.tyut.core.pojo.Group;
-import com.tyut.core.pojo.GroupMembers;
-import com.tyut.core.pojo.Teacher;
-import com.tyut.core.pojo.User;
+import com.tyut.core.pojo.*;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.user.dao.GroupMapper;
 import com.tyut.user.dao.GroupMembersMapper;
@@ -15,6 +12,7 @@ import com.tyut.user.service.GroupMemberService;
 import com.tyut.user.vo.CompetitionTitleListVo;
 import com.tyut.user.vo.GroupMemVo;
 import com.tyut.user.vo.GroupsVo;
+import com.tyut.user.vo.InviteVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -139,7 +137,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
                 groupMemVo.setUserName(byGroupId.getTeacherName());
                 groupMemVo.setUserPhone(byGroupId.getTeacherPhone());
                 groupMemVo.setUserIdentity(2);
-                groupMemVo.setUserId(byGroupId.toString());
+                groupMemVo.setUserId(byGroupId.getTeacherId().toString());
                 list.add(groupMemVo);
             }
         }catch(Exception e){}
@@ -258,7 +256,25 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (groupMembers == null){
             return ServerResponse.createBySuccessMessage("没有关于你的消息。");
         }
-        return ServerResponse.createBySuccess(groupMembers);
+        try {
+            List<InviteVO> list = new ArrayList<>();
+            for (GroupMembers g : groupMembers) {
+                InviteVO inviteVO = new InviteVO();
+                Integer groupId = g.getGroupId();
+                Group group = groupMapper.selectByPrimaryKey(groupId);
+                String groupHeaderId = group.getGroupHeaderId();
+                User header = userRepository.findOne(groupHeaderId);
+                inviteVO.setGroupName(group.getGroupName());
+                inviteVO.setCptName(competitionRepostory.findOne(group.getGroupType()).getCptName());
+                inviteVO.setGroupId(groupId);
+                inviteVO.setGroupPhone(group.getGroupPhone());
+                inviteVO.setHeadName(header.getUserName());
+                list.add(inviteVO);
+            }
+            return ServerResponse.createBySuccess(list);
+        }catch (Exception e){
+            return ServerResponse.createByErrorMessage("查询邀请信息异常");
+        }
     }
 
     /**
@@ -267,10 +283,38 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     @Override
     public ServerResponse quitGroup(String userId, Integer groupId) {
         int i = membersMapper.deleteSomeone(groupId, userId);
+        //获取队长id
+        Group group = groupMapper.selectByPrimaryKey(groupId);
+        String groupHeaderId = group.getGroupHeaderId();
+        User one = userRepository.findOne(userId);
+        newsService.addNews(groupHeaderId,one.getUserName()+"退出了你的战队");
         if (i != 1){
             return ServerResponse.createByErrorMessage("退出失败");
         }
         return ServerResponse.createBySuccessMessage("成功退出");
+    }
+
+    @Override
+    public ServerResponse rejectInvite(String userId, Integer groupId) {
+        int i = membersMapper.deleteSomeone(groupId, userId);
+        //获取队长id
+        Group group = groupMapper.selectByPrimaryKey(groupId);
+        String groupHeaderId = group.getGroupHeaderId();
+        User one = userRepository.findOne(userId);
+        newsService.addNews(groupHeaderId,one.getUserName()+"拒绝了你的邀请");
+        if (i != 1){
+            return ServerResponse.createByErrorMessage("退出失败");
+        }
+        return ServerResponse.createBySuccessMessage("成功退出");
+    }
+
+    @Override
+    public ServerResponse ignoreInvite(String userId, Integer groupId) {
+        int i = membersMapper.deleteSomeone(groupId, userId);
+        if (i != 1){
+            return ServerResponse.createByErrorMessage("失败");
+        }
+        return ServerResponse.createBySuccessMessage("成功忽略此消息");
     }
 
     /**

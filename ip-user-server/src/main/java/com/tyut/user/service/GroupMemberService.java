@@ -28,10 +28,15 @@ public interface GroupMemberService {
     ServerResponse queryBeInvited(String userId);
     /** 退出队伍 */
     ServerResponse quitGroup(String userId,Integer groupId);
+    /** 拒绝邀请 */
+    ServerResponse rejectInvite(String userId, Integer groupId);
+    /** 忽略邀请 */
+    ServerResponse ignoreInvite(String userId, Integer groupId);
     /** 接受邀请加入队伍  */
     ServerResponse updateInvite(String userId, Integer memberId);
     /** 添加指导教师 */
     ServerResponse addTeacher(Integer groupId, String headId, String teacherName, String teacherPhone);
     /** 删除指导老师 */
     ServerResponse removeTeacher(Integer teacherId, String userId, Integer groupId);
+
 }

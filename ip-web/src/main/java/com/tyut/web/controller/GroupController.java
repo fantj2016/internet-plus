@@ -146,6 +146,19 @@ public class GroupController {
         return memberService.quitGroup(userId,groupId);
     }
 
+    @ApiOperation("忽略邀请 ")
+    @PostMapping("/ignoreInvite")
+    public ServerResponse ignoreInvite(@RequestParam Integer groupId,
+                                        @RequestParam String userId){
+        return memberService.ignoreInvite(userId,groupId);
+    }
+    @ApiOperation("拒绝邀请 ")
+    @PostMapping("/rejectInvite")
+    public ServerResponse rejectInvite(@RequestParam Integer groupId,
+                                        @RequestParam String userId){
+        return memberService.rejectInvite(userId,groupId);
+    }
+
     @ApiOperation("添加指导老师,只有队长能添加")
     @PostMapping("/addTeacher")
     public ServerResponse addTeacher(@RequestParam Integer groupId,
@@ -157,10 +170,10 @@ public class GroupController {
     }
 
     @ApiOperation("删除指导老师")
-    @GetMapping("/delTeacher/{teacherId}/{userId}/{groupId}")
-    public ServerResponse delTeacher(@PathVariable Integer teacherId,
-                                     @PathVariable String userId,
-                                     @PathVariable Integer groupId){
+    @PostMapping("/delTeacher")
+    public ServerResponse delTeacher(@RequestParam Integer teacherId,
+                                     @RequestParam String userId,
+                                     @RequestParam Integer groupId){
         return memberService.removeTeacher(teacherId,userId,groupId);
     }
 }
