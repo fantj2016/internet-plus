@@ -58,6 +58,15 @@
     delete from ip_group_members
     where user_id = #{userId,jdbcType=VARCHAR} and group_id = #{groupId,jdbcType=INTEGER}
   </delete>
+  <!--deleteByUserIdList-->
+    <delete id="deleteByUserIdList"  >
+      delete from ip_group_members
+      where group_id =  #{groupId,jdbcType=INTEGER}
+      and user_id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+    </delete>
   <insert id="insert" parameterType="com.tyut.core.pojo.GroupMembers" >
     insert into ip_group_members (id, group_id, group_name, 
       user_id, user_identity, user_status

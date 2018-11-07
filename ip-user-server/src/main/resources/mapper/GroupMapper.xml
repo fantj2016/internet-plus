@@ -141,6 +141,9 @@
       <if test="groupCreateTime != null" >
         group_create_time = #{groupCreateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="groupAddress != null">
+        group_address = #{groupAddress,jdbcType=VARCHAR}
+      </if>
       <if test="groupUpdateTime != null" >
         group_update_time = #{groupUpdateTime,jdbcType=TIMESTAMP},
       </if>

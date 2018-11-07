@@ -38,4 +38,6 @@ public interface GroupMembersMapper {
     /** 根据 用户id 查询 个人队伍信息列表 */
     List<GroupMembers> queryGroupListByUserId(String userId);
     int isJoinCpt(@Param("userId") String userId,@Param("cptId") Integer cptId);
+
+    int deleteByUserIdList(@Param("groupId") Integer groupId, @Param("list") List<String> removeList);
 }

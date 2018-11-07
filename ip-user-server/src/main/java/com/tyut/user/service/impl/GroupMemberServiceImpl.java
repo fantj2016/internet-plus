@@ -23,6 +23,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 /**
  * Created by Fant.J.
@@ -107,40 +108,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      */
     @Override
     public ServerResponse findGroupsByGroupId(Integer groupId) {
-        Query nativeQuery = em.createNativeQuery(
-                "select g.group_name,u.user_name,u.user_phone,g.user_identity,g.user_status as user_status_for_group,u.user_id," +
-                            "u.user_portrait,s.school_name,u.user_status " +
-                        "from ip_group_members as g,ip_user as u, ip_school s " +
-                        "where s.id=u.user_school_id and g.user_id=u.user_id and g.group_id=? and g.user_status!=2 " +
-                        "ORDER BY g.user_identity desc,g.user_status desc");
-        List<Object> objects = nativeQuery.setParameter(1, groupId).getResultList();
-        List<GroupMemVo> list = new ArrayList<>();
-        for (Object o : objects) {
-            Object[] rowArray = (Object[]) o;
-            GroupMemVo view = new GroupMemVo();
-            view.setGroupName((String) rowArray[0]);
-            view.setUserName((String) rowArray[1]);
-            view.setUserPhone((String) rowArray[2]);
-            view.setUserIdentity((Integer) rowArray[3]);
-            view.setUserStatusForGroup((Integer) rowArray[4]);
-            view.setUserId((String) rowArray[5]);
-            view.setUserPortrait((String) rowArray[6]);
-            view.setUserSchool((String) rowArray[7]);
-            view.setUserStatus((Integer) rowArray[8]);
-            list.add(view);
-        }
-        //在这里添加老师信息
-        try {
-            Teacher byGroupId = teacherRepostory.findByGroupId(groupId);
-            if (byGroupId != null ) {
-                GroupMemVo groupMemVo = new GroupMemVo();
-                groupMemVo.setUserName(byGroupId.getTeacherName());
-                groupMemVo.setUserPhone(byGroupId.getTeacherPhone());
-                groupMemVo.setUserIdentity(2);
-                groupMemVo.setUserId(byGroupId.getTeacherId().toString());
-                list.add(groupMemVo);
-            }
-        }catch(Exception e){}
+        List<GroupMemVo> list = findMembrsBygroupId(groupId);
         if (!StringUtils.isEmpty(list)){
             log.info("findAllBygGroupId: *****"+list);
             return ServerResponse.createBySuccess(list);
@@ -172,7 +140,11 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      * 拒绝用户加入队伍
      */
     @Override
+    @Transactional
     public ServerResponse rejectSomeone(Integer groupId, String headId, String userId) {
+        String headerUserId = getHeaderUserId(groupId);
+        User header = userMapper.selectByPrimaryKey(headerUserId);
+        newsService.addNews(userId,"队长:"+header.getUserName()+"拒绝你加入队伍,他的联系方式:"+header.getUserPhone());
         return  removeSomeone(groupId, headId, userId);
     }
 
@@ -195,7 +167,9 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (i1 == 0){
             return ServerResponse.createByErrorMessage("用户移除失败");
         }
-        newsService.addNews(userId,"队长已把你移除队伍");
+        String headerUserId = getHeaderUserId(groupId);
+        User header = userMapper.selectByPrimaryKey(headerUserId);
+        newsService.addNews(userId,"队长:"+header.getUserName()+"已把你移除队伍,他的联系方式:"+header.getUserPhone());
         return ServerResponse.createBySuccessMessage("用户移除成功");
     }
 
@@ -263,7 +237,9 @@ public class GroupMemberServiceImpl implements GroupMemberService {
                 Integer groupId = g.getGroupId();
                 Group group = groupMapper.selectByPrimaryKey(groupId);
                 String groupHeaderId = group.getGroupHeaderId();
-                User header = userRepository.findOne(groupHeaderId);
+                log.info("获取到队长的id:{}",groupHeaderId);
+                User header = userMapper.selectByPrimaryKey(groupHeaderId);
+                log.info(" "+header);
                 inviteVO.setGroupName(group.getGroupName());
                 inviteVO.setCptName(competitionRepostory.findOne(group.getGroupType()).getCptName());
                 inviteVO.setGroupId(groupId);
@@ -376,6 +352,38 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         return ServerResponse.createBySuccessMessage("删除成功");
     }
 
+    @Override
+    @Transactional
+    public ServerResponse disbandGroup(String headerId, String groupKey) {
+        Group allByGroupKey = groupRepostory.findAllByGroupKey(groupKey);
+        Integer groupId = allByGroupKey.getGroupId();
+        boolean header = isHeader(headerId, groupId);
+        if (!header){
+            return ServerResponse.createByErrorMessage("该用户没有权限");
+        }
+        List<GroupMemVo> list = findMembrsBygroupId(groupId);
+        //拿出id,批量删除
+        List<String> removeList = list.stream().map(GroupMemVo::getUserId).collect(Collectors.toList());
+        //批量发通知
+        Group group = groupMapper.selectByPrimaryKey(groupId);
+        System.out.println(group.toString());
+        String groupName = group.getGroupName();
+        String groupPhone  = group.getGroupPhone();
+        for (int j = 0;j< removeList.size();j++){
+            String userId = removeList.get(j);
+            if (headerId.equals(userId)){
+                newsService.addNews(userId,"你的队伍"+groupName+"已被你解散");
+            }
+            newsService.addNews(userId,"你的队伍"+groupName+"已被队长解散,联系方式:"+groupPhone);
+        }
+        int i = membersMapper.deleteByUserIdList(groupId, removeList);
+        groupMapper.deleteByPrimaryKey(groupId);
+        if (i!=0){
+            return ServerResponse.createBySuccessMessage("成功解散队伍");
+        }
+        return ServerResponse.createByErrorMessage("解散队伍失败");
+    }
+
 
     /**
      * 根据groupId 查询队长 的userID
@@ -416,5 +424,44 @@ public class GroupMemberServiceImpl implements GroupMemberService {
             }
         }
         return true;
+    }
+
+    public List<GroupMemVo> findMembrsBygroupId(Integer groupId){
+        Query nativeQuery = em.createNativeQuery(
+                "select g.group_name,u.user_name,u.user_phone,g.user_identity,g.user_status as user_status_for_group,u.user_id," +
+                        "u.user_portrait,s.school_name,u.user_status " +
+                        "from ip_group_members as g,ip_user as u, ip_school s " +
+                        "where s.id=u.user_school_id and g.user_id=u.user_id and g.group_id=? and g.user_status!=2 " +
+                        "ORDER BY g.user_identity desc,g.user_status desc");
+        List<Object> objects = nativeQuery.setParameter(1, groupId).getResultList();
+        List<GroupMemVo> list = new ArrayList<>();
+        for (Object o : objects) {
+            Object[] rowArray = (Object[]) o;
+            GroupMemVo view = new GroupMemVo();
+            view.setGroupName((String) rowArray[0]);
+            view.setUserName((String) rowArray[1]);
+            view.setUserPhone((String) rowArray[2]);
+            view.setUserIdentity((Integer) rowArray[3]);
+            view.setUserStatusForGroup((Integer) rowArray[4]);
+            view.setUserId((String) rowArray[5]);
+            view.setUserPortrait((String) rowArray[6]);
+            view.setUserSchool((String) rowArray[7]);
+            view.setUserStatus((Integer) rowArray[8]);
+            list.add(view);
+        }
+        //在这里添加老师信息
+        try {
+            Teacher byGroupId = teacherRepostory.findByGroupId(groupId);
+            if (byGroupId != null ) {
+                GroupMemVo groupMemVo = new GroupMemVo();
+                groupMemVo.setUserName(byGroupId.getTeacherName());
+                groupMemVo.setUserPhone(byGroupId.getTeacherPhone());
+                groupMemVo.setUserIdentity(2);
+                groupMemVo.setUserStatusForGroup(1);
+                groupMemVo.setUserId(byGroupId.getTeacherId().toString());
+                list.add(groupMemVo);
+            }
+        }catch(Exception e){}
+        return list;
     }
 }

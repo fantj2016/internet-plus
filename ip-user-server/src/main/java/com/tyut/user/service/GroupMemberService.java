@@ -38,5 +38,6 @@ public interface GroupMemberService {
     ServerResponse addTeacher(Integer groupId, String headId, String teacherName, String teacherPhone);
     /** 删除指导老师 */
     ServerResponse removeTeacher(Integer teacherId, String userId, Integer groupId);
-
+    /** 解散队伍 */
+    ServerResponse disbandGroup(String headerId,String groupKey);
 }

@@ -176,4 +176,11 @@ public class GroupController {
                                      @RequestParam Integer groupId){
         return memberService.removeTeacher(teacherId,userId,groupId);
     }
+    @ApiOperation("解散队伍")
+    @PostMapping("/disbandGroup")
+    public ServerResponse delTeacher(
+                                     @RequestParam String userId,
+                                     @RequestParam String groupKey){
+        return memberService.disbandGroup(userId,groupKey);
+    }
 }

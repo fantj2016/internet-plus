@@ -166,6 +166,7 @@ public class GroupServiceImpl implements GroupService {
         }
         return ServerResponse.createBySuccessMessage("团队信息修改成功");
     }
+
     public List<GroupsVo> selectGroupListByUserId(String userId){
                 Query nativeQuery = entityManager.createNativeQuery(
                 "select u.user_name,u.user_phone,m.group_name,m.group_id,m.user_identity,m.id,c.cpt_name,g.group_key," +
@@ -224,5 +225,4 @@ public class GroupServiceImpl implements GroupService {
         }
         return list;
     }
-
 }

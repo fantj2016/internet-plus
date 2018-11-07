@@ -28,4 +28,5 @@ public interface GroupService {
     ServerResponse updateGroupInfo(Group group);
 
     /** 根据id获取队长名字 */
+
 }

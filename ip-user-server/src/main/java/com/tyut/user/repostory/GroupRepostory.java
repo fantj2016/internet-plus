@@ -31,4 +31,5 @@ public interface GroupRepostory extends JpaRepository<Group,Integer> {
      */
 //    @Query("select u.user_name from ip_user u,ip_group g where g.group_id=?1 and g.group_header_id=u.user_id")
 //    String queryHeaderByGroupId(Integer groupId);
+    Group findAllByGroupKey(String groupKey);
 }

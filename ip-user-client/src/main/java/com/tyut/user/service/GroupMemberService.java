@@ -33,4 +33,7 @@ public interface GroupMemberService {
     ServerResponse ignoreInvite(String userId, Integer groupId);
     /** 拒绝邀请 */
     ServerResponse rejectInvite(String userId, Integer groupId);
+
+    /** 解散队伍 */
+    ServerResponse disbandGroup(String headerId,String groupKey);
 }
