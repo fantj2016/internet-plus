@@ -2,6 +2,7 @@ package com.tyut.user.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.tyut.core.constants.NoticeMsg;
 import com.tyut.core.pojo.*;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.user.dao.GroupMapper;
@@ -98,8 +99,8 @@ public class GroupMemberServiceImpl implements GroupMemberService {
          * 通知队长
          */
         String headerUserId = getHeaderUserId(groupId);
-        newsService.addNews(headerUserId,"你创建的团队:"+groupName+"又有新申请啦！");
-        newsService.addNews(userId,"申请已通知队长，请等待队长同意");
+        newsService.addNews(headerUserId,NoticeMsg.ind.groupNewApply(groupName));
+        newsService.addNews(userId,NoticeMsg.ind.groupWaitAgree(groupName));
         return ServerResponse.createBySuccessMessage("申请成功");
     }
 
@@ -132,7 +133,9 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         if (i1 == 0){
             return ServerResponse.createByErrorMessage("用户加入失败");
         }
-        newsService.addNews(userId,"队长已同意你加入队伍,请刷新查看我的队伍");
+        Group group = groupMapper.selectByPrimaryKey(groupId);
+        User header = userMapper.selectByPrimaryKey(headId);
+        newsService.addNews(userId,NoticeMsg.ind.groupBeAgree(group.getGroupName(),header.getUserName()));
         return ServerResponse.createBySuccessMessage("用户加入成功");
     }
 
@@ -142,9 +145,22 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     @Override
     @Transactional
     public ServerResponse rejectSomeone(Integer groupId, String headId, String userId) {
+        boolean isHeader = isHeader(headId, groupId);
+        if (!isHeader){
+            //无同意权限
+            return ServerResponse.createByErrorMessage("该用户没有权限");
+        }
+        if (headId.equals(userId)){
+            return ServerResponse.createByErrorMessage("不能移除本人!");
+        }
+        int i1 = membersMapper.deleteSomeone(groupId, userId);
+        if (i1 == 0){
+            return ServerResponse.createByErrorMessage("用户移除失败");
+        }
         String headerUserId = getHeaderUserId(groupId);
         User header = userMapper.selectByPrimaryKey(headerUserId);
-        newsService.addNews(userId,"队长:"+header.getUserName()+"拒绝你加入队伍,他的联系方式:"+header.getUserPhone());
+        Group group = groupMapper.selectByPrimaryKey(groupId);
+        newsService.addNews(userId,NoticeMsg.ind.groupBereject(group.getGroupName(),header.getUserName(),group.getGroupPhone()));
         return  removeSomeone(groupId, headId, userId);
     }
 
@@ -169,7 +185,8 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         }
         String headerUserId = getHeaderUserId(groupId);
         User header = userMapper.selectByPrimaryKey(headerUserId);
-        newsService.addNews(userId,"队长:"+header.getUserName()+"已把你移除队伍,他的联系方式:"+header.getUserPhone());
+        Group group = groupMapper.selectByPrimaryKey(groupId);
+        newsService.addNews(userId,NoticeMsg.ind.groupBequit(group.getGroupName(),header.getUserName(),group.getGroupPhone()));
         return ServerResponse.createBySuccessMessage("用户移除成功");
     }
 
@@ -216,7 +233,8 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         User header = userMapper.queryMemberSimpleInfo(one.getGroupHeaderId());
 //        User header = userRepository.findOne(one.getGroupHeaderId());
         //发通知
-        newsService.addNews(userId,"队长: "+header.getUserName() +" 邀请你加入他的队伍: "+one.getGroupName()+" 请去我的队伍页面进行确认。 ");
+        Group group = groupMapper.selectByPrimaryKey(groupId);
+        newsService.addNews(userId,NoticeMsg.ind.groupInvide(group.getGroupName(),header.getUserName(),group.getGroupPhone()));
 
         return ServerResponse.createBySuccessMessage("邀请成功,请耐心等待同意.");
     }
@@ -257,13 +275,14 @@ public class GroupMemberServiceImpl implements GroupMemberService {
      * 退出队伍
      */
     @Override
+    @Transactional
     public ServerResponse quitGroup(String userId, Integer groupId) {
-        int i = membersMapper.deleteSomeone(groupId, userId);
         //获取队长id
         Group group = groupMapper.selectByPrimaryKey(groupId);
         String groupHeaderId = group.getGroupHeaderId();
         User one = userRepository.findOne(userId);
-        newsService.addNews(groupHeaderId,one.getUserName()+"退出了你的战队");
+        newsService.addNews(groupHeaderId,NoticeMsg.ind.groupSomeoneQuit(group.getGroupName(),one.getUserName(),one.getUserPhone()));
+        int i = membersMapper.deleteSomeone(groupId, userId);
         if (i != 1){
             return ServerResponse.createByErrorMessage("退出失败");
         }
@@ -277,7 +296,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         Group group = groupMapper.selectByPrimaryKey(groupId);
         String groupHeaderId = group.getGroupHeaderId();
         User one = userRepository.findOne(userId);
-        newsService.addNews(groupHeaderId,one.getUserName()+"拒绝了你的邀请");
+        newsService.addNews(groupHeaderId,NoticeMsg.ind.groupInviteBeeject(one.getUserName(),one.getUserPhone()));
         if (i != 1){
             return ServerResponse.createByErrorMessage("退出失败");
         }
@@ -357,8 +376,8 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     public ServerResponse disbandGroup(String headerId, String groupKey) {
         Group allByGroupKey = groupRepostory.findAllByGroupKey(groupKey);
         Integer groupId = allByGroupKey.getGroupId();
-        boolean header = isHeader(headerId, groupId);
-        if (!header){
+        boolean isheader = isHeader(headerId, groupId);
+        if (!isheader){
             return ServerResponse.createByErrorMessage("该用户没有权限");
         }
         List<GroupMemVo> list = findMembrsBygroupId(groupId);
@@ -369,12 +388,13 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         System.out.println(group.toString());
         String groupName = group.getGroupName();
         String groupPhone  = group.getGroupPhone();
+        User header = userMapper.selectByPrimaryKey(headerId);
         for (int j = 0;j< removeList.size();j++){
             String userId = removeList.get(j);
             if (headerId.equals(userId)){
                 newsService.addNews(userId,"你的队伍"+groupName+"已被你解散");
             }
-            newsService.addNews(userId,"你的队伍"+groupName+"已被队长解散,联系方式:"+groupPhone);
+            newsService.addNews(userId,NoticeMsg.ind.groupDisband(groupName,header.getUserName(),groupPhone));
         }
         int i = membersMapper.deleteByUserIdList(groupId, removeList);
         groupMapper.deleteByPrimaryKey(groupId);

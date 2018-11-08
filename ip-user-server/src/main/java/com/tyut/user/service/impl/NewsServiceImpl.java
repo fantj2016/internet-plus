@@ -9,10 +9,12 @@ import com.tyut.user.dao.NewsMapper;
 import com.tyut.user.service.NewsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Fant.J.
@@ -95,5 +97,18 @@ public class NewsServiceImpl implements NewsService {
         //在这里可以加一个防止横向越权的操作（防止授权用户互相查看信息）
         int i = newsMapper.selectCountNotRead(userId);
         return ServerResponse.createBySuccess(i);
+    }
+
+    @Override
+    @Transactional
+    public ServerResponse onekeyIgnore(String userId) {
+        List<News> newsList = newsMapper.listNotRead(userId);
+        List<Integer> list = newsList.stream().map(News::getNewsId).collect(Collectors.toList());
+        log.info("list"+list);
+        int i = newsMapper.onekeyIgnore(list);
+        if (i == 0){
+            return ServerResponse.createByErrorMessage("一键忽略失败");
+        }
+        return ServerResponse.createBySuccessMessage("一键忽略成功");
     }
 }

@@ -2,6 +2,7 @@ package com.tyut.user.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.tyut.core.aspect.ServiceLog;
+import com.tyut.core.constants.NoticeMsg;
 import com.tyut.core.pojo.Group;
 import com.tyut.core.pojo.GroupMembers;
 import com.tyut.core.response.ServerResponse;
@@ -87,7 +88,7 @@ public class GroupServiceImpl implements GroupService {
         members.setGroupType(group.getGroupType());
         members.setGroupName(save.getGroupName());
         memRepostory.save(members);
-        newsService.addNews(group.getGroupHeaderId(),"队伍创建成功,队名："+group.getGroupName()+"\b口令："+save.getGroupKey()+"\b快通知你的小伙伴吧!");
+        newsService.addNews(group.getGroupHeaderId(), NoticeMsg.sys.groupCreateSuccess(group.getGroupName(),group.getGroupKey()));
         return ServerResponse.createBySuccess(save.getGroupKey(),"创建队伍成功");
     }
 

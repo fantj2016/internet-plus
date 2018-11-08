@@ -29,4 +29,8 @@ public interface NewsMapper {
     /** 查询未读数量 */
     int selectCountNotRead(String userId);
 
+    /** 获取未读列表 */
+    List<News> listNotRead(String userId);
+    /** 一键忽略 */
+    int onekeyIgnore(List<Integer> userIdList);
 }

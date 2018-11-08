@@ -61,4 +61,10 @@ public class NewsController {
     public ServerResponse selectCountNotRead(@PathVariable String userId){
         return newsService.selectCountNotRead(userId);
     }
+
+    @ApiOperation("一键忽略 ")
+    @GetMapping("/onekeyIgnore/{userId}")
+    public ServerResponse onekeyIgnore(@PathVariable String userId){
+        return newsService.onekeyIgnore(userId);
+    }
 }

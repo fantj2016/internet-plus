@@ -34,6 +34,14 @@
     from ip_news
     where user_id = #{userId,jdbcType=VARCHAR}  order by news_id desc
   </select>
+  <!--List<Integer> listNotRead(String userId);-->
+   <select id="listNotRead" resultMap="ResultMapWithBLOBs">
+    select
+    news_id
+    from ip_news
+    where user_id = #{userId,jdbcType=VARCHAR}
+    and (news_status + news_ignore) &lt; 1
+  </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -102,6 +110,15 @@
     where news_id = #{newsId,jdbcType=INTEGER}
   </update>
 
+  <!--void onekeyIgnore(String userId);-->
+<update id="onekeyIgnore" >
+    update ip_news
+    set news_ignore = 1
+    where news_id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+  </update>
 
   <update id="updateByPrimaryKeySelective" parameterType="com.tyut.core.pojo.News" >
     update ip_news

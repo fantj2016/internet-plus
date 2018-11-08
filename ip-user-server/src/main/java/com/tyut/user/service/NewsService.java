@@ -22,4 +22,6 @@ public interface NewsService {
 
     /** 查询未读消息个数 */
     ServerResponse selectCountNotRead(String userId);
+    /** 一键忽略 */
+    ServerResponse onekeyIgnore(String userId);
 }
