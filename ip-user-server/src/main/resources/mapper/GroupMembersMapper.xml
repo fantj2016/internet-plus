@@ -9,6 +9,7 @@
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="user_identity" property="userIdentity" jdbcType="INTEGER" />
     <result column="user_status" property="userStatus" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" javaType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, group_id, group_name, user_id, user_identity, user_status,group_type

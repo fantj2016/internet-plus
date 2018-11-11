@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Fant.J.
@@ -31,6 +32,8 @@ public class GroupMembers implements Serializable {
     private Integer userStatus;
 
     private String groupName;
+
+    private Date createTime;
 
 }
 

@@ -280,7 +280,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         //获取队长id
         Group group = groupMapper.selectByPrimaryKey(groupId);
         String groupHeaderId = group.getGroupHeaderId();
-        User one = userRepository.findOne(userId);
+        User one = userMapper.selectByPrimaryKey(userId);
         newsService.addNews(groupHeaderId,NoticeMsg.ind.groupSomeoneQuit(group.getGroupName(),one.getUserName(),one.getUserPhone()));
         int i = membersMapper.deleteSomeone(groupId, userId);
         if (i != 1){
@@ -289,18 +289,22 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         return ServerResponse.createBySuccessMessage("成功退出");
     }
 
+    /**
+     * 拒绝接受邀请
+     */
     @Override
+    @Transactional
     public ServerResponse rejectInvite(String userId, Integer groupId) {
-        int i = membersMapper.deleteSomeone(groupId, userId);
         //获取队长id
         Group group = groupMapper.selectByPrimaryKey(groupId);
         String groupHeaderId = group.getGroupHeaderId();
-        User one = userRepository.findOne(userId);
+        User one = userMapper.selectByPrimaryKey(userId);
         newsService.addNews(groupHeaderId,NoticeMsg.ind.groupInviteBeeject(one.getUserName(),one.getUserPhone()));
+        int i = membersMapper.deleteSomeone(groupId, userId);
         if (i != 1){
-            return ServerResponse.createByErrorMessage("退出失败");
+            return ServerResponse.createByErrorMessage("拒绝失败");
         }
-        return ServerResponse.createBySuccessMessage("成功退出");
+        return ServerResponse.createBySuccessMessage("成功拒绝");
     }
 
     @Override

@@ -113,7 +113,7 @@
   <!--void onekeyIgnore(String userId);-->
 <update id="onekeyIgnore" >
     update ip_news
-    set news_ignore = 1
+    set news_status= 1
     where news_id in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
           #{item}
