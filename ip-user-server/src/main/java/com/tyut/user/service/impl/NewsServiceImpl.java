@@ -107,8 +107,8 @@ public class NewsServiceImpl implements NewsService {
         log.info("list"+list);
         int i = newsMapper.onekeyIgnore(list);
         if (i == 0){
-            return ServerResponse.createByErrorMessage("一键忽略失败");
+            return ServerResponse.createByErrorMessage("一键已读失败");
         }
-        return ServerResponse.createBySuccessMessage("一键忽略成功");
+        return ServerResponse.createBySuccessMessage("一键已读成功");
     }
 }
