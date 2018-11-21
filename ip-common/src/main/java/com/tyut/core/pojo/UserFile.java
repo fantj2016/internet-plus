@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Fant.J.
@@ -22,4 +23,5 @@ public class UserFile implements Serializable {
     private String username;
     private Integer cptId;
     private Integer fileStatus;
+    private Date updateTime;
 }
