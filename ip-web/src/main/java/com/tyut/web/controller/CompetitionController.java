@@ -27,7 +27,7 @@ public class CompetitionController {
     @GetMapping("/{id}")
     @Cacheable(value = "cpt",key = "'getOne' + #id")
     public ServerResponse getOne(@PathVariable Integer id){
-        return competitionService.selectById(id);
+        return ServerResponse.createBySuccess(competitionService.selectById(id));
     }
 
 

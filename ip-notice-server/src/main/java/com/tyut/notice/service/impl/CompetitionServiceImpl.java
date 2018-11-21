@@ -34,12 +34,12 @@ public class CompetitionServiceImpl  implements CompetitionService {
      */
     @Override
     @Cacheable(key = "'selectById'+#id")
-    public ServerResponse selectById(Integer id) {
+    public Competition selectById(Integer id) {
         Competition one = repostory.findOne(id);
-        if (one != null){
-            return ServerResponse.createBySuccess(one);
+        if (one == null){
+            throw new RuntimeException("查询cpt出错");
         }
-        return null;
+        return one;
     }
 
     /**

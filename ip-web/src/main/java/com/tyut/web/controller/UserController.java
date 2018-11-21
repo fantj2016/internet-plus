@@ -4,11 +4,13 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.google.common.collect.Lists;
 import com.tyut.core.constants.ConsParams;
 import com.tyut.core.dto.UserUpdateVo;
+import com.tyut.core.pojo.Competition;
 import com.tyut.core.pojo.User;
 import com.tyut.core.pojo.UserFile;
 import com.tyut.core.response.ServerResponse;
 import com.tyut.core.utils.CheckFormat;
 import com.tyut.core.utils.FTPUtil;
+import com.tyut.notice.service.CompetitionService;
 import com.tyut.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,6 +39,8 @@ public class UserController {
 
     @Reference(version = "2.0.0")
     private UserService userService;
+    @Reference(version = "2.0.0")
+    private CompetitionService competitionService;
 
     @GetMapping("/me")
     public ServerResponse getCurrentUser(Authentication user)  {
@@ -82,8 +86,12 @@ public class UserController {
     }
     @ApiOperation("上传作品")
     @PostMapping("/uploadWork")
-    public ServerResponse uploadWork(Authentication user,MultipartFile file
+    public ServerResponse uploadWork(Authentication user, MultipartFile file
             , HttpServletRequest request,@RequestParam Integer cptId ) throws IOException {
+        Competition competition = competitionService.selectById(cptId);
+        if (competition.getCptStatus() != 3){
+            return ServerResponse.createByErrorMessage("请在规定的时间段内上传作品");
+        }
         //没有用户信息
         if (StringUtils.isEmpty(user)){ return ServerResponse.createByErrorMessage("请先登录"); }
         // 图像数据为空
@@ -92,7 +100,7 @@ public class UserController {
         File folder = new File(path);
         if (!folder.exists()){ folder.mkdirs(); }
         String username = user.getName();
-        String uploadFileName = file.getName();
+        String uploadFileName = file.getOriginalFilename();
         if (!CheckFormat.isZip(uploadFileName.substring(uploadFileName.lastIndexOf(".")+1))){
             return ServerResponse.createByErrorMessage("上传文件格式错误");
         }

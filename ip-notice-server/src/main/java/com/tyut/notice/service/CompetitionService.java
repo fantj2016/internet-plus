@@ -1,5 +1,6 @@
 package com.tyut.notice.service;
 
+import com.tyut.core.pojo.Competition;
 import com.tyut.core.response.ServerResponse;
 
 /**
@@ -8,7 +9,7 @@ import com.tyut.core.response.ServerResponse;
  */
 public interface CompetitionService {
     /** 查询单个*/
-    ServerResponse selectById(Integer id);
+    Competition selectById(Integer id);
     /** 查询题目列表 */
     ServerResponse selectTitleList();
 }
