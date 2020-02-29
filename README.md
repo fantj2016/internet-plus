@@ -27,3 +27,9 @@
 * 全局异常处理
 * 前后端分离
 
+### API
+![API总览](https://github.com/fantj2016/internet-plus/tree/master/img/1.png)
+![](https://github.com/fantj2016/internet-plus/tree/master/img/2.png)
+![](https://github.com/fantj2016/internet-plus/tree/master/img/3.png)
+![](https://github.com/fantj2016/internet-plus/tree/master/img/4.png)
+![](https://github.com/fantj2016/internet-plus/tree/master/img/5.png)
