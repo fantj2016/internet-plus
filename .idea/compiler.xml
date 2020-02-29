@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="ip-common" />
+        <module name="ip-notice-client" />
+        <module name="ip-notice-server" />
+        <module name="ip-school-client" />
+        <module name="ip-school-server" />
+        <module name="ip-user-client" />
+        <module name="ip-user-server" />
+        <module name="ip-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ip-common" target="1.8" />
+      <module name="ip-notice-client" target="1.8" />
+      <module name="ip-notice-server" target="1.8" />
+      <module name="ip-parent" target="1.8" />
+      <module name="ip-school-client" target="1.8" />
+      <module name="ip-school-server" target="1.8" />
+      <module name="ip-user-client" target="1.8" />
+      <module name="ip-user-server" target="1.8" />
+      <module name="ip-web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
