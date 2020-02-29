@@ -9,16 +9,26 @@
 适合springboot初学者参考, 有兴趣也可以一起把他完善成开源的竞赛网项目.
 
 ### 如何运行?
+
 1. 搭建zk, 替换配置文件中的ip
+
 2. 搭建redis, 替换配置文件中的ip
+
 3. 搭建mysql, 替换配置文件中的ip
+
 4. 搭建ftp、nginx, 替换配置文件中的ip
+
 上面的搭建文档都整理在[服务搭建篇](https://github.com/fantj2016/java-reader/tree/master/8.%20%E5%A4%A7%E6%95%B0%E6%8D%AE/8.1%20%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E7%AF%87)
+
+搭建好之后依次启动模块 notice/school/user -> web
 
 #### 模块解释
 common模块：公用模块
+
 parent模块：做版本统一管理
+
 notice、school、user模块相互隔离, 对web模块暴露接口, 分别实现系统通知功能、学校功能、用户/组队功能
+
 web模块依赖于notice、school、user模块, 并将其组装对外暴露rest服务。
 
 启动顺序：notice/school/user -> web
